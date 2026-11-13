@@ -1,0 +1,215 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ════════════════════════════════════════════════════════════════
+   SAIGETSU ASIAN FOOD PRESENTATION DESIGN SYSTEM
+   Ref: Saigetsu Presentation Deck (Japanese and Asian Food Presentation)
+   Palette: Terracotta Red (#BA382A), Deep Wine (#8B1E1E), 
+            Warm Ochre (#D97330), Crisp Porcelain White (#FFFFFF),
+            Soft Warm Ivory (#FAF8F5), Dark Stone (#1C1917)
+════════════════════════════════════════════════════════════════ */
+
+:root {
+  --color-red:        #BA382A;
+  --color-red-dark:   #8B1E1E;
+  --color-red-light:  #FDF2F0;
+  --color-orange:     #D97330;
+  --color-dark:       #1C1917;
+  --color-stone:      #44403C;
+  --color-muted:      #78716C;
+  --color-cream:      #FAF8F5;
+  --color-border:     #E7E5E4;
+}
+
+/* ═══════════ ACCESSIBILITY & BASE ═══════════ */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #FFFFFF;
+  color: #1C1917;
+  font-family: var(--font-sans), 'Plus Jakarta Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* R-39: Cursor pointer on all interactive controls */
+a[href],
+button,
+summary,
+select,
+label[for],
+input[type="checkbox"],
+input[type="radio"],
+[role="button"],
+[role="tab"],
+[role="switch"] {
+  cursor: pointer;
+}
+
+button:disabled,
+a[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+/* R-32: Visible focus indicators */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #BA382A;
+  outline-offset: 3px;
+}
+
+/* ═══════════ SCROLLBAR ═══════════ */
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF8F5;
+}
+::-webkit-scrollbar-thumb {
+  background: #BA382A;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8B1E1E;
+}
+
+/* ═══════════ TYPOGRAPHY ═══════════ */
+.font-display {
+  font-family: var(--font-display), 'Oswald', 'Impact', sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.font-sans {
+  font-family: var(--font-sans), 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+/* ═══════════ BUTTONS (SAIGETSU STYLE) ═══════════ */
+.btn-saigetsu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #BA382A;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 0.875rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid transparent;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(186, 56, 42, 0.25);
+  text-decoration: none;
+  min-height: 44px;
+}
+.btn-saigetsu:hover {
+  background-color: #A32E22;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(186, 56, 42, 0.35);
+}
+.btn-saigetsu:active {
+  transform: translateY(0);
+}
+
+.btn-saigetsu-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: transparent;
+  color: #BA382A;
+  font-weight: 700;
+  font-size: 0.875rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 1.5px solid #BA382A;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  min-height: 44px;
+}
+.btn-saigetsu-outline:hover {
+  background-color: #BA382A;
+  color: #FFFFFF;
+  transform: translateY(-1px);
+}
+.btn-saigetsu-outline:active {
+  transform: translateY(0);
+}
+
+.btn-saigetsu-white {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #FFFFFF;
+  color: #BA382A;
+  font-weight: 700;
+  font-size: 0.875rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  text-decoration: none;
+  min-height: 44px;
+}
+.btn-saigetsu-white:hover {
+  background-color: #FAF8F5;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.18);
+}
+
+/* ═══════════ ASIAN SEAL STAMP ═══════════ */
+.saigetsu-stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #BA382A;
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 0.75rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+}
+
+/* Dot leader for menu board */
+.saigetsu-dot-leader {
+  flex: 1;
+  border-bottom: 1.5px dotted #D6D3D1;
+  margin: 0 0.75rem;
+  transform: translateY(-4px);
+}
+
+/* Badge */
+.badge-saigetsu {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  background-color: #FDF2F0;
+  color: #BA382A;
+  border: 1px solid rgba(186, 56, 42, 0.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

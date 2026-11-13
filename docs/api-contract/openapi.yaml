@@ -1,0 +1,30 @@
+openapi: 3.0.3
+info:
+  title: Mie Ayam System ML & API Contract
+  version: 1.0.0
+  description: Kontrak API untuk /extract, /match, /status, /orders
+paths:
+  /extract:
+    post:
+      summary: Extract order details from image
+      responses:
+        '200':
+          description: OK
+  /match:
+    post:
+      summary: Match extracted items against menu catalog
+      responses:
+        '200':
+          description: OK
+  /status:
+    get:
+      summary: Store / service status
+      responses:
+        '200':
+          description: OK
+  /orders:
+    get:
+      summary: Order management endpoint
+      responses:
+        '200':
+          description: OK

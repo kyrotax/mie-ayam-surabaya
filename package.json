@@ -1,0 +1,14 @@
+{
+  "name": "mieayamsurabaya",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mie Ayam Surabaya Company Profile & System",
+  "scripts": {
+    "dev": "npm --prefix web run dev",
+    "build": "npm --prefix web run build",
+    "start": "npm --prefix web run start",
+    "db:seed": "npm --prefix web run db:seed",
+    "db:push": "npm --prefix web run db:push"
+  }
+}
+

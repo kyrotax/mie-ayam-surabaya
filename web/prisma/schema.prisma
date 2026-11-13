@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model StoreProfile {
+  id               Int      @id @default(1)
+  name             String   @default("Mie Ayam Surabaya")
+  tagline          String   @default("Cita Rasa Khas Mie Ayam Oriental di Surabaya & Sidoarjo")
+  shortDescription String
+  story            String
+  address          String   @default("Taman Pinang Indah, Sidoarjo")
+  mapsUrl          String
+  mapsEmbedUrl     String?
+  whatsappNumber   String   @default("6282319195854")
+  instagramUrl     String   @default("https://www.instagram.com/mieayamsurabaya_/")
+  logoUrl          String   @default("/images/logo.jpg")
+  heroImageUrl     String   @default("/images/menu.png")
+  updatedAt        DateTime @updatedAt
+}
+
+model StoreStatus {
+  id             Int      @id @default(1)
+  isOpen         Boolean  @default(true)
+  manualOverride Boolean  @default(true)
+  statusNote     String?  @default("Warung sedang buka, siap melayani pesanan Anda.")
+  nextOpenText   String?  @default("Buka kembali besok pukul 09:00 WIB")
+  updatedAt      DateTime @updatedAt
+}
+
+model OperatingSchedule {
+  id        Int     @id @default(autoincrement())
+  dayName   String
+  dayOfWeek Int
+  openTime  String  @default("09:00")
+  closeTime String  @default("21:00")
+  isClosed  Boolean @default(false)
+}
+
+model MenuCategory {
+  id        Int        @id @default(autoincrement())
+  name      String
+  slug      String     @unique
+  order     Int        @default(0)
+  items     MenuItem[]
+  createdAt DateTime   @default(now())
+}
+
+model MenuItem {
+  id          Int          @id @default(autoincrement())
+  categoryId  Int
+  category    MenuCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  price       Int
+  imageUrl    String?
+  isAvailable Boolean      @default(true)
+  isFeatured  Boolean      @default(false)
+  badge       String?
+  order       Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model GalleryImage {
+  id        Int      @id @default(autoincrement())
+  title     String
+  caption   String?
+  imageUrl  String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+

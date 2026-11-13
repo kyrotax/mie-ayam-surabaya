@@ -1,0 +1,4 @@
+# Abaikan file foto asli di direktori raw
+*
+!.gitignore
+!.gitkeep
