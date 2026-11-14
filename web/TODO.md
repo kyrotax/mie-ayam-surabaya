@@ -35,3 +35,25 @@ Dokumen ini mencatat data yang telah terintegrasi dari dokumen konsep, revisi vi
 ## 2. Catatan Konfigurasi Lanjutan untuk Pemilik
 - **Jam Operasional Fleksibel:** Jadwal saat ini diset standar 09.00 sampai 21.00 WIB setiap hari dengan mode `manualOverride = true` (status selalu BUKA terkontrol). Di Fase 2 (Dashboard Toko), pemilik dapat mengubah status ini langsung melalui tombol saklar Buka/Tutup di panel admin.
 - **Pembaruan Foto Menu:** Foto hidangan saat ini telah tertaut ke masing-masing item menu. Di Fase 2, pemilik dapat mengganti atau menambah foto baru melalui panel admin.
+
+
+## 3. Realisasi Fase 2 (Dashboard Admin - Frontend Dummy)
+- **Status:** SELESAI & LULUS BUILD
+- **Komponen & Arsitektur yang Dibangun:**
+  1. **Autentikasi & Guard Rute:** Middleware `middleware.ts` membaca cookie `mm_session` (base64url) dengan masa berlaku 8 jam. Penjagaan ganda di server layout `(panel)/layout.tsx` dan proteksi izin halaman via `lib/admin/permissions.ts`.
+  2. **Akun Dummy:** Owner (`owner@mieayam.test` / `Owner123!`), Admin (`admin@mieayam.test` / `Admin123!`), dan Akun Nonaktif (`admin2@mieayam.test`).
+  3. **Lapisan Layanan (Services Layer):** Seluruh interaksi UI memanggil modul di `lib/admin/services/*` dengan artificial latency 300-500ms dan persistensi `localStorage` (`mm_dummy_state_v1`) via `store.tsx`.
+  4. **Dashboard 1 (Profil & Toko):**
+     - `/admin`: Ringkasan KPI, saklar cepat status, grafik 7 hari, 5 pesanan terbaru, aktivitas terkini.
+     - `/admin/toko`: Saklar Buka/Tutup dengan modal alasan dan estimasi jam, mode jadwal/paksa, tabel jadwal 7 hari, log aktivitas, dan pratinjau WhatsApp.
+     - `/admin/konten`: Tab Profil, Tentang, Kontak & Lokasi (read-only Admin), Galeri Hidangan (urutan naik/turun, alt text), Testimoni, serta floating save bar.
+     - `/admin/menu`: Manajemen daftar menu, saklar stok habis inline, urutan naik/turun, drawer tambah/ubah, validasi harga & alias AI unik.
+     - `/admin/chatbot`: Tab auto-reply WhatsApp dengan tag variabel `{jam_buka_kembali}` dan `{alasan}`, tab FAQ interaktif, serta tab log obrolan pelanggan (tersamarkan).
+  5. **Dashboard 2 (Pesanan & AI):**
+     - `/admin/pesanan/baru`: Dropzone kamera HP & unggah berkas dengan kompresi gambar sisi klien, simulasi langkah OCR, dan trigger job gagal via kata kunci nama file `gagal`.
+     - `/admin/pesanan/[id]/review`: Panel ganda foto & tabel ekstraksi porsi, stepper, kalkulasi subtotal/total otomatis, verifikasi keyakinan AI, dan validasi simpan pesanan.
+     - `/admin/pesanan`: Riwayat transaksi terfilter rentang tanggal dan sumber, paginasi 10 baris, dan ekspor CSV langsung di browser.
+     - `/admin/pesanan/[id]`: Detail transaksi dengan foto berdampingan dan opsi hapus pesanan bagi Owner.
+     - `/admin/laporan`: Analitik KPI omset estimasi, grafik tren harian, menu terlaris, jam ramai, serta fitur ekspor CSV dan cetak ramah printer.
+     - `/admin/akun`: Manajemen pengguna, validasi email unik, proteksi akun sendiri dan pencegahan penghapusan Owner terakhir.
+  6. **Aksesibilitas & UI Antislop:** Seluruh warna berdasar palet Saigetsu & token semantik dashboard, kontras WCAG AA, tap target minimum 44px, responsif pada lebar 360px - 1280px, dan bebas horizontal scroll.

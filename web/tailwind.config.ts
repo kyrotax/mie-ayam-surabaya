@@ -22,6 +22,27 @@ const config: Config = {
           border: "#E7E5E4",        // Clean stone 200 border
           sand: "#F5F0EA",          // Soft secondary surface
         },
+        admin: {
+          "merah-jago": "#8D0D00",
+          "merah-tua": "#6B0A00",
+          emas: "#CBA857",
+          "emas-terang": "#F4CE90",
+          "emas-tua": "#A8783A",
+          krem: "#FFF4E0",
+          "krem-tua": "#F6E4C4",
+          cokelat: "#3B2416",
+          "cokelat-muda": "#6B5240",
+          "hijau-buka": "#2E7D32",
+          "abu-tutup": "#6B5B50",
+          sukses: "#276B2B",
+          "sukses-bg": "#E4F2E5",
+          peringatan: "#8A5A00",
+          "peringatan-bg": "#FBEBC8",
+          bahaya: "#B42318",
+          "bahaya-bg": "#FBE4E1",
+          netral: "#6B5240",
+          "netral-bg": "#F6E4C4",
+        },
       },
       fontFamily: {
         display: ["var(--font-display)", "Oswald", "Impact", "sans-serif"],
