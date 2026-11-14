@@ -18,3 +18,4 @@ export default async function AdminPanelLayout({
 
   return <PanelShell user={user}>{children}</PanelShell>;
 }
+

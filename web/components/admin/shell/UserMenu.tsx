@@ -69,3 +69,4 @@ export function UserMenu({ user }: { user: SessionUser }) {
     </div>
   );
 }
+

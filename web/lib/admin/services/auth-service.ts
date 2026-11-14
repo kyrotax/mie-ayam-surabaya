@@ -33,3 +33,4 @@ export async function getCurrentUserService(userId: string): Promise<User | null
   const found = state.users.find((u) => u.id === userId);
   return found || null;
 }
+

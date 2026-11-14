@@ -127,3 +127,4 @@ export function mockExtract(filename: string, photoDataUrl: string): ExtractionJ
     result,
   };
 }
+

@@ -127,3 +127,4 @@ export async function getReportDataService(days: number = 30): Promise<ReportDat
     dailySummaryTable,
   };
 }
+

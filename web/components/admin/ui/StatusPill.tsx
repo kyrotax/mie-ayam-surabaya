@@ -34,3 +34,4 @@ export function StatusPill({ status }: { status: JobStatus }) {
     </span>
   );
 }
+

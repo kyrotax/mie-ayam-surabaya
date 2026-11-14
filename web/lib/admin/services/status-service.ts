@@ -54,3 +54,4 @@ export async function getStatusLogsService(): Promise<StatusLogEntry[]> {
   await delay();
   return getDummyState().statusLogs;
 }
+

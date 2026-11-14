@@ -302,3 +302,4 @@ export default function AdminLaporanPage() {
     </div>
   );
 }
+

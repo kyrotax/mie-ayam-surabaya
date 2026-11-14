@@ -14,3 +14,4 @@ export async function updateSiteContentService(content: SiteContent): Promise<Si
   saveDummyState({ ...state, siteContent: content });
   return content;
 }
+

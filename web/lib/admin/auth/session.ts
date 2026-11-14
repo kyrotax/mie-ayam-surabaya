@@ -33,3 +33,4 @@ export function decodeSession(token: string | undefined | null): SessionUser | n
     return null;
   }
 }
+

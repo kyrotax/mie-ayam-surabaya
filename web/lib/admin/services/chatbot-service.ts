@@ -55,3 +55,4 @@ export async function getChatLogsService(): Promise<ChatLog[]> {
   await delay();
   return getDummyState().chatLogs;
 }
+
