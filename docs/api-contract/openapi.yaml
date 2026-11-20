@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Mie Ayam System ML & API Contract
   version: 1.0.0
-  description: Kontrak API untuk /extract, /match, /status, /orders
+  description: Kontrak API untuk /extract, /match, /chat/intent, /status, /orders
 paths:
   /extract:
     post:
@@ -16,6 +16,26 @@ paths:
       responses:
         '200':
           description: OK
+  /chat/intent:
+    post:
+      summary: Classify customer chat intent and normalize Surabaya slang
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatIntentRequest'
+      responses:
+        '200':
+          description: Predicted intent and normalized text
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatIntentResponse'
+        '401':
+          description: Invalid or missing API Key
   /status:
     get:
       summary: Store / service status
@@ -28,3 +48,43 @@ paths:
       responses:
         '200':
           description: OK
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+  schemas:
+    ChatIntentRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: "mak 2 porsi bukak jam brp?"
+    ChatIntentResponse:
+      type: object
+      required:
+        - intent
+        - confidence
+        - normalized_text
+      properties:
+        intent:
+          type: string
+          enum:
+            - tanya_produk
+            - operasional
+            - keluhan
+            - oot
+          example: "operasional"
+        confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          example: 0.89
+        normalized_text:
+          type: string
+          example: "mie ayam komplit 2 porsi buka jam berapa?"
+

@@ -75,3 +75,18 @@ model GalleryImage {
   createdAt DateTime @default(now())
 }
 
+model ChatLog {
+  id                Int      @id @default(autoincrement())
+  senderId          String
+  platform          String   @default("web")
+  userMessage       String
+  normalizedMessage String?
+  detectedIntent    String
+  confidence        Float
+  botReply          String
+  escalateToOwner   Boolean  @default(false)
+  isResolved        Boolean  @default(false)
+  createdAt         DateTime @default(now())
+}
+
+
