@@ -5,6 +5,7 @@ const config: Config = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./lib/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -52,6 +53,11 @@ const config: Config = {
         saigetsu: "0 10px 30px -5px rgba(186, 56, 42, 0.08), 0 4px 12px -2px rgba(28, 25, 23, 0.04)",
         "saigetsu-hover": "0 20px 40px -10px rgba(186, 56, 42, 0.16), 0 8px 16px -4px rgba(28, 25, 23, 0.06)",
         "saigetsu-card": "0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02)",
+      },
+      // Brief design tokens — additive, tidak menimpa token yang ada
+      borderRadius: {
+        card: "12px",
+        button: "9999px",
       },
     },
   },
