@@ -1,0 +1,397 @@
+text,intent
+menu mie ayam lada hitam ada gak min? dong min,tanya_produk
+"min pesanan saya kok belum sampai ya, udah nunggu 1 jam lebih nih",keluhan
+order mie ayam biasa 2 porsi dipisah kuahnya ya kak,pemesanan
+min hari ini warung buka jam berapa sampai jam berapa?,tanya_produk
+assalamu alaikum bs pinjam seratus dulu gak buat besok? tolong infonya ya,lainnya
+es teh manisnya tawar banget gak ada gulanya sama sekali kak,keluhan
+warungnya yang di taman pinang indah sidoarjo ya?,tanya_produk
+sore min,lainnya
+ada kuah kaldu sapi atau kuah kaldu ayam min? terimakasih,tanya_produk
+mau nanya dong hari senin besok buka gak? min,tanya_produk
+bisa liat daftar harga lengkapnya ga min?,tanya_produk
+min mau tambah pesanan es teh 2 lagi dong di meja 2,pemesanan
+min mau tanya ayamnya ada yang bau basi kak tolong dicek kebersihan dapurnya! terimakasih,keluhan
+min mau tanya toping ayamnya manis apa asin gurih kak?,tanya_produk
+assalamu alaikum pelayanan kasirnya tadi judes banget ya kak kurang ramah ya kak,keluhan
+misi selamat siang dong min,lainnya
+permisi kak topping jamurnya pake jamur kancing apa tiram min? kak,tanya_produk
+min mau tanya mau nanya pilkada sidoarjo siapa yang menang ya? makasih,lainnya
+order mie komplit 1 pedes banget ya kak,pemesanan
+permisi kak pesanan via wa ga dibales-bales padahal status online dari tadi! ya kak,keluhan
+mie ayam oriental surabaya ini kuahnya dipisah atau campur?,tanya_produk
+halo sore min min,lainnya
+min mau tanya tadi saya pesan 3 porsi dibungkus pas dibuka cuma ada 2 porsi! kak,keluhan
+kak mie ayam original harganya berapaan ya?,tanya_produk
+mau nanya dong teh hangatnya manis apa tawar kak? terimakasih,tanya_produk
+halo mie ayam original harganya berapaan ya?,tanya_produk
+misi apakah buka saat libur cuti bersama kak? makasih,tanya_produk
+apakah mie ayamnya bebas pengawet?,tanya_produk
+permisi kak hari ini warung buka jam berapa sampai jam berapa? min,tanya_produk
+malam ini tutup jam brp ya min? makasih,tanya_produk
+misi harga menu makanan paling murah berapaan kak?,tanya_produk
+kak mau tanya bs kirim kurir ke jl pahlawan sidoarjo? tolong infonya ya,pemesanan
+tadi saya nemu helai rambut di mangkok mie ayam tolong dong higienisnya dijaga,keluhan
+tes tes 1 2 3 apakah bot aktif?,lainnya
+mau nanya dong es teh manis nya brpan ya kak?,tanya_produk
+pesanan via wa ga dibales-bales padahal status online dari tadi!,keluhan
+assalamu alaikum es batunya pake air matang kan ya min? terimakasih,tanya_produk
+warung buka jam berapa ya min?,tanya_produk
+porsi mie ayamnya kenyang ga kak bwt makan siang? tolong infonya ya,tanya_produk
+apakah ada porsi jumbo atau dobel mie?,tanya_produk
+hari jumat buka jam berapa setelah sholat jumat?,tanya_produk
+saya bayar pake qris saldo kepotong tapi kasirnya bilang belum masuk dan suruh bayar tunai lagi makasih,keluhan
+misi saya mau pesen delivery order bayar pake qris bs? kak,pemesanan
+misi mau pesan mie ayam 10 bungkus buat kantor makasih,pemesanan
+cara order mie ayam via whatsapp gimana ya kak?,pemesanan
+assalamu alaikum deket rs delta surya gak ya min lokasinya? dong min,tanya_produk
+apakah ada cabang lain selain di sidoarjo?,tanya_produk
+tadi minta tanpa sawi kok tetep dikasih sawi banyak banget sih kak,keluhan
+permisi kak kalo pagi jam 9 udh bs beli belum ya min? tolong infonya ya,tanya_produk
+bisa keep pesanan dulu ga kak saya lg jalan ke warung,pemesanan
+min ada camilan siomay atau dimsum gak?,tanya_produk
+hari minggu tetap buka ga kak?,tanya_produk
+topping jamurnya pake jamur kancing apa tiram min?,tanya_produk
+misi saya nunggu antrian 45 menit padahal meja lain yang baru dateng dilayani duluan,keluhan
+permisi kak cie min adminnya cowo apa cewe nih? dong min,lainnya
+permisi kak kalo nambah topping bakso sapi harganya brp? ya kak,tanya_produk
+min resep bumbu rahasia mie ayam oriental nya apa ya?,lainnya
+assalamu alaikum saya mau order 15 bungkus buat rapat guru besok pagi,pemesanan
+harga menu makanan paling murah berapaan kak?,tanya_produk
+pangsit rebusnya lembut gak ya kak?,tanya_produk
+min mau tanya pangsit rebusnya lembut gak ya kak? kak,tanya_produk
+kak bisa kirim kurir ke jl pahlawan sidoarjo?,pemesanan
+misi warungnya yang di taman pinang indah sidoarjo ya? makasih,tanya_produk
+tolong kirim rek briva atau mandiri buat bayar pesanan ini,pemesanan
+min mau tanya mau pesan mie ayam original 3 bungkus bawa pulang ya min,pemesanan
+halo bisa keep pesanan dulu ga kak saya lg jalan ke warung,pemesanan
+kalo pagi jam 9 sudah bisa beli belum ya min?,tanya_produk
+assalamu alaikum kuah kaldunya pake kaldu ayam kampung ya? dong min,tanya_produk
+permisi kak apakah kuahnya berlemak gurih kak? makasih,tanya_produk
+pangsit gorengnya isi berapa biji ya?,tanya_produk
+kalo dari arah surabaya lewat mana ya min?,tanya_produk
+mau nanya dong pangsit gorengnya isi brp biji ya? tolong infonya ya,tanya_produk
+min mau tanya mau order buat makan di tempat nanti siang jam 12 min,pemesanan
+kak mau tanya apakah bs makan di tempat langsung di warung? min,tanya_produk
+gimana cara bikin akun instagram bisnis ya kak?,lainnya
+halo apakah malam ini masih buka jam 8 malam? kak,tanya_produk
+kak mau tanya ada menu bakso kuah aja ga kak tanpa mie? ya kak,tanya_produk
+harga mie komplit berapa min seporsi?,tanya_produk
+es teler pake nangka sama alpukat asli gak?,tanya_produk
+permisi kak bisa minta share lock google maps nya kak? tolong infonya ya,tanya_produk
+selamat pagi min,lainnya
+assalamu alaikum alamat lengkap mie ayam surabaya dimana? min,tanya_produk
+jam istirahat siang warung tutup ga kak?,tanya_produk
+halo nomor rekening bca warung buat transfer pesanan berapa? makasih,pemesanan
+kak mau tanya mau booking meja untuk rombongan 8 orang jam 7 malam ya min,pemesanan
+assalamu alaikum mie nya lembek banget kaya bubur ga kenyal sama sekali kecewa tolong infonya ya,keluhan
+min mau tanya ping p,lainnya
+misi bisa pesan antar ke perumahan taman pinang ga kak? min,pemesanan
+assalamu alaikum format pemesanan mie ayam gimana ya min? makasih,pemesanan
+permisi kak besok libur ga min warungnya?,tanya_produk
+min mau tanya punya rekomendasi bengkel motor deket situ ga kak?,lainnya
+kak mau tanya topping daging ayamnya cincang atau potongan dadu? ya kak,tanya_produk
+bisa keep pesanan dulu ga kak saya lg jalan ke warung dong min,pemesanan
+kak mau tanya ada lowongan kerja buat bagian dapur ga? terimakasih,lainnya
+mau nanya dong mau booking meja untuk rombongan 8 orang jam 7 malam ya kak,pemesanan
+min mau tanya porsi mie nya sekarang kok makin dikit ya beda sama dulu dong min,keluhan
+ada menu bakso kuah aja ga kak tanpa mie? ya kak,tanya_produk
+bisa minta sawinya dibanyakin ga kak? terimakasih,tanya_produk
+kak mie ayam terenak di dunia menurut kamu apa?,lainnya
+ada kerupuk kaleng putih ga min di warung?,tanya_produk
+toko buka ga hari ini min?,tanya_produk
+halo menu es teler istimewa masih ada ga hari ini? kak,tanya_produk
+es teh manis nya berapaan ya kak?,tanya_produk
+ada kuah kaldu sapi atau kuah kaldu ayam min?,tanya_produk
+pesanan via wa ga dibales-bales padahal status online dari tadi! ya kak,keluhan
+min ada lowongan kerja buat bagian dapur ga?,lainnya
+siap min terima kasih,lainnya
+misi kalo dari arah surabaya lewat mana ya min? kak,tanya_produk
+bisa pesan antar ke perumahan taman pinang ga kak?,pemesanan
+tadi pesen pedas tapi dikasih yang manis gimana sih min,keluhan
+min mau tanya salam kenal ya min makasih,lainnya
+baksonya ada yang masih beku di dalem kak kurang mateng masaknya,keluhan
+kak hari senin besok buka gak?,tanya_produk
+min mau tanya patokan lokasinya deket apa ya min kalo dr alun-alun sidoarjo? dong min,tanya_produk
+tadi minta tanpa sawi kok tetep dikasih sawi banyak banget sih,keluhan
+misi bs keep pesanan dulu ga kak saya lg jalan ke warung kak,pemesanan
+assalamu alaikum siap min terima kasih dong min,lainnya
+halo pangsit rebusnya lembut gak ya kak? terimakasih,tanya_produk
+mau nanya dong warungnya rame gak min kalo jam makan siang? makasih,tanya_produk
+kalo mie komplit itu dapet bakso berapa biji kak?,tanya_produk
+halo sekarang warungnya udah buka belom ya kak? kak,tanya_produk
+toping ayamnya manis apa asin gurih kak?,tanya_produk
+misi mie ayam original harganya brpan ya? tolong infonya ya,tanya_produk
+mantap min sukses selalu usahanya ya,lainnya
+permisi kak kalo pagi jam 9 sudah bisa beli belum ya min? tolong infonya ya,tanya_produk
+halo order mie pangsit 2 porsi tanpa sawi bungkus ya min,pemesanan
+min order mie pangsit 2 porsi tanpa sawi bungkus ya,pemesanan
+misi kamu ini robot apa orang beneran sih? terimakasih,lainnya
+kak mau tanya tolong kirim rek briva atau mandiri buat bayar pesanan ini min,pemesanan
+mau nanya dong rekomendasi tempat wisata anak di sidoarjo apa ya min? makasih,lainnya
+min mau tanya order mie komplit 1 pedes banget ya kak kak,pemesanan
+assalamu alaikum bs pinjam seratus dulu gak buat besok?,lainnya
+halo menu es teler istimewa masih ada ga hari ini?,tanya_produk
+mau nanya dong pesanan via wa ga dibales-bales padahal status online dari tadi! dong min,keluhan
+porsi mie nya sekarang kok makin dikit ya beda sama dulu,keluhan
+min mau tanya malam ini tutup jam brp ya min? dong min,tanya_produk
+min mau tanya kamu ini robot apa orang beneran sih? terimakasih,lainnya
+mau nanya dong tadi minta tanpa sawi kok tetep dikasih sawi banyak banget sih dong min,keluhan
+topping daging ayamnya cincang atau potongan dadu?,tanya_produk
+halo hari jumat buka jam brp setelah sholat jumat? ya kak,tanya_produk
+kuah kaldunya hari ini asin banget kebangetan gak bisa kemakan,keluhan
+misi es teler pake nangka sama alpukat asli gak? dong min,tanya_produk
+saya mau pesen delivery order bayar pake qris bisa?,pemesanan
+halo kak mau pesan mie ayam 10 bungkus buat kantor,pemesanan
+toko libur tiap hari apa ya kak?,tanya_produk
+halo warung buka jam berapa ya min? makasih,tanya_produk
+sambalnya asem kaya sambal kemarin basi min tolong diganti,keluhan
+format pemesanan mie ayam gimana ya min?,pemesanan
+min menu es teler istimewa masih ada ga hari ini?,tanya_produk
+kembalian saya tadi kurang 10 ribu kak kasirnya lupa ngasih,keluhan
+misi bisa delivery ke daerah jetis sidoarjo gak? min,pemesanan
+permisi kak apakah mie ayamnya bebas pengawet? min,tanya_produk
+kalo nambah topping bakso sapi harganya berapa?,tanya_produk
+assalamu alaikum makasih banyak ya kak infonya tolong infonya ya,lainnya
+mau nanya dong es batunya pake air matang kan ya min? dong min,tanya_produk
+kak mau tanya kalo dari arah surabaya lewat mana ya min? tolong infonya ya,tanya_produk
+bisa bayar cod ga kak klo delivery?,pemesanan
+"mau nanya dong pesen mie ayam bakso 1, es teler 1 tolong dianter ke meja 4 min",pemesanan
+"halo pesen mie ayam bakso 1, es teler 1 tolong dianter ke meja 4 dong min",pemesanan
+bisa pesan mie ayam lewat shopeefood min?,pemesanan
+permisi kak apakah mie ayamnya bebas pengawet? tolong infonya ya,tanya_produk
+halo resep bumbu rahasia mie ayam oriental nya apa ya? ya kak,lainnya
+mau nanya dong terakhir order jam brp ya kak sebelum tutup? terimakasih,tanya_produk
+halo mie nya lembek banget kaya bubur ga kenyal sama sekali kecewa,keluhan
+kak mau tanya menu mie ayam lada hitam ada gak min? kak,tanya_produk
+assalamu alaikum apakah mie ayamnya bebas pengawet? tolong infonya ya,tanya_produk
+assalamu alaikum pesan mie ayam 3 porsi jangan pake daun bawang ya min,pemesanan
+kak mau tanya hari jumat buka jam brp setelah sholat jumat? makasih,tanya_produk
+apakah buka saat libur cuti bersama kak?,tanya_produk
+apakah buka saat libur cuti bersama kak? ya kak,tanya_produk
+assalamu alaikum kalo mie komplit itu dapet bakso brp biji kak? ya kak,tanya_produk
+min mau tanya kalo pagi jam 9 udh bs beli belum ya min? ya kak,tanya_produk
+lagi gabut aja nih min sapa tau bisa ngobrol,lainnya
+permisi kak porsi mie ayamnya kenyang ga kak bwt makan siang? dong min,tanya_produk
+mie nya lembek banget kaya bubur ga kenyal sama sekali kecewa,keluhan
+halo min hari ini ready sampe jam brp?,tanya_produk
+apakah mie nya bikin sendiri atau mie pabrikan?,tanya_produk
+apakah kuahnya berlemak gurih kak?,tanya_produk
+min mau tanya kalo mie komplit itu dapet bakso brp biji kak? ya kak,tanya_produk
+assalamu alaikum bisa liat daftar harga lengkapnya ga min? ya kak,tanya_produk
+besok libur ga min warungnya?,tanya_produk
+kak mau pesan mie ayam original 3 bungkus bawa pulang ya,pemesanan
+halo saya mau order 15 bungkus buat rapat guru besok pagi,pemesanan
+saya nunggu antrian 45 menit padahal meja lain yang baru dateng dilayani duluan,keluhan
+"halo pesanan saya kok belum sampai ya, udah nunggu 1 jam lebih nih makasih",keluhan
+misi ada lowongan kerja buat bagian dapur ga? kak,lainnya
+misi kuah kaldunya pake kaldu ayam kampung ya?,tanya_produk
+kak mau tanya sambal mie ayamnya pedas banget gak min? makasih,tanya_produk
+mau nanya dong mau booking meja untuk rombongan 8 orang jam 7 malam ya min,pemesanan
+permisi kak apakah ada cabang lain selain di sidoarjo? terimakasih,tanya_produk
+misi kembalian saya tadi kurang 10 ribu kak kasirnya lupa ngasih min,keluhan
+kak mau tanya driver gojeknya bilang pesanan belum dibuatkan padahal di app status selesai min,keluhan
+assalamu alaikum pangsit gorengnya keras banget alot dan bau apek min dong min,keluhan
+assalamu alaikum bs pesan mie ayam lewat shopeefood min? tolong infonya ya,pemesanan
+kak tadi saya pesan mie ayam komplit tapi kok baksonya ga ada?,keluhan
+tadi saya pesan 3 porsi dibungkus pas dibuka cuma ada 2 porsi!,keluhan
+min bisa delivery ke daerah jetis sidoarjo gak?,pemesanan
+mau nanya dong bs kirim kurir ke jl pahlawan sidoarjo? ya kak,pemesanan
+pelayanan kasirnya tadi judes banget ya kak kurang ramah,keluhan
+permisi kak saya bayar pake qris saldo kepotong tapi kasirnya bilang belum masuk dan suruh bayar tunai lagi min,keluhan
+misi lagi gabut aja nih min sapa tau bs ngobrol min,lainnya
+kuah kaldunya pake kaldu ayam kampung ya?,tanya_produk
+es batunya pake air matang kan ya min?,tanya_produk
+mie ayamnya ini halal gak min?,tanya_produk
+min pesenan take away saya ketuker sama meja sebelah,keluhan
+kak saya mau pesen mie ayam pangsit 4 sama es teh 4 bungkus,pemesanan
+permisi kak mau pesan mie ayam 10 bungkus buat kantor min,pemesanan
+patokan lokasinya deket apa ya min kalo dr alun-alun sidoarjo? makasih,tanya_produk
+halo min mau pesen mie ayam komplit 2 porsi bisa?,pemesanan
+min mau tanya bs pesan mie ayam lewat shopeefood min? tolong infonya ya,pemesanan
+halo mau nanya pilkada sidoarjo siapa yang menang ya? min,lainnya
+halo toping ayamnya manis apa asin gurih kak? ya kak,tanya_produk
+min bisa pinjam seratus dulu gak buat besok?,lainnya
+halo bisa keep pesanan dulu ga kak saya lg jalan ke warung makasih,pemesanan
+misi rekomendasi tempat wisata anak di sidoarjo apa ya min? terimakasih,lainnya
+pangsit gorengnya keras banget alot dan bau apek min,keluhan
+ping p,lainnya
+kak mau tanya hari ini ready sampe jam brp?,tanya_produk
+kak mau tanya pesan mie ayam 3 porsi jangan pake daun bawang ya min ya kak,pemesanan
+mau nanya dong lokasi warungnya di sebelah mana ya kak? tolong infonya ya,tanya_produk
+apakah ada cabang lain selain di sidoarjo? terimakasih,tanya_produk
+"pesen mie ayam bakso 1, es teler 1 tolong dianter ke meja 4",pemesanan
+saya mau pesan untuk catering acara ulang tahun bisa kah?,pemesanan
+misi tau ga cara bikin kuah kaldu sapi gurih? makasih,lainnya
+mie ayam bakso sama mie ayam pangsit bedanya apa kak?,tanya_produk
+min mau pesan porsi banyak dapet potongan harga gak?,pemesanan
+assalamu alaikum menu mie ayam lada hitam ada gak min? makasih,tanya_produk
+mau pesan sekarang kira-kira brp lama ya masaknya? kak,pemesanan
+permisi kak mau pesan porsi banyak dapet potongan harga gak? min,pemesanan
+sambal mie ayamnya pedas banget gak min?,tanya_produk
+halo patokan lokasinya deket apa ya min kalo dr alun-alun sidoarjo? makasih,tanya_produk
+misi saya bayar pake qris saldo kepotong tapi kasirnya bilang belum masuk dan suruh bayar tunai lagi,keluhan
+min mau tanya bisa delivery ke daerah jetis sidoarjo gak? makasih,pemesanan
+assalamu alaikum mau order buat makan di tempat nanti siang jam 12,pemesanan
+kak mau tanya selamat siang ya kak,lainnya
+assalamu alaikum driver gojeknya bilang pesanan belum dibuatkan padahal di app status selesai min,keluhan
+halo selamat siang,lainnya
+min mau tanya apakah malam ini masih buka jam 8 malam? kak,tanya_produk
+halo kalo mie komplit itu dapet bakso brp biji kak? ya kak,tanya_produk
+min tau ga cara bikin kuah kaldu sapi gurih?,lainnya
+menu favorit best seller di sini apa ya kak?,tanya_produk
+kak mau tanya apakah kuahnya berlemak gurih kak? makasih,tanya_produk
+min mau tanya mie nya lembek banget kaya bubur ga kenyal sama sekali kecewa min,keluhan
+permisi kak teh hangatnya manis apa tawar kak? dong min,tanya_produk
+"min mau tanya tolong siapin 5 porsi mie komplit ya kak, nanti saya ambil jam 1 ya kak",pemesanan
+min mau tanya order mie ayam biasa 2 sama bakso tambahan 1 porsi dibungkus min,pemesanan
+misi topping jamurnya pake jamur kancing apa tiram min? ya kak,tanya_produk
+permisi kak bs bayar cod ga kak klo delivery? ya kak,pemesanan
+halo mau order buat makan di tempat nanti siang jam 12,pemesanan
+ayamnya ada yang bau basi kak tolong dicek kebersihan dapurnya!,keluhan
+ada parkiran mobil ga kak di warungnya?,tanya_produk
+rekomendasi tempat wisata anak di sidoarjo apa ya min?,lainnya
+sekarang warungnya udah buka belom ya kak?,tanya_produk
+permisi kak kamu ini robot apa orang beneran sih? min,lainnya
+halo menu favorit best seller di sini apa ya kak? kak,tanya_produk
+permisi kak bisa pesan antar ke perumahan taman pinang ga kak? makasih,pemesanan
+bisa order lewat gofood atau grabfood gak min?,pemesanan
+misi apakah ada pilihan mie yamin manis gurih?,tanya_produk
+mie ayam disini pake minyak babi apa minyak ayam halal?,tanya_produk
+menu mie ayam lada hitam ada gak min?,tanya_produk
+apakah ada menu nasi atau cuma olahan mie aja?,tanya_produk
+kak mau tanya warungnya yang di taman pinang indah sidoarjo ya? ya kak,tanya_produk
+min mau tanya hari minggu tetap buka ga kak?,tanya_produk
+ok kak noted,lainnya
+assalamu alaikum baksonya ada yang masih beku di dalem kak kurang mateng masaknya kak,keluhan
+misi mau tambah pesanan es teh 2 lagi dong di meja 2 min,pemesanan
+kak mau tanya apakah bs makan di tempat langsung di warung? makasih,tanya_produk
+apakah bisa makan di tempat langsung di warung?,tanya_produk
+kak mau tanya mau pesan mie ayam original 3 bungkus bawa pulang ya makasih,pemesanan
+assalamu alaikum pesenan take away saya ketuker sama meja sebelah ya kak,keluhan
+saya bayar pake qris saldo kepotong tapi kasirnya bilang belum masuk dan suruh bayar tunai lagi,keluhan
+min mau tanya topping jamurnya pake jamur kancing apa tiram min? makasih,tanya_produk
+min alamat lengkap mie ayam surabaya dimana?,tanya_produk
+min mau tanya saya nunggu antrian 45 menit padahal meja lain yang baru dateng dilayani duluan min,keluhan
+pesan mie ayam 3 porsi jangan pake daun bawang ya min,pemesanan
+kak mau tanya format pemesanan mie ayam gimana ya min? makasih,pemesanan
+kak mau nanya pilkada sidoarjo siapa yang menang ya?,lainnya
+ada menu bakso kuah aja ga kak tanpa mie?,tanya_produk
+misi tolong kirim rek briva atau mandiri buat bayar pesanan ini terimakasih,pemesanan
+cie min adminnya cowo apa cewe nih?,lainnya
+min mau tanya porsi mie ayamnya kenyang ga kak bwt makan siang? terimakasih,tanya_produk
+permisi kak order mie komplit 1 pedes banget ya kak makasih,pemesanan
+assalamualaikum wr wb min,lainnya
+kak mau pesan sekarang kira-kira berapa lama ya masaknya?,pemesanan
+min mau tanya es batunya pake air matang kan ya min? kak,tanya_produk
+halo warungnya rame gak min kalo jam makan siang? kak,tanya_produk
+halo bisa pesan mie ayam lewat shopeefood min? min,pemesanan
+jam operasional mie ayam surabaya jam brp?,tanya_produk
+warungnya pinggir jalan raya apa masuk gang min?,tanya_produk
+es jeruk nipis ada gak min selain es teh?,tanya_produk
+min mau tanya nomor rekening bca warung buat transfer pesanan berapa? makasih,pemesanan
+kak order mie ayam biasa 2 porsi dipisah kuahnya ya,pemesanan
+punya rekomendasi bengkel motor deket situ ga kak?,lainnya
+min kuah kaldunya pake kaldu ayam kampung ya?,tanya_produk
+kamu ini robot apa orang beneran sih? tolong infonya ya,lainnya
+min mau tanya mau pesen sekarang diantar jam 5 sore bs? kak,pemesanan
+assalamu alaikum mau booking meja untuk rombongan 8 orang jam 7 malam ya makasih,pemesanan
+kecewa banget hari ini kuahnya dingin dan hambar,keluhan
+kak mau tanya apakah bs makan di tempat langsung di warung? tolong infonya ya,tanya_produk
+halo kak,lainnya
+bs liat daftar harga lengkapnya ga min? min,tanya_produk
+kalo tanggal merah tetep buka apa libur min?,tanya_produk
+kak mau tanya tersedia fasilitas toilet dan musholla gak min? tolong infonya ya,tanya_produk
+assalamu alaikum terakhir order jam berapa ya kak sebelum tutup? dong min,tanya_produk
+teh hangatnya manis apa tawar kak?,tanya_produk
+malam ini tutup jam berapa ya min?,tanya_produk
+meja makannya kotor berminyak belum dilap sama pelayan,keluhan
+porsi mie ayamnya kenyang ga kak bwt makan siang?,tanya_produk
+permisi kak tempatnya ada ac nya atau semi outdoor kak? makasih,tanya_produk
+lokasi warungnya di sebelah mana ya kak?,tanya_produk
+min presiden indonesia sekarang siapa?,lainnya
+kak mau tanya tadi minta tanpa sawi kok tetep dikasih sawi banyak banget sih kak,keluhan
+misi nomor rekening bca warung buat transfer pesanan berapa? min,pemesanan
+kuah mie ayamnya tumpah semua di plastik min gimana nih!,keluhan
+malam kak,lainnya
+permisi kak tolong kirim rek briva atau mandiri buat bayar pesanan ini,pemesanan
+kak minta tolong kuahnya dipisah ya jangan dicampur langsung,pemesanan
+order mie ayam biasa 2 sama bakso tambahan 1 porsi dibungkus,pemesanan
+min mau komplain soal pelayanan di kasir tadi siang,keluhan
+semoga warungnya tambah laris berkah ya min,lainnya
+misi saya mau pesen mie ayam pangsit 4 sama es teh 4 bungkus terimakasih,pemesanan
+permisi kak resep bumbu rahasia mie ayam oriental nya apa ya? makasih,lainnya
+kamu ini robot apa orang beneran sih?,lainnya
+mau nanya dong es teh manisnya tawar banget gak ada gulanya sama sekali kak tolong infonya ya,keluhan
+min mau tanya mau pesan mie ayam original 3 bungkus bawa pulang ya dong min,pemesanan
+min mau pesen sekarang diantar jam 5 sore bisa?,pemesanan
+mau nanya dong menu favorit best seller di sini apa ya kak?,tanya_produk
+patokan lokasinya deket apa ya min kalo dr alun-alun sidoarjo?,tanya_produk
+"mau pesan mie ayam bakso 2, 1 pedas 1 gak pedas ya kak",pemesanan
+bisa pesen take away sekarang gak kak?,pemesanan
+mau nanya dong baksonya ada yang masih beku di dalem kak kurang mateng masaknya dong min,keluhan
+format pemesanan mie ayam gimana ya min? makasih,pemesanan
+kak mau tanya porsi mie ayamnya kenyang ga kak bwt makan siang? tolong infonya ya,tanya_produk
+tersedia fasilitas toilet dan musholla gak min?,tanya_produk
+min daftar menu mie ayam ada apa aja?,tanya_produk
+warung mie ayam surabaya deket gor sidoarjo ga?,tanya_produk
+halo patokan lokasinya deket apa ya min kalo dr alun-alun sidoarjo? ya kak,tanya_produk
+mau booking meja untuk rombongan 8 orang jam 7 malam ya,pemesanan
+bisa request mie setengah matang gak min?,tanya_produk
+assalamu alaikum bisa bayar cod ga kak klo delivery? terimakasih,pemesanan
+min mau tanya apakah bisa makan di tempat langsung di warung? ya kak,tanya_produk
+p,lainnya
+tempatnya ada ac nya atau semi outdoor kak?,tanya_produk
+kak mau tanya order mie ayam biasa 2 porsi dipisah kuahnya ya min,pemesanan
+cara order mie ayam via whatsapp gimana ya kak? makasih,pemesanan
+apakah ada pilihan mie yamin manis gurih?,tanya_produk
+mau komplain soal pelayanan di kasir tadi siang tolong infonya ya,keluhan
+permisi kak pangsit rebusnya lembut gak ya kak? min,tanya_produk
+permisi kak mau pesan mie ayam original 3 bungkus bawa pulang ya dong min,pemesanan
+kak mau tanya hari ini warung buka jam berapa sampai jam berapa? terimakasih,tanya_produk
+halo tadi saya nemu helai rambut di mangkok mie ayam tolong dong higienisnya dijaga,keluhan
+permisi kak cie min adminnya cowo apa cewe nih? makasih,lainnya
+mau nanya dong hari jumat buka jam brp setelah sholat jumat?,tanya_produk
+assalamu alaikum pesanan via wa ga dibales-bales padahal status online dari tadi! tolong infonya ya,keluhan
+halo apakah cuaca di sidoarjo lagi hujan min? terimakasih,lainnya
+kak mau tanya pesenan take away saya ketuker sama meja sebelah terimakasih,keluhan
+mau nanya dong bs order lewat gofood atau grabfood gak min? min,pemesanan
+warungnya rame gak min kalo jam makan siang?,tanya_produk
+deket rs delta surya gak ya min lokasinya?,tanya_produk
+min mau tanya mie ayam original harganya berapaan ya? tolong infonya ya,tanya_produk
+"tolong siapin 5 porsi mie komplit ya kak, nanti saya ambil jam 1",pemesanan
+min mau tanya cie min adminnya cowo apa cewe nih? kak,lainnya
+apakah bisa pesan buat acara arisan 30 porsi besok sabtu?,pemesanan
+mau nanya dong mie ayam original harganya berapaan ya? terimakasih,tanya_produk
+apakah malam ini masih buka jam 8 malam?,tanya_produk
+bisa minta share lock google maps nya kak?,tanya_produk
+makasih banyak ya kak infonya,lainnya
+halo bisa pesan antar ke perumahan taman pinang ga kak? kak,pemesanan
+permisi kak tolong kirim rek briva atau mandiri buat bayar pesanan ini kak,pemesanan
+mie pangsit kuah apa pangsit goreng min?,tanya_produk
+misi tadi saya pesan mie ayam komplit tapi kok baksonya ga ada? terimakasih,keluhan
+mau nanya dong apakah ada menu nasi atau cuma olahan mie aja? min,tanya_produk
+min mau tanya minta tolong kuahnya dipisah ya jangan dicampur langsung kak,pemesanan
+min nomor rekening bca warung buat transfer pesanan berapa?,pemesanan
+driver gojeknya bilang pesanan belum dibuatkan padahal di app status selesai,keluhan
+salam kenal ya min,lainnya
+"permisi kak pesen mie ayam bakso 1, es teler 1 tolong dianter ke meja 4 min",pemesanan
+min mau tanya pangsit gorengnya keras banget alot dan bau apek min makasih,keluhan
+pangsit gorengnya isi brp biji ya? terimakasih,tanya_produk
+es teh manis nya brpan ya kak? min,tanya_produk
+warungnya rame gak min kalo jam makan siang? ya kak,tanya_produk
+selamat malam salam sejahtera,lainnya
+min mau tanya toko libur tiap hari apa ya kak?,tanya_produk
+misi salam kenal ya min,lainnya
+halo bs request mie setengah matang gak min? dong min,tanya_produk
+"misi pesanan saya kok belum sampai ya, udah nunggu 1 jam lebih nih ya kak",keluhan
+"mau pesan mie ayam bakso 2, 1 pedas 1 gak pedas",pemesanan
+assalamu alaikum hari ini ready sampe jam brp? dong min,tanya_produk
+assalamu alaikum rekomendasi tempat wisata anak di sidoarjo apa ya min? ya kak,lainnya
+bisa minta sawinya dibanyakin ga kak?,tanya_produk
+"min mau pesan mie ayam bakso 2, 1 pedas 1 gak pedas",pemesanan
+terakhir order jam berapa ya kak sebelum tutup?,tanya_produk
+halo topping jamurnya pake jamur kancing apa tiram min? ya kak,tanya_produk
+assalamu alaikum bisa pesan mie ayam lewat shopeefood min? min,pemesanan
+apakah cuaca di sidoarjo lagi hujan min?,lainnya
+permisi kak apakah mie ayamnya bebas pengawet? ya kak,tanya_produk

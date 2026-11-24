@@ -1,3 +1,44 @@
+# Dependencies
 node_modules/
+.pnp
+.pnp.js
+
+# Next.js Build & Outputs
 .next/
+out/
+build/
+dist/
+*.tsbuildinfo
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+
+# Virtual Environments
+env/
+venv/
+.venv/
+ENV/
+
+# Environment Variables & Sensitive Files
 .env
+.env*.local
+*.pem
+*.key
+
+# Operating System & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Duplikat Model Weights (cukup disimpan 1 di ml/app/ocr/)
+data-science/models/*.pth
+
+# Dataset Gambar Otomatis (dapat digenerate via generate_handwriting_dataset.py)
+data-science/dataset/ocr/train/
+data-science/dataset/ocr/test/
