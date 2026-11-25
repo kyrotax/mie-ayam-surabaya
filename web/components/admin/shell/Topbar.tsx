@@ -39,19 +39,19 @@ export function Topbar({
   const isOpen = status ? status.isOpen : true;
 
   return (
-    <header className="h-16 bg-[#FAF8F5] border-b border-[#3B2416]/10 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30">
+    <header className="h-16 bg-[#FFF8E7] border-b border-[#D4AF37]/30 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 shadow-xs">
       {/* Kiri: Hamburger (Mobile) + Judul */}
       <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={onOpenMobileMenu}
-          className="lg:hidden w-11 h-11 flex items-center justify-center rounded-xl border border-[#3B2416]/15 text-[#3B2416] hover:bg-black/5 transition"
+          className="lg:hidden w-11 h-11 flex items-center justify-center rounded-xl border border-[#2C1810]/15 text-[#2C1810] hover:bg-[#D4AF37]/10 transition"
           aria-label="Buka menu navigasi"
         >
           <Menu className="w-5 h-5" />
         </button>
         {title && (
-          <h2 className="font-serif font-bold text-lg sm:text-xl text-[#3B2416] truncate">
+          <h2 className="font-heading text-2xl font-bold text-[#2C1810] tracking-wide truncate">
             {title}
           </h2>
         )}
@@ -62,16 +62,16 @@ export function Topbar({
         {/* Chip Status Toko */}
         <Link
           href="/admin/toko"
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition ${
+          className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold border transition font-subheading ${
             isOpen
               ? "bg-[#E4F2E5] text-[#276B2B] border-[#C2E4C4] hover:bg-[#d8eed9]"
-              : "bg-[#FBE4E1] text-[#B42318] border-[#F4BEB7] hover:bg-[#fad8d4]"
+              : "bg-[#FBE4E1] text-[#C41E3A] border-[#F4BEB7] hover:bg-[#fad8d4]"
           }`}
           title="Klik untuk ubah status toko"
         >
           <span
             className={`w-2 h-2 rounded-full animate-pulse ${
-              isOpen ? "bg-[#2E7D32]" : "bg-[#B42318]"
+              isOpen ? "bg-[#2E7D32]" : "bg-[#C41E3A]"
             }`}
           />
           <span>{isOpen ? "Warung Buka" : "Warung Tutup"}</span>
@@ -82,7 +82,7 @@ export function Topbar({
           href="/"
           target="_blank"
           rel="noopener noreferrer"
-          className="hidden md:flex items-center gap-1.5 text-xs font-semibold text-[#8D0D00] hover:text-[#6B0A00] px-2.5 py-1.5 rounded-lg hover:bg-black/5 transition"
+          className="hidden md:flex items-center gap-1.5 text-xs font-semibold text-[#8B0000] hover:text-[#C41E3A] px-3 py-1.5 rounded-full border border-[#D4AF37]/40 hover:bg-[#D4AF37]/10 transition font-subheading"
         >
           <span>Lihat Situs</span>
           <ExternalLink className="w-3.5 h-3.5" />

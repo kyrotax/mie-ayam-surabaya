@@ -85,22 +85,24 @@ export function Sidebar({
   };
 
   return (
-    <aside className="w-64 bg-[#8D0D00] text-[#FFF4E0] flex flex-col h-full select-none">
+    <aside className="w-64 bg-[#8B0000] text-[#FFF8E7] flex flex-col h-full select-none shadow-xl border-r border-[#6B0000]">
       {/* Brand Header */}
-      <div className="p-5 border-b border-[#6B0A00] flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#CBA857] relative shrink-0">
+      <div className="p-5 border-b border-[#6B0000] flex items-center gap-3 bg-[#7A0000]">
+        <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#D4AF37] relative shrink-0 shadow-sm">
           <Image
-            src="/images/logo.jpg"
+            src="/images/logo-umkm.jpg"
             alt="Logo Mie Ayam"
             fill
             className="object-cover"
           />
         </div>
         <div>
-          <div className="font-serif font-bold text-sm tracking-wide text-white leading-tight">
+          <div className="font-heading font-bold text-lg tracking-wider text-[#FFD700] leading-tight">
             Mie Ayam Surabaya
           </div>
-          <div className="text-[11px] text-[#F4CE90] font-medium">Panel Admin</div>
+          <div className="text-[11px] text-[#FFF8E7]/80 font-subheading font-medium tracking-wide">
+            Panel Pengelola
+          </div>
         </div>
       </div>
 
@@ -111,7 +113,7 @@ export function Sidebar({
 
           return (
             <div key={group.title}>
-              <div className="px-3 mb-1.5 text-xs font-medium text-[#F4CE90]">
+              <div className="px-3 mb-1.5 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/90 font-subheading">
                 {group.title}
               </div>
               <div className="space-y-0.5">
@@ -128,11 +130,11 @@ export function Sidebar({
                       onClick={onNavigate}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition ${
                         isActive
-                          ? "bg-[#6B0A00] text-white font-bold border-l-4 border-[#CBA857]"
-                          : "text-[#FFF4E0]/90 hover:bg-[#FFF4E0]/10 hover:text-white"
+                          ? "bg-[#6B0000] text-white font-bold border-l-4 border-[#D4AF37] shadow-sm"
+                          : "text-[#FFF8E7]/85 hover:bg-white/10 hover:text-white"
                       }`}
                     >
-                      <Icon className="w-4 h-4 shrink-0 text-[#CBA857]" />
+                      <Icon className="w-4 h-4 shrink-0 text-[#D4AF37]" />
                       <span>{item.label}</span>
                     </Link>
                   );
@@ -148,7 +150,7 @@ export function Sidebar({
             <button
               type="button"
               onClick={handleResetData}
-              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-[#F4CE90] hover:bg-[#6B0A00] transition"
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-[#FFD700] hover:bg-[#6B0000] transition"
             >
               <RotateCcw className="w-4 h-4 shrink-0" />
               <span>Reset Data Dummy</span>
@@ -158,20 +160,20 @@ export function Sidebar({
       </div>
 
       {/* Footer User Info */}
-      <div className="p-3.5 border-t border-[#6B0A00] bg-[#6B0A00]/40 flex items-center justify-between">
-        <div className="flex items-center gap-2 overflow-hidden">
-          <div className="w-8 h-8 rounded-full bg-[#CBA857] text-[#3B2416] font-bold text-xs flex items-center justify-center shrink-0">
+      <div className="p-3.5 border-t border-[#6B0000] bg-[#6B0000]/60 flex items-center justify-between">
+        <div className="flex items-center gap-2.5 overflow-hidden">
+          <div className="w-8 h-8 rounded-full bg-[#D4AF37] text-[#2C1810] font-bold text-xs flex items-center justify-center shrink-0 shadow-sm">
             {user.name[0]}
           </div>
           <div className="truncate">
             <div className="text-xs font-bold text-white truncate">{user.name}</div>
-            <div className="text-[10px] text-[#F4CE90] capitalize">{user.role}</div>
+            <div className="text-[10px] text-[#FFD700] capitalize font-medium">{user.role}</div>
           </div>
         </div>
         <form action={logoutAction}>
           <button
             type="submit"
-            className="p-1.5 rounded-lg text-[#FFF4E0]/70 hover:text-white hover:bg-[#6B0A00] transition"
+            className="p-1.5 rounded-lg text-[#FFF8E7]/70 hover:text-white hover:bg-[#8B0000] transition"
             title="Keluar"
             aria-label="Keluar"
           >

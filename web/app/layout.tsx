@@ -1,21 +1,5 @@
 import type { Metadata } from "next";
-import { Oswald, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/public/Navbar";
-import Footer from "@/components/public/Footer";
-import WhatsAppFloating from "@/components/public/WhatsAppFloating";
-
-const oswald = Oswald({
-  subsets: ["latin"],
-  variable: "--font-display",
-  display: "swap",
-});
-
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
@@ -45,15 +29,21 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="id"
-      className={`${oswald.variable} ${plusJakarta.variable}`}
-    >
-      <body className="min-h-screen flex flex-col bg-white text-stone-900 font-sans antialiased overflow-x-hidden selection:bg-[#BA382A] selection:text-white">
-        <Navbar />
-        <main className="flex-grow">{children}</main>
-        <Footer />
-        <WhatsAppFloating />
+    <html lang="id">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@600;700&family=Inter:wght@400;500;600;700&display=swap"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&display=swap"
+        />
+      </head>
+      <body className="min-h-screen flex flex-col bg-[#FFF8E7] text-[#2C1810] font-body antialiased overflow-x-hidden selection:bg-[#C41E3A] selection:text-[#FFD700]">
+        {children}
       </body>
     </html>
   );

@@ -36,17 +36,17 @@ export function ConfirmDialog({
           <AlertTriangle className="w-6 h-6" />
         </div>
         <div>
-          <h3 className="font-serif text-lg font-bold text-[#3B2416]">{title}</h3>
-          <div className="text-sm text-[#6B5240] mt-1.5 leading-relaxed">{message}</div>
+          <h3 className="font-heading text-lg text-[#2C1810]">{title}</h3>
+          <div className="text-sm text-[#6B4423] mt-1.5 leading-relaxed">{message}</div>
         </div>
       </div>
 
-      <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-[#3B2416]/10">
+      <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-[#D4AF37]/20">
         <button
           type="button"
           onClick={onClose}
           disabled={isLoading}
-          className="px-4 py-2 rounded-xl border border-[#3B2416]/20 text-[#3B2416] font-medium text-sm hover:bg-[#FAF8F5] transition"
+          className="px-4 py-2 rounded-xl border border-[#2C1810]/20 text-[#2C1810] font-medium text-sm hover:bg-[#FAF7F2] transition"
         >
           {cancelText}
         </button>
@@ -55,7 +55,7 @@ export function ConfirmDialog({
           onClick={onConfirm}
           disabled={isLoading}
           className={`px-5 py-2 rounded-xl text-white font-medium text-sm transition ${
-            isDanger ? "bg-[#B42318] hover:bg-[#8D0D00]" : "bg-[#8D0D00] hover:bg-[#6B0A00]"
+            isDanger ? "bg-[#C41E3A] hover:bg-[#8B0000]" : "bg-[#8B0000] hover:bg-[#6B0000]"
           }`}
         >
           {isLoading ? "Memproses…" : confirmText}

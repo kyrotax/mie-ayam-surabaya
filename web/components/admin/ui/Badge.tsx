@@ -11,7 +11,7 @@ export function Badge({
   variant?: BadgeVariant;
   className?: string;
 }) {
-  let styleClass = "bg-[#F6E4C4] text-[#6B5240] border-[#E5D2AF]";
+  let styleClass = "bg-[#FAF0DC] text-[#6B4423] border-[#D4AF37]/30";
   if (variant === "sukses") {
     styleClass = "bg-[#E4F2E5] text-[#276B2B] border-[#C2E4C4]";
   } else if (variant === "peringatan") {
@@ -19,7 +19,7 @@ export function Badge({
   } else if (variant === "bahaya") {
     styleClass = "bg-[#FBE4E1] text-[#B42318] border-[#F4BEB7]";
   } else if (variant === "emas") {
-    styleClass = "bg-[#FFF4E0] text-[#8D0D00] border-[#CBA857]/40";
+    styleClass = "bg-[#FAF0DC] text-[#8B0000] border-[#D4AF37]/40";
   }
 
   return (

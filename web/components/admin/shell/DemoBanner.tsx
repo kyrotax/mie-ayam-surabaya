@@ -6,8 +6,8 @@ export function DemoBanner() {
   if (!isDummy) return null;
 
   return (
-    <div className="bg-[#F4CE90] text-[#3B2416] px-4 py-1.5 text-xs font-semibold text-center border-b border-[#CBA857] flex items-center justify-center gap-1.5">
-      <Info className="w-3.5 h-3.5 text-[#8D0D00]" />
+    <div className="bg-[#FFD700] text-[#2C1810] px-4 py-1.5 text-xs font-semibold text-center border-b border-[#D4AF37] flex items-center justify-center gap-1.5">
+      <Info className="w-3.5 h-3.5 text-[#8B0000]" />
       <span>Mode demo: data contoh, tidak tersimpan ke server.</span>
     </div>
   );

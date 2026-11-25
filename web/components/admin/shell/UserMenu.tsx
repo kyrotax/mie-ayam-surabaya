@@ -35,22 +35,22 @@ export function UserMenu({ user }: { user: SessionUser }) {
         className="flex items-center gap-2.5 p-1.5 sm:px-3 rounded-xl hover:bg-black/5 transition"
         aria-expanded={isOpen}
       >
-        <div className="w-9 h-9 rounded-full bg-[#8D0D00] text-[#FFF4E0] border-2 border-[#CBA857] flex items-center justify-center font-bold text-xs shadow-xs">
+        <div className="w-9 h-9 rounded-full bg-[#8B0000] text-[#FFF4E0] border-2 border-[#D4AF37] flex items-center justify-center font-bold text-xs shadow-xs">
           {initials}
         </div>
         <div className="hidden sm:flex flex-col items-start text-left">
-          <span className="text-xs font-bold text-[#3B2416] leading-tight line-clamp-1">
+          <span className="text-xs font-bold text-[#2C1810] leading-tight line-clamp-1">
             {user.name}
           </span>
           <RoleBadge role={user.role} />
         </div>
-        <ChevronDown className="w-4 h-4 text-[#6B5240] hidden sm:block" />
+        <ChevronDown className="w-4 h-4 text-[#6B4423] hidden sm:block" />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl border border-[#3B2416]/10 shadow-lg py-2 z-50 animate-in fade-in duration-100">
-          <div className="px-4 py-2 border-b border-[#3B2416]/10 sm:hidden">
-            <div className="font-bold text-xs text-[#3B2416]">{user.name}</div>
+        <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl border border-[#D4AF37]/20 shadow-lg py-2 z-50 animate-in fade-in duration-100">
+          <div className="px-4 py-2 border-b border-[#D4AF37]/20 sm:hidden">
+            <div className="font-bold text-xs text-[#2C1810]">{user.name}</div>
             <div className="mt-1">
               <RoleBadge role={user.role} />
             </div>

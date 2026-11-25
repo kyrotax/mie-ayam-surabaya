@@ -17,7 +17,7 @@ export function PanelShell({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF8F5] text-[#1C1917]">
+    <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#2C1810]">
       {/* Banner Demo Permanen */}
       <DemoBanner />
 
