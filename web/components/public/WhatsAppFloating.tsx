@@ -1,10 +1,12 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
+import { siteConfig } from "@/data/site.config";
 
 export default function WhatsAppFloating() {
-  const whatsappUrl =
-    "https://wa.me/6282319195854?text=Halo%20Mie%20Ayam%20Surabaya%2C%20saya%20ingin%20bertanya%20menu%20dan%20memesan.";
+  const whatsappUrl = `https://wa.me/${siteConfig.kontak.wa}?text=Halo%20${encodeURIComponent(
+    siteConfig.brandName
+  )}%2C%20saya%20ingin%20bertanya%20menu%20dan%20memesan.`;
 
   return (
     <div className="fixed bottom-6 right-6 z-40">

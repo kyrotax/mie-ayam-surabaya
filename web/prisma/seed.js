@@ -14,11 +14,11 @@ async function main() {
     create: {
       id: 1,
       name: "Mie Ayam Surabaya",
-      tagline: "Cita Rasa Khas Mie Ayam Oriental di Surabaya & Sidoarjo",
+      tagline: "Mie Ayam Oriental Khas Sidoarjo. Mienya Kenyal, Bumbunya Gurih Meresap, Porsinya Bikin Puas!",
       shortDescription:
-        "Mie Ayam Surabaya menyajikan mie ayam bergaya oriental dengan bumbu khas dan topping melimpah. Menghadirkan kenikmatan mie otentik untuk semua kalangan.",
+        "Mie Ayam Surabaya menyajikan mie kenyal buatan sendiri tiap pagi dengan bumbu ayam gurih meresap, kuah kaldu sapi hangat, dan aneka minuman segar di Sidoarjo.",
       story:
-        "Mie Ayam Surabaya merupakan UMKM kuliner yang menyajikan mie ayam bergaya oriental, sehingga memiliki cita rasa khas yang berbeda dari mie ayam pada umumnya. Dengan target pasar masyarakat umum dan semua kalangan, promosi dilakukan melalui TikTok dan Instagram dengan mencantumkan nomor WhatsApp Business di media sosial tersebut. Pemesanan produk dapat dilakukan secara online melalui platform Gojek dan WhatsApp. Selain memproses pemesanan, nomor WhatsApp operasional tersebut juga difungsikan untuk melayani pertanyaan pelanggan, khususnya terkait informasi jam operasional toko.",
+        "Berawal dari kecintaan kami pada sajian mie berkuah hangat, Mie Ayam Surabaya hadir untuk membawa pengalaman kuliner oriental yang gurih lezat dan ramah di lidah semua orang. Mienya kami buat sendiri setiap pagi tanpa bahan pengawet, dipadu potongan ayam empuk berbumbu rempah gurih manis, serta kuah kaldu sapi hangat yang menenangkan. Warung kami di Taman Pinang Indah siap menyambut santap siang dan santap malammu bersama keluarga dan teman tercinta!",
       address:
         "Jl. Raya Taman Pinang Indah, Jetis, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213",
       mapsUrl:

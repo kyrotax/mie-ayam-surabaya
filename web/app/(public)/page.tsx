@@ -1,658 +1,648 @@
-import Link from "next/link";
 import Image from "next/image";
-import { prisma } from "@/lib/db";
-import StatusSign from "@/components/public/StatusSign";
-import { formatRupiah } from "@/lib/utils";
-import { MapPin, Clock, MessageCircle, ExternalLink, ArrowRight } from "lucide-react";
+import { siteConfig } from "@/data/site.config";
+import WaveDivider from "@/components/public/WaveDivider";
+import StampBadge from "@/components/public/StampBadge";
+import StatusBadge from "@/components/public/StatusBadge";
+import SectionHeading from "@/components/public/SectionHeading";
+import MenuCard from "@/components/public/MenuCard";
+import TestimonialCard from "@/components/public/TestimonialCard";
+import IconLine from "@/components/public/IconLine";
+import { MapPin, Phone, MessageCircle, ExternalLink } from "lucide-react";
 
 export const revalidate = 60;
 
-// ── SAIGETSU Monoline Vector Graphics ─────────────────────────────────────
-const MonolineWave = () => (
-  <svg
-    viewBox="0 0 240 140"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className="w-full h-auto text-[#BA382A]"
-    aria-hidden="true"
-  >
-    <path
-      d="M10 130 C40 130 55 90 75 90 C95 90 105 115 130 115 C155 115 170 70 195 70 C215 70 225 90 235 90"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-    />
-    <path
-      d="M5 110 C30 110 45 60 70 60 C90 60 100 85 125 85 C150 85 165 40 190 40 C210 40 220 60 235 60"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-    <path
-      d="M15 90 C35 90 50 35 75 35 C95 35 105 60 130 60 C155 60 170 15 195 15 C215 15 225 35 235 35"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-    />
-    <circle cx="68" cy="20" r="3" fill="currentColor" />
-    <circle cx="120" cy="45" r="2.5" fill="currentColor" />
-    <circle cx="185" cy="8" r="3.5" fill="currentColor" />
-    <circle cx="160" cy="50" r="2" fill="currentColor" />
-  </svg>
-);
+export default function HomePage() {
+  const { copy, kontak, sosmed, menuMakanan, menuMinuman, testimoni, galeri, statusBuka, statusBukaNote } =
+    siteConfig;
 
-const MonolineChopsticksNoodle = () => (
-  <svg
-    viewBox="0 0 72 72"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className="w-14 h-14 text-[#BA382A]"
-    aria-hidden="true"
-  >
-    <path
-      d="M12 36 Q12 60 36 60 Q60 60 60 36 Z"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <line x1="8" y1="36" x2="64" y2="36" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-    <line x1="24" y1="64" x2="48" y2="64" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-    <line x1="16" y1="12" x2="52" y2="28" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-    <line x1="20" y1="8" x2="56" y2="24" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-    <path
-      d="M36 22 Q40 28 36 36 Q32 44 38 48"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-    <path
-      d="M44 25 Q48 30 42 36 Q38 42 44 46"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-  </svg>
-);
+  const waLink = `https://wa.me/${kontak.wa}?text=Halo%20${encodeURIComponent(
+    siteConfig.brandName
+  )}%2C%20saya%20ingin%20memesan.`;
 
-const MonolineFloralCrest = () => (
-  <svg
-    viewBox="0 0 64 64"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className="w-12 h-12 text-[#BA382A]"
-    aria-hidden="true"
-  >
-    <circle cx="32" cy="32" r="5" stroke="currentColor" strokeWidth="2" />
-    <path d="M32 27 C28 17 36 17 32 27" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    <path d="M36.7 30.4 C46.2 25.5 48.7 33.1 36.7 30.4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    <path d="M35 36 C41 44 34.5 49 35 36" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    <path d="M29 36 C23 44 29.5 49 29 36" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    <path d="M27.3 30.4 C17.8 25.5 15.3 33.1 27.3 30.4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-  </svg>
-);
-
-export default async function HomePage() {
-  const [profile, status, featuredItems, schedule] = await Promise.all([
-    prisma.storeProfile.findFirst(),
-    prisma.storeStatus.findFirst(),
-    prisma.menuItem.findMany({
-      where: { isFeatured: true },
-      take: 4,
-      orderBy: { order: "asc" },
-      include: { category: true },
-    }),
-    prisma.operatingSchedule.findMany({ orderBy: { dayOfWeek: "asc" } }),
-  ]);
-
-  const todayDOW = new Date().getDay();
-  const wa = profile?.whatsappNumber || "6282319195854";
+  // Makanan: 1 kartu utama besar (Mie Ayam Komplit) + 3 kartu makanan (Mie Ayam ori, Mie Ayam Bakso, Mie Ayam Pangsit)
+  const [mainFood, ...restFood] = menuMakanan;
 
   return (
     <div className="bg-white">
 
-      {/* ════════════════════════════════════════════════════════════════
-          1. HERO SECTION (Saigetsu Slide 1 Presentation)
-             Porcelain Ivory Canvas, Monoline Crest, Monoline Ocean Waves,
-             Condensed Display Title, Integrated Status Sign, Circular Dish Mask
-         ════════════════════════════════════════════════════════════════ */}
-      <section className="relative min-h-[90vh] flex items-center bg-[#FAF8F5] border-b border-stone-200 overflow-hidden pt-28 pb-20">
-
-        {/* Top-Right Monoline Floral Crest */}
-        <div className="absolute top-10 right-10 opacity-70 pointer-events-none hidden sm:block">
-          <MonolineFloralCrest />
-        </div>
-
-        {/* Bottom-Left Monoline Waves */}
-        <div className="absolute -bottom-6 -left-6 w-72 sm:w-80 opacity-40 pointer-events-none">
-          <MonolineWave />
-        </div>
-
-        {/* Circular Arc Graphic Accent */}
-        <div
-          className="absolute right-[-100px] top-[20%] w-[380px] h-[380px] rounded-full border-2 border-[#BA382A]/20 pointer-events-none hidden lg:block"
-          aria-hidden="true"
-        />
-
-        <div className="relative z-10 max-w-6xl mx-auto w-full px-5 sm:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center">
-
-            {/* Left Column (Editorial Typography) */}
-            <div className="space-y-6">
-
-              {/* Chopsticks & Noodle Monoline Icon */}
-              <div className="flex items-center gap-3">
-                <MonolineChopsticksNoodle />
-                <div className="h-8 w-px bg-stone-200" />
-                <div className="flex items-center gap-2">
-                  <span className="saigetsu-stamp">東方</span>
-                  <span className="text-[11px] uppercase tracking-[0.25em] text-[#BA382A] font-bold">
-                    Authentic Oriental Noodles
-                  </span>
-                </div>
-              </div>
-
-              {/* Main Heading (Oswald Condensed Bold) */}
-              <h1 className="font-display text-6xl sm:text-7xl lg:text-8xl font-bold tracking-tight text-stone-900 uppercase leading-[0.92]">
-                MIE AYAM<br />
-                <span className="text-[#BA382A]">SURABAYA</span>
-              </h1>
-
-              {/* Asian Subtitle Line */}
-              <div className="flex items-center gap-2.5 text-stone-700">
-                <span className="text-xs uppercase tracking-[0.2em] font-semibold text-stone-500">
-                  Cita Rasa Khas Oriental Sidoarjo
-                </span>
-                <span className="text-stone-300">·</span>
-                <span className="text-xs font-bold text-stone-700">東方風味</span>
-              </div>
-
-              {/* Description */}
-              <p className="text-stone-600 font-sans text-base sm:text-lg leading-relaxed max-w-lg">
-                {profile?.shortDescription ||
-                  "Menyajikan mie ayam bergaya oriental dengan bumbu khas meresap, tekstur mie kenyal autentik, dan topping daging ayam melimpah."}
-              </p>
-
-              {/* Live Status Operasional (Tasteful & Non-Slop) */}
-              <div className="pt-1">
-                <StatusSign
-                  initialData={{
-                    isOpen: status?.isOpen ?? true,
-                    statusNote: status?.statusNote ?? null,
-                    nextOpenText: status?.nextOpenText ?? null,
-                  }}
-                />
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-wrap gap-4 pt-1">
-                <a
-                  href={`https://wa.me/${wa}?text=Halo%2C%20saya%20ingin%20memesan%20Mie%20Ayam.`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-saigetsu text-sm uppercase tracking-wider"
-                  aria-label="Pesan via WhatsApp (buka di tab baru)"
-                >
-                  <MessageCircle className="w-4 h-4 shrink-0" aria-hidden="true" />
-                  <span>Pesan via WhatsApp</span>
-                </a>
-                <Link
-                  href="/menu"
-                  className="btn-saigetsu-outline text-sm uppercase tracking-wider"
-                  aria-label="Lihat daftar menu lengkap dan harga"
-                >
-                  <span>Lihat Daftar Menu</span>
-                </Link>
-              </div>
-            </div>
-
-            {/* Right Column (Saigetsu Signature Circular Framing) */}
-            <div className="flex flex-col items-center justify-center">
-              <div className="relative">
-                {/* Semicircular Terracotta Backing Arc */}
-                <div
-                  className="absolute -top-4 -right-4 w-64 h-64 sm:w-80 sm:h-80 rounded-full border-4 border-[#BA382A] pointer-events-none"
-                  style={{
-                    clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 100%)",
-                  }}
-                  aria-hidden="true"
-                />
-
-                {/* Circular Mask with Red Ring holding the authentic dish photo */}
-                <div className="relative w-60 h-60 sm:w-72 sm:h-72 rounded-full overflow-hidden border-4 border-[#BA382A] shadow-xl bg-white p-2">
-                  <div className="relative w-full h-full rounded-full overflow-hidden">
-                    <Image
-                      src="/images/fotomie.png"
-                      alt="Semangkuk Mie Ayam Oriental Komplit dengan Pangsit dan Kuah Kaldu"
-                      fill
-                      className="object-cover hover:scale-105 transition-transform duration-500"
-                      priority
-                      sizes="(max-width: 640px) 240px, 320px"
-                    />
-                  </div>
-                </div>
-
-                {/* Overlapping Badge Pill */}
-                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-[#BA382A] text-white px-5 py-2 rounded-full shadow-md text-xs font-bold uppercase tracking-wider whitespace-nowrap">
-                  100% Halal & Gurih
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-
-      {/* ════════════════════════════════════════════════════════════════
-          2. THE 3 VERTICAL ASIAN PILLARS (Saigetsu Slide 2 & 4)
-             Solid Terracotta, Wine & Warm Ochre Pillars
-         ════════════════════════════════════════════════════════════════ */}
-      <section className="py-24 px-5 sm:px-8 max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-
-          {/* Left Text Block (5 cols) */}
-          <div className="lg:col-span-5 space-y-5">
-            <div className="flex items-center gap-2">
-              <span className="saigetsu-stamp">故事</span>
-              <span className="text-xs uppercase tracking-[0.2em] text-[#BA382A] font-bold">
-                Cerita Kami
-              </span>
-            </div>
-            <h2 className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-stone-900 uppercase leading-[0.95]">
-              Cita Rasa yang<br />
-              <span className="text-[#BA382A]">Beda Dari Biasa</span>
-            </h2>
-            <div className="w-16 h-1 bg-[#BA382A] rounded-full" />
-            <p className="text-stone-600 font-sans text-sm sm:text-base leading-relaxed">
-              {profile?.story ||
-                "Mie Ayam Surabaya menyajikan mie ayam bergaya oriental dengan bumbu khas yang meresap sempurna. Daging ayam gurih, mie kenyal harian, dan kuah kaldu hangat menjadi racikan favorit penikmat kuliner di Sidoarjo."}
-            </p>
-            <div className="pt-2">
-              <Link
-                href="/tentang"
-                className="inline-flex items-center gap-2 text-sm font-bold text-[#BA382A] hover:text-[#8B1E1E] transition-colors uppercase tracking-wider group"
-                aria-label="Baca perjalanan lengkap usaha kami"
-              >
-                <span>Baca Perjalanan Kami</span>
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-              </Link>
-            </div>
-          </div>
-
-          {/* Right: The 3 Vertical Asian Pillar Cards */}
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-4">
-            
-            {/* Pillar 1: Deep Wine */}
-            <div className="bg-[#8B1E1E] text-white rounded-2xl p-6 flex flex-col justify-between min-h-[220px] shadow-sm">
-              <div className="flex justify-between items-start">
-                <span className="font-display text-4xl font-bold opacity-30 select-none">
-                  01
-                </span>
-                <span className="text-3xl font-bold opacity-90">麵</span>
-              </div>
-              <div>
-                <p className="text-[11px] uppercase tracking-widest text-red-200 font-semibold mb-1">
-                  Tekstur Otentik
-                </p>
-                <h3 className="font-display text-xl font-bold uppercase leading-tight mb-2">
-                  Mie Kenyal Pas
-                </h3>
-                <p className="text-xs text-red-100/80 leading-relaxed font-sans">
-                  Mie olahan segar harian tanpa pengawet dengan kekenyalan khas oriental.
-                </p>
-              </div>
-            </div>
-
-            {/* Pillar 2: Signature Terracotta Red */}
-            <div className="bg-[#BA382A] text-white rounded-2xl p-6 flex flex-col justify-between min-h-[220px] shadow-sm">
-              <div className="flex justify-between items-start">
-                <span className="font-display text-4xl font-bold opacity-30 select-none">
-                  02
-                </span>
-                <span className="text-3xl font-bold opacity-90">香</span>
-              </div>
-              <div>
-                <p className="text-[11px] uppercase tracking-widest text-red-200 font-semibold mb-1">
-                  Racikan Spesial
-                </p>
-                <h3 className="font-display text-xl font-bold uppercase leading-tight mb-2">
-                  Bumbu Meresap
-                </h3>
-                <p className="text-xs text-red-100/80 leading-relaxed font-sans">
-                  Bumbu oriental yang gurih mendalam berpadu minyak rempah wangi.
-                </p>
-              </div>
-            </div>
-
-            {/* Pillar 3: Warm Ochre */}
-            <div className="bg-[#D97330] text-white rounded-2xl p-6 flex flex-col justify-between min-h-[220px] shadow-sm">
-              <div className="flex justify-between items-start">
-                <span className="font-display text-4xl font-bold opacity-30 select-none">
-                  03
-                </span>
-                <span className="text-3xl font-bold opacity-90">濃</span>
-              </div>
-              <div>
-                <p className="text-[11px] uppercase tracking-widest text-orange-200 font-semibold mb-1">
-                  Topping Melimpah
-                </p>
-                <h3 className="font-display text-xl font-bold uppercase leading-tight mb-2">
-                  Ayam & Pangsit
-                </h3>
-                <p className="text-xs text-orange-100/80 leading-relaxed font-sans">
-                  Potongan ayam tebal, bakso sapi kenyal, dan pangsit renyah gurih.
-                </p>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-
-      {/* ════════════════════════════════════════════════════════════════
-          3. FEATURED MENU SHOWCASE (Saigetsu Slide 5)
-             Red Terracotta Banner with Double Frame,
-             Followed by Clean Dotted Menu Cards with Real Dish Photos
-         ════════════════════════════════════════════════════════════════ */}
-      <section className="bg-[#FAF8F5] border-y border-stone-200 py-24 px-5 sm:px-8">
-        <div className="max-w-6xl mx-auto space-y-12">
-
-          {/* Saigetsu Red Showcase Banner */}
-          <div className="relative bg-[#BA382A] text-white rounded-2xl p-8 sm:p-12 overflow-hidden shadow-lg">
-            <div className="absolute inset-3 sm:inset-4 border border-white/20 rounded-xl pointer-events-none" aria-hidden="true" />
-            
-            <div className="relative z-10 max-w-2xl space-y-3">
-              <div className="flex items-center gap-2">
-                <span className="bg-white text-[#BA382A] px-2 py-0.5 text-xs font-bold rounded-sm tracking-wider">
-                  SELEKSI RESMI
-                </span>
-                <span className="text-xs uppercase tracking-widest text-red-100 font-semibold">
-                  Menu Pilihan Favorit
-                </span>
-              </div>
-              <h2 className="font-display text-4xl sm:text-6xl font-bold tracking-tight uppercase leading-[0.95]">
-                PILIHAN UTAMA<br />
-                MIE AYAM SURABAYA
-              </h2>
-              <p className="text-sm sm:text-base text-red-100 leading-relaxed font-sans pt-1">
-                Disajikan panas langsung dari kuali dengan kaldu gurih harum dan bumbu oriental khas.
-              </p>
-            </div>
-          </div>
-
-          {/* Grid of Featured Items with Aesthetic Dish Photos */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {featuredItems.map((item) => {
-              const waLink = `https://wa.me/${wa}?text=Halo%2C%20saya%20ingin%20pesan%20${encodeURIComponent(item.name)}.`;
-              const imageSrc = item.imageUrl || "/images/menu/mie-komplit.png";
-
-              return (
-                <div
-                  key={item.id}
-                  className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-sm flex flex-col justify-between gap-5 hover:border-[#BA382A]/50 transition-colors"
-                >
-                  <div className="flex items-start gap-4">
-                    {/* Dish Photo Thumbnail */}
-                    <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden border border-stone-200 shrink-0 bg-stone-50 shadow-xs">
-                      <Image
-                        src={imageSrc}
-                        alt={item.name}
-                        fill
-                        className="object-cover hover:scale-105 transition-transform duration-300"
-                        sizes="(max-width: 640px) 80px, 96px"
-                      />
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2 mb-1">
-                        <span className="text-[10px] tracking-widest uppercase font-bold text-stone-400">
-                          {item.category.name}
-                        </span>
-                        {item.badge && (
-                          <span className="badge-saigetsu">{item.badge}</span>
-                        )}
-                      </div>
-                      <h3 className="font-sans text-lg sm:text-xl font-bold text-stone-900 leading-tight mb-1">
-                        {item.name}
-                      </h3>
-                      <p className="text-xs text-stone-500 font-sans leading-relaxed line-clamp-2">
-                        {item.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-4 border-t border-stone-100">
-                    <span className="font-display text-2xl font-bold text-[#BA382A]">
-                      {formatRupiah(item.price)}
-                    </span>
-                    <a
-                      href={waLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-saigetsu text-xs uppercase tracking-wider py-2 px-4"
-                      aria-label={`Pesan ${item.name} via WhatsApp (buka di tab baru)`}
-                    >
-                      <MessageCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-                      <span>Pesan</span>
-                    </a>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* View All Menu CTA */}
-          <div className="text-center pt-4">
-            <Link
-              href="/menu"
-              className="btn-saigetsu-outline text-sm uppercase tracking-wider inline-flex"
-              aria-label="Lihat seluruh daftar menu makanan dan minuman"
-            >
-              Lihat Daftar Menu Lengkap & Harga
-            </Link>
-          </div>
-
-        </div>
-      </section>
-
-
-      {/* ════════════════════════════════════════════════════════════════
-          4. 3 PILAR KUALITAS & CONNECTED STEPPER (Saigetsu Slide 6)
-             Horizontal Stepper with Arching Arc
-         ════════════════════════════════════════════════════════════════ */}
-      <section className="py-24 px-5 sm:px-8 max-w-6xl mx-auto">
-        <div className="text-center space-y-3 mb-16">
-          <div className="flex items-center justify-center gap-2">
-            <span className="saigetsu-stamp">品質</span>
-            <span className="text-xs uppercase tracking-[0.2em] text-[#BA382A] font-bold">
-              Standar Kami
-            </span>
-          </div>
-          <h2 className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-stone-900 uppercase">
-            3 Pilar Kualitas Kami
-          </h2>
-          <p className="text-sm text-stone-500 max-w-lg mx-auto font-sans">
-            Menjaga standar cita rasa oriental terbaik dalam setiap porsi yang disajikan ke meja Anda.
-          </p>
-        </div>
-
-        {/* Stepper Timeline with Connecting Line */}
-        <div className="relative mb-12 hidden md:block">
-          <div className="absolute top-1/2 left-[15%] right-[15%] h-0.5 bg-stone-200 -translate-y-1/2" />
+      {/* ═══════════════════════════════════════════════════════════════
+          b. HERO SECTION
+          - Foto mie ayam BLEED full-width sebagai background
+          - Overlay merah bata 40% (rgba(139, 30, 30, 0.42))
+          - Teks putih besar + subteks + 2 tombol pill
+          - StatusBadge di pojok kanan atas
+         ═══════════════════════════════════════════════════════════════ */}
+      <section
+        id="beranda"
+        className="relative min-h-[92vh] flex items-center overflow-hidden pt-28 pb-20"
+      >
+        {/* Full-bleed background image with high fetchpriority */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/fotomie.png"
+            alt={`Semangkuk ${siteConfig.brandName} komplit dengan topping melimpah`}
+            fill
+            className="object-cover object-center"
+            priority
+            fetchPriority="high"
+            sizes="100vw"
+          />
+          {/* Overlay merah bata untuk kontras teks WCAG AA */}
           <div
-            className="absolute top-[-30px] right-[10%] w-32 h-24 rounded-t-full border-t-2 border-r-2 border-[#BA382A] pointer-events-none"
+            className="absolute inset-0 bg-[#8B1E1E]/45"
             aria-hidden="true"
           />
+          {/* Gradient tambahan di sebelah kiri agar tulisan terbaca sempurna */}
+          <div
+            className="absolute inset-0 bg-gradient-to-r from-[#6B1515]/75 via-[#8B1E1E]/40 to-transparent"
+            aria-hidden="true"
+          />
+        </div>
 
-          <div className="relative flex justify-around items-center">
-            {[1, 2, 3].map((num) => (
-              <div
-                key={num}
-                className="w-12 h-12 rounded-full bg-[#BA382A] text-white flex items-center justify-center font-display text-lg font-bold shadow-md"
+        {/* Badge status buka di pojok kanan atas hero */}
+        <div className="absolute top-24 right-5 sm:right-10 z-20">
+          <StatusBadge isOpen={statusBuka} note={statusBukaNote} />
+        </div>
+
+        {/* StampBadge aksen pojok kanan (desktop) */}
+        <div className="hidden lg:block absolute bottom-24 right-12 z-20 opacity-85">
+          <StampBadge
+            text="AUTENTIK · ORIENTAL · SIDOARJO · 2024 ·"
+            size={110}
+            bgColor="#6B1515"
+            borderColor="#F5E6D3"
+            textColor="#F5E6D3"
+          />
+        </div>
+
+        {/* Konten teks hero */}
+        <div className="relative z-10 max-w-6xl mx-auto w-full px-5 sm:px-8 mt-4 sm:mt-8">
+          <div className="max-w-2xl">
+            {/* Eyebrow */}
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-xs uppercase tracking-[0.25em] text-[#F5E6D3] font-bold">
+                {copy.hero.eyebrow}
+              </span>
+            </div>
+
+            {/* H1 Heading */}
+            <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl font-bold tracking-tight text-white uppercase leading-[0.92] mb-5">
+              {copy.hero.heading}
+              <br />
+              <span className="text-[#F5E6D3]">{copy.hero.headingAccent}</span>
+            </h1>
+
+            {/* Subteks */}
+            <p className="text-white/90 font-sans text-base sm:text-lg leading-relaxed mb-8 max-w-lg">
+              {copy.hero.subteks}
+            </p>
+
+            {/* 2 Tombol Pill (Lihat Menu & Pesan via WA) */}
+            <div className="flex flex-wrap gap-4">
+              <a
+                href={waLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Pesan via WhatsApp (buka di tab baru)"
+                className="inline-flex items-center gap-2.5 bg-white text-[#8B1E1E] hover:bg-[#F5E6D3] font-bold text-sm uppercase tracking-wider px-7 py-3.5 rounded-full transition-all duration-200 min-h-[48px] shadow-lg hover:-translate-y-0.5"
               >
-                {num}
+                <MessageCircle className="w-4 h-4 shrink-0" aria-hidden="true" />
+                <span>{copy.hero.ctaWa}</span>
+              </a>
+
+              <a
+                href="#menu"
+                aria-label="Lihat daftar menu unggulan"
+                className="inline-flex items-center gap-2 bg-transparent hover:bg-white/15 text-white border-2 border-white/80 hover:border-white font-bold text-sm uppercase tracking-wider px-7 py-3.5 rounded-full transition-all duration-200 min-h-[48px]"
+              >
+                <span>{copy.hero.ctaMenu}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Wave divider bawah transisi ke krem */}
+        <WaveDivider
+          direction="bottom"
+          color="#FAF0E6"
+          className="absolute bottom-0 left-0 right-0 z-10"
+        />
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          c. TENTANG KAMI
+          - 2 kolom: foto warung di kiri (bleed), teks di kanan
+          - StampBadge di pojok foto
+         ═══════════════════════════════════════════════════════════════ */}
+      <section id="tentang" className="bg-[#FAF0E6] py-20 sm:py-28">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+            {/* Kolom kiri: Foto warung BLEED dengan StampBadge di pojok */}
+            <div className="relative">
+              <div className="relative rounded-[12px] overflow-hidden aspect-[4/3] bg-stone-900 shadow-sm">
+                <Image
+                  src={copy.tentang.foto}
+                  alt={`Tentang Warung ${siteConfig.brandName}`}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+                <div
+                  className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"
+                  aria-hidden="true"
+                />
+              </div>
+
+              {/* StampBadge di pojok kanan bawah foto */}
+              <div className="absolute -bottom-5 -right-3 z-10 drop-shadow-xl">
+                <StampBadge
+                  text={copy.tentang.badgeText}
+                  size={104}
+                  bgColor="#8B1E1E"
+                  borderColor="#FAF0E6"
+                  textColor="#FAF0E6"
+                />
+              </div>
+            </div>
+
+            {/* Kolom kanan: Teks Cerita Kami */}
+            <div className="space-y-5 lg:pl-4">
+              <SectionHeading
+                eyebrow={copy.tentang.eyebrow}
+                heading={copy.tentang.heading}
+                headingAccent={copy.tentang.headingAccent}
+                align="left"
+              />
+
+              <p className="text-stone-700 font-sans text-sm sm:text-base leading-relaxed">
+                {copy.tentang.p1}
+              </p>
+
+              <p className="text-stone-600 font-sans text-sm sm:text-base leading-relaxed">
+                {copy.tentang.p2}
+              </p>
+
+              <div className="pt-2">
+                <a
+                  href="#menu"
+                  className="inline-flex items-center gap-2 text-sm font-bold text-[#8B1E1E] hover:text-[#6B1515] transition-colors uppercase tracking-wider group"
+                >
+                  <span>Lihat Sajian Kami</span>
+                  <svg
+                    className="w-4 h-4 transition-transform group-hover:translate-x-1"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M3 8h10M9 4l4 4-4 4"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <WaveDivider direction="bottom" color="#FAF0E6" />
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          d. MENU UNGGULAN (MAKANAN & MINUMAN)
+          - Background krem (#FAF0E6)
+          - Grid asimetris makanan: 1 kartu besar + kartu pendukung
+          - Termasuk Mie Ayam (ori), Es Teh, Teh Hangat
+          - Foto BLEED di dalam kartu (tanpa border putih tebal)
+         ═══════════════════════════════════════════════════════════════ */}
+      <section id="menu" className="py-20 sm:py-28 bg-[#FAF0E6]">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 space-y-16">
+
+          {/* Subseksi 1: Makanan */}
+          <div>
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
+              <SectionHeading
+                eyebrow={copy.menu.eyebrow}
+                heading={copy.menu.heading}
+                headingAccent={copy.menu.headingAccent}
+                subheading={copy.menu.subheading}
+                align="left"
+              />
+              <a
+                href={waLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Pesan via WhatsApp (buka di tab baru)"
+                className="inline-flex items-center gap-2 text-xs font-bold text-[#8B1E1E] hover:text-[#6B1515] uppercase tracking-widest transition-colors shrink-0 pb-1"
+              >
+                <span>Pesan Sekarang</span>
+                <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path
+                    d="M3 8h10M9 4l4 4-4 4"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </a>
+            </div>
+
+            {/* Grid asimetris: 1 kartu besar (Mie Ayam Komplit) + 3 kartu kecil (Mie Ayam ori, Bakso, Pangsit) */}
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 sm:gap-6">
+              {/* 1 Kartu Besar */}
+              {mainFood && (
+                <div className="md:col-span-3">
+                  <MenuCard
+                    name={mainFood.nama}
+                    description={mainFood.deskripsi}
+                    price={mainFood.harga}
+                    imageUrl={mainFood.foto}
+                    badge={mainFood.badge}
+                    isAvailable={mainFood.isAvailable ?? true}
+                    waNumber={kontak.wa}
+                    variant="large"
+                  />
+                </div>
+              )}
+
+              {/* Kartu Makanan lainnya stacked */}
+              <div className="md:col-span-2 flex flex-col gap-4 sm:gap-6">
+                {restFood.slice(0, 2).map((item) => (
+                  <MenuCard
+                    key={item.id}
+                    name={item.nama}
+                    description={item.deskripsi}
+                    price={item.harga}
+                    imageUrl={item.foto}
+                    badge={item.badge}
+                    isAvailable={item.isAvailable ?? true}
+                    waNumber={kontak.wa}
+                    variant="small"
+                  />
+                ))}
+              </div>
+
+              {/* Kartu Makanan ke-4 (Mie Ayam Pangsit) */}
+              {restFood[2] && (
+                <div className="md:col-span-5">
+                  <MenuCard
+                    name={restFood[2].nama}
+                    description={restFood[2].deskripsi}
+                    price={restFood[2].harga}
+                    imageUrl={restFood[2].foto}
+                    badge={restFood[2].badge}
+                    isAvailable={restFood[2].isAvailable ?? true}
+                    waNumber={kontak.wa}
+                    variant="small"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Subseksi 2: Minuman Segar (Es Teh, Teh Hangat, Es Teler) */}
+          <div className="pt-6 border-t border-stone-200/70">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
+              <SectionHeading
+                eyebrow="Penyegar Dahaga"
+                heading="Pilihan Minuman"
+                headingAccent="Segar & Pelepas Dahaga"
+                subheading="Makan mie ayam hangat makin nikmat kalau ditemani es teh manis dingin yang segar atau semangkuk es teler legit."
+                align="left"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+              {menuMinuman.map((item) => (
+                <MenuCard
+                  key={item.id}
+                  name={item.nama}
+                  description={item.deskripsi}
+                  price={item.harga}
+                  imageUrl={item.foto}
+                  badge={item.badge}
+                  isAvailable={item.isAvailable ?? true}
+                  waNumber={kontak.wa}
+                  variant="small"
+                />
+              ))}
+            </div>
+          </div>
+
+        </div>
+
+        <WaveDivider direction="bottom" color="#8B1E1E" />
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          e. KENAPA PILIH KAMI
+          - Background merah bata (#8B1E1E), teks putih
+          - 3 item dengan IconLine line-art 1 warna
+          - Layout horizontal di desktop, vertikal di mobile
+         ═══════════════════════════════════════════════════════════════ */}
+      <section id="kenapa-kami" className="relative bg-[#8B1E1E] overflow-hidden">
+        <WaveDivider direction="top" color="#FAF0E6" className="absolute top-0 left-0 right-0" />
+
+        <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 py-28 sm:py-36">
+
+          <div className="text-center mb-16">
+            <SectionHeading
+              eyebrow={copy.kenapaPilihKami.eyebrow}
+              heading={copy.kenapaPilihKami.heading}
+              headingAccent={copy.kenapaPilihKami.headingAccent}
+              align="center"
+              light
+            />
+          </div>
+
+          {/* 3 Keunggulan (horizontal desktop, vertikal mobile) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
+            {copy.kenapaPilihKami.items.map((item, idx) => (
+              <div key={idx} className="flex flex-col items-center text-center gap-4">
+                <div className="w-16 h-16 rounded-full border-2 border-white/30 bg-white/5 flex items-center justify-center">
+                  <IconLine icon={item.icon} size={30} color="#FFFFFF" />
+                </div>
+
+                <div>
+                  <h3 className="font-display text-xl font-bold text-white uppercase tracking-tight mb-2">
+                    {item.judul}
+                  </h3>
+                  <p className="text-red-100/85 font-sans text-sm leading-relaxed max-w-xs mx-auto">
+                    {item.deskripsi}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
+
         </div>
 
-        {/* 3 Quality Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-[#FAF8F5] rounded-2xl p-6 border border-stone-200 text-center space-y-3">
-            <div className="w-10 h-10 rounded-full bg-white border border-[#BA382A] text-[#BA382A] flex items-center justify-center font-bold text-sm mx-auto shadow-sm">
-              01
-            </div>
-            <h3 className="font-sans font-bold text-lg text-stone-900">
-              Bumbu Oriental Asli
-            </h3>
-            <p className="text-xs text-stone-500 leading-relaxed font-sans">
-              Racikan bumbu tradisional khas oriental dengan kecap pilihan dan minyak bawang wangi buatan sendiri.
-            </p>
-          </div>
-
-          <div className="bg-[#FAF8F5] rounded-2xl p-6 border border-stone-200 text-center space-y-3">
-            <div className="w-10 h-10 rounded-full bg-white border border-[#BA382A] text-[#BA382A] flex items-center justify-center font-bold text-sm mx-auto shadow-sm">
-              02
-            </div>
-            <h3 className="font-sans font-bold text-lg text-stone-900">
-              Bahan Segar Harian
-            </h3>
-            <p className="text-xs text-stone-500 leading-relaxed font-sans">
-              Daging ayam, sayuran hijau segar, bakso sapi, dan pangsit renyah diproses baru setiap hari tanpa sisa kemarin.
-            </p>
-          </div>
-
-          <div className="bg-[#FAF8F5] rounded-2xl p-6 border border-stone-200 text-center space-y-3">
-            <div className="w-10 h-10 rounded-full bg-white border border-[#BA382A] text-[#BA382A] flex items-center justify-center font-bold text-sm mx-auto shadow-sm">
-              03
-            </div>
-            <h3 className="font-sans font-bold text-lg text-stone-900">
-              Harga Warung Keluarga
-            </h3>
-            <p className="text-xs text-stone-500 leading-relaxed font-sans">
-              Kualitas rasa standar restoran dengan harga yang terjangkau untuk dinikmati seluruh anggota keluarga.
-            </p>
-          </div>
-        </div>
+        <WaveDivider direction="bottom" color="#FAF0E6" className="absolute bottom-0 left-0 right-0" />
       </section>
 
+      {/* ═══════════════════════════════════════════════════════════════
+          f. GALERI
+          - Grid 4 foto dengan 1 foto besar + 3 kecil
+          - Hover: zoom subtle
+         ═══════════════════════════════════════════════════════════════ */}
+      <section id="galeri" className="bg-[#FAF0E6] py-20 sm:py-28">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8">
 
-      {/* ════════════════════════════════════════════════════════════════
-          5. JADWAL OPERASIONAL & LOKASI WARUNG
-             Clean geometric cards with today highlighted & map directions
-         ════════════════════════════════════════════════════════════════ */}
-      <section className="bg-[#FAF8F5] border-t border-stone-200 py-24 px-5 sm:px-8">
-        <div className="max-w-6xl mx-auto space-y-10">
-
-          <div className="text-center space-y-2">
-            <span className="saigetsu-stamp">地點</span>
-            <h2 className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-stone-900 uppercase">
-              Jadwal & Lokasi
-            </h2>
-            <p className="text-sm text-stone-500 font-sans">
-              Kunjungi warung kami langsung di Sidoarjo atau pesan antar ke rumah Anda.
-            </p>
+          <div className="text-center mb-12">
+            <SectionHeading
+              eyebrow={copy.galeri.eyebrow}
+              heading={copy.galeri.heading}
+              headingAccent={copy.galeri.headingAccent}
+              subheading={copy.galeri.subheading}
+              align="center"
+            />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-
-            {/* Operating Schedule Card */}
-            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200 shadow-sm space-y-4">
-              <div className="flex items-center gap-3 pb-3 border-b border-stone-100">
-                <div className="w-10 h-10 rounded-xl bg-[#FDF2F0] text-[#BA382A] flex items-center justify-center shrink-0">
-                  <Clock className="w-5 h-5" aria-hidden="true" />
-                </div>
-                <div>
-                  <h3 className="font-sans font-bold text-lg text-stone-900">
-                    Jam Operasional
-                  </h3>
-                  <p className="text-xs text-stone-400">Buka seminggu penuh</p>
-                </div>
+          {/* 1 foto besar (span 2 baris & 2 kolom) + 3 foto kecil */}
+          <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[180px] sm:auto-rows-[220px] gap-3 sm:gap-4">
+            {galeri[0] && (
+              <div className="col-span-2 row-span-2 relative rounded-[12px] overflow-hidden bg-stone-900 group">
+                <Image
+                  src={galeri[0].src}
+                  alt={galeri[0].alt}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
               </div>
+            )}
 
-              <div className="space-y-1.5 font-sans text-xs sm:text-sm">
-                {schedule.map((s) => {
-                  const today = s.dayOfWeek === todayDOW;
-                  return (
-                    <div
-                      key={s.id}
-                      className={`flex justify-between items-center px-3.5 py-2.5 rounded-xl transition-colors ${
-                        today
-                          ? "bg-[#FDF2F0] font-bold text-[#BA382A]"
-                          : "text-stone-600 hover:bg-stone-50"
-                      }`}
-                    >
-                      <span className="flex items-center gap-2">
-                        {s.dayName}
-                        {today && (
-                          <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#BA382A] text-white">
-                            Hari Ini
-                          </span>
-                        )}
-                      </span>
-                      <span>
-                        {s.isClosed ? "Tutup" : `${s.openTime} sampai ${s.closeTime} WIB`}
-                      </span>
-                    </div>
-                  );
-                })}
+            {galeri.slice(1, 4).map((foto, idx) => (
+              <div key={idx} className="relative rounded-[12px] overflow-hidden bg-stone-900 group">
+                <Image
+                  src={foto.src}
+                  alt={foto.alt}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                />
+              </div>
+            ))}
+          </div>
+
+        </div>
+
+        <WaveDivider direction="bottom" color="#FAF0E6" />
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          g. TESTIMONI (Referensi Ulasan Google Maps & Pelanggan Nyata)
+          - Background krem
+          - Grid 2 kolom, quote mark besar sebagai aksen
+         ═══════════════════════════════════════════════════════════════ */}
+      {testimoni.length > 0 && (
+        <section id="testimoni" className="bg-[#FAF0E6] py-20 sm:py-28">
+          <div className="max-w-6xl mx-auto px-5 sm:px-8">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12">
+              <SectionHeading
+                eyebrow={copy.testimoni.eyebrow}
+                heading={copy.testimoni.heading}
+                headingAccent={copy.testimoni.headingAccent}
+                subheading={copy.testimoni.subheading}
+                align="left"
+              />
+
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 shrink-0 pb-1">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#8B1E1E]/20 text-xs font-bold text-stone-800 shadow-sm">
+                  <span className="text-amber-500 text-sm">★★★★★</span>
+                  <span>5.0 / 5.0 Google Maps</span>
+                </div>
+
+                <a
+                  href={kontak.mapsLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#8B1E1E] hover:text-[#6B1515] uppercase tracking-wider transition-colors"
+                  aria-label="Lihat ulasan lengkap di Google Maps (buka di tab baru)"
+                >
+                  <span>Lihat di Maps</span>
+                  <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                </a>
               </div>
             </div>
 
-            {/* Location & Map Direction Card */}
-            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200 shadow-sm flex flex-col justify-between gap-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 pb-3 border-b border-stone-100">
-                  <div className="w-10 h-10 rounded-xl bg-[#FDF2F0] text-[#BA382A] flex items-center justify-center shrink-0">
-                    <MapPin className="w-5 h-5" aria-hidden="true" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {testimoni.map((t, idx) => (
+                <TestimonialCard
+                  key={idx}
+                  nama={t.nama}
+                  teks={t.teks}
+                  rating={t.rating}
+                  asal={t.asal}
+                  source="Ulasan Google Maps"
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════
+          h. LOKASI WARUNG (Tanpa Jam Operasional sesuai permintaan)
+          - 2 kolom: Alamat & Kontak di kiri, Peta Interaktif di kanan
+          - StampBadge "Klik untuk navigasi"
+         ═══════════════════════════════════════════════════════════════ */}
+      <section id="lokasi" className="bg-[#FAF0E6] py-20 sm:py-28">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8">
+
+          <div className="text-center mb-14">
+            <SectionHeading
+              eyebrow={copy.lokasi.eyebrow}
+              heading={copy.lokasi.heading}
+              headingAccent={copy.lokasi.headingAccent}
+              subheading={copy.lokasi.subheading}
+              align="center"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+
+            {/* Kolom kiri (5 cols): Rincian Alamat & Kontak Langsung */}
+            <div className="lg:col-span-5 bg-white rounded-[12px] p-6 sm:p-8 border border-stone-200 shadow-sm flex flex-col justify-between gap-6">
+              <div className="space-y-6">
+                <div className="flex items-center justify-between pb-4 border-b border-stone-100">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[#8B1E1E] text-white flex items-center justify-center shrink-0">
+                      <MapPin className="w-5 h-5" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <h3 className="font-sans font-bold text-lg text-stone-900">
+                        Alamat Warung
+                      </h3>
+                      <p className="text-xs text-stone-400">Sidoarjo, Jawa Timur</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-sans font-bold text-lg text-stone-900">
-                      Alamat Warung
-                    </h3>
-                    <p className="text-xs text-stone-400">Sidoarjo, Jawa Timur</p>
-                  </div>
+
+                  <a
+                    href={kontak.mapsLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Buka navigasi Google Maps (buka di tab baru)"
+                    className="shrink-0 hover:scale-105 transition-transform"
+                  >
+                    <StampBadge
+                      text={copy.lokasi.badgeNavigasi}
+                      size={58}
+                      bgColor="#8B1E1E"
+                      borderColor="#FAF0E6"
+                      textColor="#FAF0E6"
+                    />
+                  </a>
                 </div>
 
-                <p className="text-sm text-stone-700 leading-relaxed font-sans">
-                  {profile?.address ||
-                    "Jl. Raya Taman Pinang Indah, Jetis, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213"}
-                </p>
+                <div className="space-y-3 font-sans">
+                  <p className="text-sm text-stone-700 leading-relaxed font-medium">
+                    {kontak.alamat}
+                  </p>
+                  <p className="text-xs text-stone-500 leading-relaxed">
+                    Lokasi strategis di perumahan Taman Pinang Indah. Tempatnya bersih, asri, dan tersedia area parkir aman untuk motor maupun mobil.
+                  </p>
+                </div>
 
-                <p className="text-xs text-stone-500 font-sans">
-                  Lokasi strategis di kawasan perumahan Taman Pinang Indah. Parkir mudah dan tersedia area makan yang nyaman.
-                </p>
+                <div className="p-4 rounded-xl bg-[#FAF0E6]/60 border border-[#8B1E1E]/15 space-y-2">
+                  <div className="flex items-center gap-2 text-stone-800 font-bold text-xs uppercase tracking-wider">
+                    <Phone className="w-3.5 h-3.5 text-[#8B1E1E]" aria-hidden="true" />
+                    <span>Mau Mampir atau Pesan Antar?</span>
+                  </div>
+                  <p className="text-xs text-stone-600 font-sans">
+                    Mau delivery ke rumah, tanya ketersediaan menu, atau pesan banyak untuk acara keluarga? Langsung chat kami di WhatsApp{" "}
+                    <strong className="text-[#8B1E1E]">{kontak.waDisplay}</strong>, kami siap layani dengan senang hati!
+                  </p>
+                </div>
               </div>
 
-              <div className="flex flex-wrap gap-3 pt-4 border-t border-stone-100">
+              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-stone-100">
                 <a
-                  href={
-                    profile?.mapsUrl ||
-                    "https://www.google.com/maps/place/MIE+AYAM+SURABAYA"
-                  }
+                  href={kontak.mapsLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-saigetsu text-xs uppercase tracking-wider py-2.5 px-4"
-                  aria-label="Buka lokasi di Google Maps (buka di tab baru)"
+                  aria-label="Buka navigasi di Google Maps (buka di tab baru)"
+                  className="inline-flex items-center justify-center gap-2 bg-[#8B1E1E] hover:bg-[#6B1515] text-white font-bold text-xs uppercase tracking-wider px-5 py-3 rounded-full transition-colors min-h-[44px]"
                 >
                   <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>Buka di Google Maps</span>
                 </a>
-                <Link
-                  href="/lokasi"
-                  className="btn-saigetsu-outline text-xs uppercase tracking-wider py-2.5 px-4"
-                  aria-label="Lihat rincian petunjuk arah di halaman lokasi"
+
+                <a
+                  href={waLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Hubungi via WhatsApp (buka di tab baru)"
+                  className="inline-flex items-center justify-center gap-2 bg-transparent hover:bg-[#8B1E1E] text-[#8B1E1E] hover:text-white border-2 border-[#8B1E1E] font-bold text-xs uppercase tracking-wider px-5 py-3 rounded-full transition-all duration-200 min-h-[44px]"
                 >
-                  Detail Petunjuk Arah
-                </Link>
+                  <MessageCircle className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span>Chat WhatsApp</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Kolom kanan (7 cols): Embed Google Maps Interaktif */}
+            <div className="lg:col-span-7 bg-white rounded-[12px] p-3 sm:p-4 border border-stone-200 shadow-sm flex flex-col justify-between">
+              <div className="relative rounded-[8px] overflow-hidden h-[360px] sm:h-[420px] w-full border border-stone-100 bg-stone-100">
+                <iframe
+                  title="Peta Lokasi Mie Ayam Surabaya"
+                  src={kontak.mapsEmbedUrl}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="w-full h-full"
+                />
+              </div>
+
+              <div className="pt-3 px-2 flex items-center justify-between text-xs text-stone-500 font-sans">
+                <span>Taman Pinang Indah, Sidoarjo</span>
+                <span className="text-[11px] font-semibold text-[#8B1E1E]">Google Maps Interaktif</span>
               </div>
             </div>
 
           </div>
+        </div>
 
+        <WaveDivider direction="bottom" color="#8B1E1E" />
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          i. KONTAK / CTA SECTION
+          - Background merah bata (#8B1E1E)
+          - Teks putih besar "Pesan sekarang via WhatsApp"
+          - Tombol pill putih dengan icon WA
+         ═══════════════════════════════════════════════════════════════ */}
+      <section id="kontak" className="bg-[#8B1E1E] py-20 sm:py-24">
+        <div className="max-w-4xl mx-auto px-5 sm:px-8 text-center">
+
+          <h2 className="font-display text-4xl sm:text-6xl font-bold text-white uppercase tracking-tight leading-[0.95] mb-4">
+            {copy.cta.heading}
+            <br />
+            <span className="text-[#F5E6D3]">{copy.cta.headingAccent}</span>
+          </h2>
+
+          <p className="text-red-100/90 font-sans text-base mb-8 max-w-md mx-auto leading-relaxed">
+            {copy.cta.subteks}
+          </p>
+
+          <a
+            href={waLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Pesan via WhatsApp (buka di tab baru)"
+            className="inline-flex items-center gap-3 bg-white text-[#8B1E1E] hover:bg-[#F5E6D3] font-bold text-base uppercase tracking-wider px-9 py-4 rounded-full transition-all duration-200 min-h-[52px] shadow-xl hover:-translate-y-0.5"
+          >
+            <MessageCircle className="w-5 h-5 shrink-0" aria-hidden="true" />
+            <span>{copy.cta.tombolText}</span>
+          </a>
         </div>
       </section>
 

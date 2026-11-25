@@ -1,24 +1,17 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
-import { MapPin, Phone, Instagram, Clock, ExternalLink, MessageCircle } from "lucide-react";
+import { MapPin, Phone, Instagram, ExternalLink, MessageCircle } from "lucide-react";
 
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Lokasi & Jam Buka",
+  title: "Lokasi Warung",
   description:
-    "Lokasi warung Mie Ayam Surabaya di Taman Pinang Indah, Sidoarjo. Petunjuk arah Google Maps, jam buka, dan kontak WhatsApp.",
+    "Lokasi warung Mie Ayam Surabaya di kawasan Taman Pinang Indah, Sidoarjo. Petunjuk arah Google Maps dan pemesanan via WhatsApp.",
 };
 
 export default async function LokasiPage() {
-  const [profile, schedule] = await Promise.all([
-    prisma.storeProfile.findFirst(),
-    prisma.operatingSchedule.findMany({
-      orderBy: { dayOfWeek: "asc" },
-    }),
-  ]);
-
-  const todayDay = new Date().getDay();
+  const profile = await prisma.storeProfile.findFirst();
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen pt-28 pb-24">
@@ -29,16 +22,15 @@ export default async function LokasiPage() {
 
           <div className="relative z-10 max-w-2xl space-y-3">
             <div className="flex items-center gap-2">
-              <span className="saigetsu-stamp">位置</span>
               <span className="text-xs uppercase tracking-[0.2em] text-[#BA382A] font-bold">
-                Kunjungi Warung Kami
+                Arah & Petunjuk Jalan
               </span>
             </div>
             <h1 className="font-display text-5xl sm:text-6xl font-bold tracking-tight text-stone-900 uppercase leading-[0.95]">
-              LOKASI & JAM BUKA
+              LOKASI WARUNG
             </h1>
             <p className="text-sm sm:text-base text-stone-600 font-sans leading-relaxed">
-              Temukan lokasi warung Mie Ayam Surabaya di Taman Pinang Indah, Sidoarjo, atau pesan langsung via online.
+              Warung kami berlokasi strategis di kawasan Taman Pinang Indah, Sidoarjo. Yuk mampir langsung atau pesan antar lewat WhatsApp!
             </p>
           </div>
         </div>
@@ -58,11 +50,14 @@ export default async function LokasiPage() {
                 </div>
                 <div>
                   <h3 className="font-sans font-bold text-lg text-stone-900">
-                    Alamat Lengkap
+                    Alamat Warung
                   </h3>
                   <p className="text-xs sm:text-sm text-stone-600 mt-1 leading-relaxed font-sans">
                     {profile?.address ||
                       "Jl. Raya Taman Pinang Indah, Jetis, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213"}
+                  </p>
+                  <p className="text-xs text-stone-500 mt-2 font-sans">
+                    Kawasan perumahan yang asri dan tenang. Area parkir luas dan aman untuk kendaraan roda dua maupun roda empat.
                   </p>
                 </div>
               </div>
@@ -78,15 +73,18 @@ export default async function LokasiPage() {
                 aria-label="Buka di Google Maps (buka di tab baru)"
               >
                 <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>Buka di Google Maps</span>
+                <span>Buka Petunjuk Arah di Maps</span>
               </a>
             </div>
 
             {/* Official Contacts */}
             <div className="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm space-y-4">
               <h3 className="font-sans font-bold text-lg text-stone-900">
-                Kontak Resmi
+                Kontak & WhatsApp Kami
               </h3>
+              <p className="text-xs text-stone-500 font-sans">
+                Mau tanya ketersediaan menu atau pesan antar ke rumah? Kami siap bantu!
+              </p>
               <div className="space-y-2.5 font-sans text-xs sm:text-sm">
                 <a
                   href={`https://wa.me/${profile?.whatsappNumber || "6282319195854"}`}
@@ -98,7 +96,7 @@ export default async function LokasiPage() {
                   <Phone className="w-4 h-4 text-[#BA382A] shrink-0" aria-hidden="true" />
                   <span className="flex-1 font-semibold">0823-1919-5854</span>
                   <span className="text-[10px] font-bold uppercase text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
-                    WhatsApp
+                    Chat WA
                   </span>
                 </a>
                 <a
@@ -117,45 +115,6 @@ export default async function LokasiPage() {
               </div>
             </div>
 
-            {/* Schedule */}
-            <div className="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm space-y-4">
-              <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5 text-[#BA382A]" aria-hidden="true" />
-                <h3 className="font-sans font-bold text-lg text-stone-900">
-                  Jam Operasional
-                </h3>
-              </div>
-              <div className="space-y-1.5 font-sans text-xs">
-                {schedule.map((item) => {
-                  const isToday = item.dayOfWeek === todayDay;
-                  return (
-                    <div
-                      key={item.id}
-                      className={`flex items-center justify-between py-2 px-3 rounded-lg ${
-                        isToday
-                          ? "bg-[#FDF2F0] font-bold text-[#BA382A]"
-                          : "text-stone-600"
-                      }`}
-                    >
-                      <span className="flex items-center gap-1.5">
-                        {item.dayName}
-                        {isToday && (
-                          <span className="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded-full bg-[#BA382A] text-white">
-                            Hari Ini
-                          </span>
-                        )}
-                      </span>
-                      <span>
-                        {item.isClosed
-                          ? "Tutup"
-                          : `${item.openTime} sampai ${item.closeTime} WIB`}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
             {/* Order CTA */}
             <a
               href={`https://wa.me/${profile?.whatsappNumber || "6282319195854"}?text=Halo%20Mie%20Ayam%20Surabaya,%20saya%20ingin%20memesan.`}
@@ -165,7 +124,7 @@ export default async function LokasiPage() {
               aria-label="Pesan Sekarang via WhatsApp (buka di tab baru)"
             >
               <MessageCircle className="w-4 h-4 shrink-0" aria-hidden="true" />
-              <span>Pesan Sekarang via WhatsApp</span>
+              <span>Pesan Sekarang Lewat WhatsApp</span>
             </a>
 
           </div>
@@ -174,10 +133,10 @@ export default async function LokasiPage() {
           <div className="lg:col-span-7 bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-sm flex flex-col">
             <div className="p-4 border-b border-stone-100 flex items-center justify-between bg-[#FAF8F5]">
               <span className="font-sans text-sm font-bold text-stone-900">
-                Peta Lokasi Interaktif
+                Peta Petunjuk Arah
               </span>
               <span className="text-[10px] uppercase tracking-wider text-stone-400 font-bold">
-                Google Maps
+                Google Maps Interaktif
               </span>
             </div>
 
