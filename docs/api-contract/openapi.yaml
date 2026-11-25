@@ -1,30 +1,372 @@
 openapi: 3.0.3
 info:
-  title: Mie Ayam System ML & API Contract
-  version: 1.0.0
-  description: Kontrak API untuk /extract, /match, /status, /orders
+  title: Mie Ayam Surabaya ML & AI Service API Contract
+  version: 1.1.0
+  description: >
+    Kontrak API internal layanan FastAPI ML/AI (Port 8000) untuk arsitektur 3-Stage Hybrid OCR
+    (Custom OCR lokal -> Gemini text-only -> Local rule fallback), Menu Matching 8 item resmi,
+    serta Chatbot Intent Classification.
+servers:
+  - url: http://localhost:8000
+    description: Local ML FastAPI Service
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: Wajib diisi bila API_KEY / REQUIRE_API_KEY diaktifkan pada environment ML service.
+
+  schemas:
+    ExtractedLineItem:
+      type: object
+      properties:
+        raw_text:
+          type: string
+          example: "1 MA"
+        qty:
+          type: integer
+          example: 1
+        raw_item:
+          type: string
+          example: "ma"
+        confidence:
+          type: number
+          format: float
+          example: 0.94
+        metode_bayar:
+          type: string
+          nullable: true
+          example: null
+        bbox:
+          type: array
+          items:
+            type: integer
+          nullable: true
+
+    ExtractResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        raw_text:
+          type: string
+          example: "1 MA\n1 MP\n1 MB"
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtractedLineItem'
+        overall_confidence:
+          type: number
+          format: float
+          example: 0.93
+        perlu_tinjauan_manual:
+          type: boolean
+          example: false
+
+    MatchItemInput:
+      type: object
+      properties:
+        raw_text:
+          type: string
+          nullable: true
+          example: "1 MP"
+        raw_item:
+          type: string
+          nullable: true
+          example: "MP"
+        qty:
+          type: integer
+          nullable: true
+          example: 1
+        confidence:
+          type: number
+          format: float
+          example: 0.95
+        metode_bayar:
+          type: string
+          nullable: true
+          example: "Tunai"
+
+    MatchRequest:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/MatchItemInput'
+              - type: string
+
+    MatchedItem:
+      type: object
+      properties:
+        menu_code:
+          type: string
+          nullable: true
+          example: "MP"
+        nama_menu:
+          type: string
+          example: "Mie Ayam Pangsit"
+        qty:
+          type: integer
+          example: 1
+        harga_satuan:
+          type: integer
+          example: 25000
+        subtotal:
+          type: integer
+          example: 25000
+        confidence:
+          type: number
+          format: float
+          example: 0.95
+        matched:
+          type: boolean
+          example: true
+        raw_text:
+          type: string
+          example: "1 MP"
+        raw_item:
+          type: string
+          example: "mp"
+        metode_bayar:
+          type: string
+          example: "Tunai"
+
+    MatchResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        matched:
+          type: array
+          items:
+            $ref: '#/components/schemas/MatchedItem'
+        unmatched_count:
+          type: integer
+          example: 0
+        grand_total:
+          type: integer
+          example: 70000
+
+    OcrRecapItem:
+      type: object
+      properties:
+        teks_mentah_ocr:
+          type: string
+          example: "1 MA"
+        ocr_confidence:
+          type: number
+          format: float
+          example: 0.93
+        menu_code:
+          type: string
+          nullable: true
+          example: "MA"
+        nama_menu:
+          type: string
+          example: "Mie Ayam"
+        qty:
+          type: integer
+          example: 1
+        harga_satuan:
+          type: integer
+          example: 20000
+        subtotal:
+          type: integer
+          example: 20000
+        metode_bayar:
+          type: string
+          enum: [Tunai, QRIS]
+          example: "Tunai"
+        matched:
+          type: boolean
+          example: true
+
+    OcrRecapResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        engine_used:
+          type: string
+          enum: [custom_ocr_plus_gemini, custom_ocr_local_fallback]
+          example: "custom_ocr_local_fallback"
+        tanggal_catatan:
+          type: string
+          example: "2026-11-25"
+        raw_text:
+          type: string
+          example: "1 MA\n1 MP\n1 MB"
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OcrRecapItem'
+        total_tunai:
+          type: integer
+          example: 70000
+        total_qris:
+          type: integer
+          example: 0
+        grand_total:
+          type: integer
+          example: 70000
+        ringkasan_harian:
+          type: string
+        perlu_tinjauan_manual:
+          type: boolean
+          example: false
+
+    ChatRequest:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+          example: "kak mie ayam komplit harganya berapa ya?"
+
+    ChatResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        predicted_intent:
+          type: string
+          enum: [tanya_produk, pemesanan, keluhan, lainnya]
+          example: "tanya_produk"
+        confidence:
+          type: number
+          format: float
+          example: 0.89
+        reply:
+          type: string
+        escalate_to_owner:
+          type: boolean
+          example: false
+        sources:
+          type: array
+          items:
+            type: string
+          example: ["menu_catalog.md"]
+
 paths:
+  /health:
+    get:
+      summary: Health check service dan kesiapan model lokal
+      responses:
+        '200':
+          description: Service status healthy/degraded
+
   /extract:
     post:
-      summary: Extract order details from image
+      summary: Stage 1 - Ekstraksi teks mentah kolom kiri nota menggunakan Custom OCR lokal
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
       responses:
         '200':
-          description: OK
+          description: Berhasil mengekstrak kandidat baris nota
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtractResponse'
+        '400':
+          description: Gambar kosong atau format tidak valid
+        '401':
+          description: Invalid API Key
+
   /match:
     post:
-      summary: Match extracted items against menu catalog
+      summary: Normalisasi dan pencocokan item terhadap 8 menu resmi
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchRequest'
       responses:
         '200':
-          description: OK
-  /status:
-    get:
-      summary: Store / service status
+          description: Hasil pemetaan menu & harga resmi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchResponse'
+        '401':
+          description: Invalid API Key
+
+  /api/v1/ai/ocr-recap:
+    post:
+      summary: Orchestrator 3-Stage Hybrid OCR Recap (1x HTTP call untuk Express.js)
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                tanggal:
+                  type: string
+                  description: Tanggal catatan format YYYY-MM-DD (opsional)
+                metode_bayar:
+                  type: string
+                  enum: [Tunai, QRIS]
+                  default: Tunai
       responses:
         '200':
-          description: OK
-  /orders:
-    get:
-      summary: Order management endpoint
+          description: Laporan rekapitulasi terstruktur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OcrRecapResponse'
+        '400':
+          description: Gambar kosong atau tidak valid
+        '401':
+          description: Invalid API Key
+
+  /api/v1/ai/chat:
+    post:
+      summary: Chatbot Intent Classifier & RAG Stub
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
       responses:
         '200':
-          description: OK
+          description: Hasil prediksi intent, balasan chatbot, dan status eskalasi pemilik
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '400':
+          description: Pesan kosong
+        '401':
+          description: Invalid API Key

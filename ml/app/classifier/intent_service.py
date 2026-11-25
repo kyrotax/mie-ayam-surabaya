@@ -5,18 +5,28 @@ Memuat model terbaik yang telah dilatih (TF-IDF + Linear SVM) dan melakukan infe
 
 import os
 import re
+from pathlib import Path
 import joblib
 import numpy as np
 
 # Kamus Normalisasi Slang & Singkatan Chat Lokal Sidoarjo / Surabaya
 SLANG_MAP = {
     r"\bma\b": "mie ayam",
+    r"\bmp\b": "mie ayam pangsit",
     r"\bmap\b": "mie ayam pangsit",
+    r"\bmb\b": "mie ayam bakso",
     r"\bmab\b": "mie ayam bakso",
+    r"\bmk\b": "mie ayam komplit",
     r"\bmak\b": "mie ayam komplit",
+    r"\bmie biasa\b": "mie ayam",
     r"\besteh\b": "es teh",
+    r"\bes teh manis\b": "es teh",
     r"\bteh anget\b": "teh hangat",
+    r"\bteh panas\b": "teh hangat",
     r"\besteler\b": "es teler",
+    r"\bairmineral\b": "air mineral",
+    r"\bmineral\b": "air mineral",
+    r"\baqua\b": "air mineral",
     r"\bbrp\b": "berapa",
     r"\budh\b": "sudah",
     r"\bsdh\b": "sudah",
@@ -44,8 +54,12 @@ SLANG_MAP = {
     r"\bak\b": "aku",
     r"\bmakasih\b": "terima kasih",
     r"\btq\b": "terima kasih",
-    r"\bthx\b": "terima kasih"
+    r"\bthx\b": "terima kasih",
 }
+
+_DEFAULT_MODEL_PATH = Path(__file__).resolve().parent / "intent_model_best.joblib"
+_ALT_DATA_SCIENCE_PATH = Path(__file__).resolve().parents[3] / "data-science" / "models" / "intent_model_best.joblib"
+
 
 def preprocess_text(text: str) -> str:
     """Case folding, standarisasi slang, dan pembersihan karakter non-alfanumerik."""
@@ -59,35 +73,43 @@ def preprocess_text(text: str) -> str:
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
+
 class IntentClassifierService:
-    def __init__(self, model_path: str = "ml/app/classifier/intent_model_best.joblib"):
-        if not os.path.exists(model_path):
-            alt_path = "data-science/models/intent_model_best.joblib"
-            if os.path.exists(alt_path):
-                model_path = alt_path
-            else:
-                raise FileNotFoundError(f"Model file tidak ditemukan di {model_path} atau {alt_path}")
-        
-        artifact = joblib.load(model_path)
+    """Wrapper inferensi TF-IDF + Linear SVM untuk klasifikasi 4 kelas intent."""
+
+    def __init__(self, model_path: str | None = None):
+        candidates = []
+        if model_path:
+            candidates.append(Path(model_path))
+        candidates.extend(
+            [
+                _DEFAULT_MODEL_PATH,
+                Path("ml/app/classifier/intent_model_best.joblib"),
+                _ALT_DATA_SCIENCE_PATH,
+                Path("data-science/models/intent_model_best.joblib"),
+            ]
+        )
+
+        resolved_path = next((p for p in candidates if p.exists()), None)
+        if resolved_path is None:
+            raise FileNotFoundError(
+                f"Model file tidak ditemukan di {[str(p) for p in candidates]}"
+            )
+
+        artifact = joblib.load(resolved_path)
         self.vectorizer = artifact["vectorizer"]
         self.model = artifact["model"]
         self.labels = artifact["labels"]
         self.model_name = artifact.get("model_name", "TF-IDF + Linear SVM")
 
-    def _softmax(self, x):
+    @staticmethod
+    def _softmax(x):
         e_x = np.exp(x - np.max(x))
         return e_x / e_x.sum(axis=0)
 
     def predict(self, text: str) -> dict:
         """
         Memprediksi intent dan confidence score dari teks pesan pelanggan.
-        Returns:
-            dict: {
-                "intent": str,
-                "confidence": float,
-                "clean_text": str,
-                "all_scores": dict
-            }
         """
         clean = preprocess_text(text)
         if not clean:
@@ -95,26 +117,32 @@ class IntentClassifierService:
                 "intent": "lainnya",
                 "confidence": 0.50,
                 "clean_text": "",
-                "all_scores": {lbl: 0.25 for lbl in self.labels}
+                "all_scores": {lbl: 0.25 for lbl in self.labels},
             }
-        
+
         vec = self.vectorizer.transform([clean])
-        
+
         if hasattr(self.model, "decision_function"):
             scores = self.model.decision_function(vec)[0]
             probs = self._softmax(scores)
-            pred_idx = np.argmax(probs)
-            pred_label = self.model.classes_[pred_idx]
+            pred_idx = int(np.argmax(probs))
+            pred_label = str(self.model.classes_[pred_idx])
             confidence = float(probs[pred_idx])
-            all_scores = {cls_name: round(float(prob), 4) for cls_name, prob in zip(self.model.classes_, probs)}
+            all_scores = {
+                str(cls_name): round(float(prob), 4)
+                for cls_name, prob in zip(self.model.classes_, probs)
+            }
         elif hasattr(self.model, "predict_proba"):
             probs = self.model.predict_proba(vec)[0]
-            pred_idx = np.argmax(probs)
-            pred_label = self.model.classes_[pred_idx]
+            pred_idx = int(np.argmax(probs))
+            pred_label = str(self.model.classes_[pred_idx])
             confidence = float(probs[pred_idx])
-            all_scores = {cls_name: round(float(prob), 4) for cls_name, prob in zip(self.model.classes_, probs)}
+            all_scores = {
+                str(cls_name): round(float(prob), 4)
+                for cls_name, prob in zip(self.model.classes_, probs)
+            }
         else:
-            pred_label = self.model.predict(vec)[0]
+            pred_label = str(self.model.predict(vec)[0])
             confidence = 0.90
             all_scores = {pred_label: 0.90}
 
@@ -122,29 +150,16 @@ class IntentClassifierService:
             "intent": pred_label,
             "confidence": round(confidence, 4),
             "clean_text": clean,
-            "all_scores": all_scores
+            "all_scores": all_scores,
         }
 
-# Singleton instance
-_service_instance = None
+
+_service_instance: IntentClassifierService | None = None
+
 
 def get_intent_classifier() -> IntentClassifierService:
+    """Mengembalikan singleton IntentClassifierService."""
     global _service_instance
     if _service_instance is None:
         _service_instance = IntentClassifierService()
     return _service_instance
-
-if __name__ == "__main__":
-    clf = get_intent_classifier()
-    test_queries = [
-        "kak mie ayam bakso porsi komplit berapaan ya?",
-        "min mau pesen 3 bungkus mie pangsit kuah dipisah dong",
-        "pesanan saya kok belum dateng2 ya sudah 1 jam lebih nih kecewa!",
-        "halo selamat pagi min apa kabar",
-        "min cuaca di sidoarjo sekarang mendung gak ya?"
-    ]
-    print("\n--- UJI COBA INFERENSI INTENT CLASSIFIER ---")
-    for q in test_queries:
-        res = clf.predict(q)
-        print(f"Pesan: '{q}'")
-        print(f" -> Intent: {res['intent']} (Confidence: {res['confidence']:.2f})\n")
