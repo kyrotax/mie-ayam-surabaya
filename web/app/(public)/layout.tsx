@@ -1,14 +1,19 @@
+import { PublicLiveDataProvider } from "@/lib/public/LiveDataContext";
 import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
 import WhatsAppFloating from "@/components/public/WhatsAppFloating";
 
-export default function PublicLayout({ children }: { children: React.ReactNode }) {
+export default function PublicLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <div className="min-h-screen flex flex-col">
+    <PublicLiveDataProvider>
       <Navbar />
       <main className="flex-grow">{children}</main>
       <Footer />
       <WhatsAppFloating />
-    </div>
+    </PublicLiveDataProvider>
   );
 }

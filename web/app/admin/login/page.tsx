@@ -216,7 +216,7 @@ export default function AdminLoginPage() {
         <div className="relative flex items-center gap-3">
           <div className="relative h-12 w-12 overflow-hidden rounded-[14px] border border-[#D6AC58] bg-[#FFF9F0]">
             <Image
-              src="/images/logo.jpg"
+              src="/images/logo-umkm.jpg"
               alt="Logo Mie Ayam Surabaya"
               fill
               sizes="48px"

@@ -1,11 +1,12 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
-import { siteConfig } from "@/data/site.config";
+import { useLiveData } from "@/lib/public/LiveDataContext";
 
 export default function WhatsAppFloating() {
-  const whatsappUrl = `https://wa.me/${siteConfig.kontak.wa}?text=Halo%20${encodeURIComponent(
-    siteConfig.brandName
+  const { siteData } = useLiveData();
+  const whatsappUrl = `https://wa.me/${siteData.kontak.wa}?text=Halo%20${encodeURIComponent(
+    siteData.brandName
   )}%2C%20saya%20ingin%20bertanya%20menu%20dan%20memesan.`;
 
   return (

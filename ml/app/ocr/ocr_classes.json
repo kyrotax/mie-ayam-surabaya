@@ -5,16 +5,16 @@
     "3",
     "4",
     "5",
-    "BKS",
-    "ESTEH",
     "MA",
-    "MAB",
-    "MAK",
-    "MAP",
-    "PGR",
+    "MB",
+    "MK",
+    "MP",
     "QRIS",
-    "TEH",
-    "TELER",
-    "TUNAI"
-  ]
+    "TUNAI",
+    "air mineral",
+    "es teh",
+    "es teler",
+    "teh hangat"
+  ],
+  "notes": "Target kelas resmi tanpa BKS dan PGR. Alias lama (MAP->MP, MAB->MB, MAK->MK, ESTEH->es teh, TEH->teh hangat, TELER->es teler) dipetakan lewat normalizer hingga retrain Fase 3."
 }

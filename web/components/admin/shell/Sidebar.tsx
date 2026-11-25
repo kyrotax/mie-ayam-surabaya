@@ -119,7 +119,7 @@ export function Sidebar({
       <div className={`relative flex min-h-[68px] items-center border-b border-[#E7E1DA] ${collapsed ? "justify-center px-2" : "gap-2.5 px-3"}`}>
         <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-[11px] border border-[#CDA35D] bg-[#FFF8ED]">
           <Image
-            src="/images/logo.jpg"
+            src="/images/logo-umkm.jpg"
             alt="Logo Mie Ayam Surabaya"
             fill
             sizes="36px"

@@ -1,106 +1,89 @@
 """
-Local Fallback Rule-Based Dictionary Parser untuk Rekapitulasi Buku Catatan.
-Digunakan saat Gemini API timeout atau terkena rate limit kuota gratis (429).
-Menjamin sistem tetap berfungsi 100% secara lokal menggunakan hasil inferensi Custom OCR.
+Local Fallback Rule-Based Dictionary & Alias Parser untuk Rekapitulasi Buku Catatan.
+Digunakan saat Gemini API key tidak diset, timeout, error, atau terkena rate limit (429).
+Menjamin sistem tetap berfungsi 100% secara lokal menggunakan hasil Custom OCR.
 """
 
-from typing import List, Dict, Any
+from typing import Any, Dict, List, Optional
+from app.core.catalog import get_menu_catalog
+from app.matching.matcher import match_items
+from app.matching.normalize import normalize_payment_method
+from app.pipeline.confidence import needs_manual_review
 
-MENU_CATALOG = {
-    "MA": {"name": "Mie Ayam Original", "price": 20000},
-    "MAP": {"name": "Mie Ayam Pangsit", "price": 25000},
-    "MAB": {"name": "Mie Ayam Bakso", "price": 25000},
-    "MAK": {"name": "Mie Ayam Komplit", "price": 30000},
-    "BKS": {"name": "Bakso Sapi Tambahan", "price": 10000},
-    "PGR": {"name": "Pangsit Goreng", "price": 10000},
-    "ESTEH": {"name": "Es Teh Manis", "price": 5000},
-    "TEH": {"name": "Teh Hangat", "price": 5000},
-    "TELER": {"name": "Es Teler Istimewa", "price": 15000},
-}
+# Katalog legacy dictionary diekspor dari Single Source of Truth (8 menu resmi)
+MENU_CATALOG = get_menu_catalog()
 
-def parse_recap_locally(recognized_rows: List[Dict[str, Any]], tanggal: str = "2026-11-19") -> Dict[str, Any]:
+
+def _format_rupiah_summary(grand_total: int, total_tunai: int, total_qris: int, item_count: int) -> str:
+    if item_count == 0:
+        return "Tidak ada catatan transaksi yang terbaca jelas. Silakan tinjau manual atau foto ulang."
+    if grand_total <= 0:
+        return f"Terbaca {item_count} baris catatan, namun memerlukan verifikasi menu/harga secara manual."
+    dominant_payment = "QRIS" if total_qris > total_tunai else "Tunai"
+    return (
+        f"Total penjualan buku catatan Rp{grand_total:,}. "
+        f"Tunai: Rp{total_tunai:,}, QRIS: Rp{total_qris:,} "
+        f"(mayoritas transaksi via {dominant_payment})."
+    ).replace(",", ".")
+
+
+def parse_recap_locally(
+    recognized_rows: List[Dict[str, Any] | str],
+    tanggal: str = "2026-11-19",
+    default_payment: str = "Tunai",
+    raw_text: Optional[str] = None,
+) -> Dict[str, Any]:
     """
     Mengubah list baris hasil Custom OCR menjadi format Structured JSON sesuai Capstone API Contract.
-    Input row contoh: {"menu_token": "MAK", "qty_token": "2", "pay_token": "QRIS", "confidence": 0.98}
+    Tidak pernah mengarang baris fiktif bila recognized_rows kosong.
     """
-    items = []
+    clean_default_pay = normalize_payment_method(default_payment, default="Tunai")
+    matched_rows = match_items(recognized_rows, default_payment=clean_default_pay)
+
+    items: List[Dict[str, Any]] = []
     total_tunai = 0
     total_qris = 0
-    perlu_tinjauan = False
 
-    for row in recognized_rows:
-        raw_menu = row.get("menu_token", "MA").upper()
-        raw_qty = row.get("qty_token", "1")
-        raw_pay = row.get("pay_token", "TUNAI").upper()
-        conf = row.get("confidence", 0.90)
+    for row in matched_rows:
+        metode_bayar = normalize_payment_method(row.get("metode_bayar"), default=clean_default_pay)
+        subtotal = int(row.get("subtotal", 0))
+        if row.get("matched"):
+            if metode_bayar == "QRIS":
+                total_qris += subtotal
+            else:
+                total_tunai += subtotal
 
-        # Mapping menu
-        catalog_info = MENU_CATALOG.get(raw_menu, {"name": f"Menu Tak Dikenal ({raw_menu})", "price": 20000})
-        nama_menu = catalog_info["name"]
-        harga_satuan = catalog_info["price"]
-
-        # Parse quantity
-        try:
-            qty = int(raw_qty)
-        except ValueError:
-            qty = 1
-            perlu_tinjauan = True
-
-        # Parse payment method
-        metode_bayar = "QRIS" if "QR" in raw_pay else "Tunai"
-
-        subtotal = qty * harga_satuan
-        if metode_bayar == "QRIS":
-            total_qris += subtotal
-        else:
-            total_tunai += subtotal
-
-        if conf < 0.80 or "Tak Dikenal" in nama_menu:
-            perlu_tinjauan = True
-
-        teks_mentah = f"{raw_menu} | {qty} | {metode_bayar}"
-        items.append({
-            "teks_mentah_ocr": teks_mentah,
-            "ocr_confidence": round(float(conf), 2),
-            "nama_menu": nama_menu,
-            "qty": qty,
-            "harga_satuan": harga_satuan,
-            "subtotal": subtotal,
-            "metode_bayar": metode_bayar
-        })
+        items.append(
+            {
+                "teks_mentah_ocr": row["raw_text"],
+                "ocr_confidence": round(float(row["confidence"]), 2),
+                "menu_code": row["menu_code"],
+                "nama_menu": row["nama_menu"],
+                "qty": int(row["qty"]),
+                "harga_satuan": int(row["harga_satuan"]),
+                "subtotal": subtotal,
+                "metode_bayar": metode_bayar,
+                "matched": bool(row["matched"]),
+            }
+        )
 
     grand_total = total_tunai + total_qris
-    
-    # Ringkasan harian
-    if grand_total > 0:
-        dominant_payment = "QRIS" if total_qris > total_tunai else "Tunai"
-        ringkasan = (
-            f"Total penjualan buku catatan Rp{grand_total:,}. "
-            f"Tunai: Rp{total_tunai:,}, QRIS: Rp{total_qris:,} "
-            f"(mayoritas transaksi via {dominant_payment})."
-        ).replace(",", ".")
-    else:
-        ringkasan = "Tidak ada catatan transaksi terbaca."
+    perlu_tinjauan = needs_manual_review(items)
+    combined_raw_text = (
+        raw_text
+        if raw_text is not None
+        else "\n".join(item["teks_mentah_ocr"] for item in items if item["teks_mentah_ocr"])
+    )
 
     return {
         "status": "success",
         "engine_used": "custom_ocr_local_fallback",
         "tanggal_catatan": tanggal,
+        "raw_text": combined_raw_text,
         "items": items,
         "total_tunai": total_tunai,
         "total_qris": total_qris,
         "grand_total": grand_total,
-        "ringkasan_harian": ringkasan,
-        "perlu_tinjauan_manual": perlu_tinjauan
+        "ringkasan_harian": _format_rupiah_summary(grand_total, total_tunai, total_qris, len(items)),
+        "perlu_tinjauan_manual": perlu_tinjauan,
     }
-
-if __name__ == "__main__":
-    sample_rows = [
-        {"menu_token": "MAK", "qty_token": "3", "pay_token": "QRIS", "confidence": 0.96},
-        {"menu_token": "MA", "qty_token": "2", "pay_token": "TUNAI", "confidence": 0.98},
-        {"menu_token": "ESTEH", "qty_token": "4", "pay_token": "QRIS", "confidence": 0.92},
-        {"menu_token": "PGR", "qty_token": "1", "pay_token": "TUNAI", "confidence": 0.88},
-    ]
-    res = parse_recap_locally(sample_rows)
-    import json
-    print(json.dumps(res, indent=2, ensure_ascii=False))

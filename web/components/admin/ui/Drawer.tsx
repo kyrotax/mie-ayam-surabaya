@@ -48,16 +48,16 @@ export function Drawer({
         aria-hidden="true"
       />
       <div
-        className={`relative z-10 w-full ${maxWidth} bg-white shadow-2xl h-full flex flex-col border-l border-[#3B2416]/10 ${
+        className={`relative z-10 w-full ${maxWidth} bg-white shadow-2xl h-full flex flex-col border-l border-[#D4AF37]/20 ${
           isLeft ? "mr-auto" : "ml-auto"
         } animate-in ${isLeft ? "slide-in-from-left" : "slide-in-from-right"} duration-200`}
       >
-        <div className="px-6 py-4 border-b border-[#3B2416]/10 flex items-center justify-between bg-[#FAF8F5]">
-          <h3 className="font-serif text-lg font-bold text-[#3B2416]">{title}</h3>
+        <div className="px-6 py-4 border-b border-[#D4AF37]/20 flex items-center justify-between bg-[#FFF8E7]">
+          <h3 className="font-heading text-lg text-[#2C1810]">{title}</h3>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-[#6B5240] hover:text-[#3B2416] hover:bg-white transition"
+            className="p-1.5 rounded-lg text-[#6B4423] hover:text-[#2C1810] hover:bg-white transition"
             aria-label="Tutup panel"
           >
             <X className="w-5 h-5" />

@@ -1,4 +1,3 @@
-// ButtonOutline: pill, border merah bata, transparent bg
 import { type ReactNode } from "react";
 
 interface ButtonOutlineProps {
@@ -6,7 +5,7 @@ interface ButtonOutlineProps {
   children: ReactNode;
   ariaLabel?: string;
   external?: boolean;
-  light?: boolean; // white border untuk background merah
+  light?: boolean;
   className?: string;
 }
 
@@ -19,8 +18,8 @@ export default function ButtonOutline({
   className = "",
 }: ButtonOutlineProps) {
   const baseClass = light
-    ? `inline-flex items-center justify-center gap-2 bg-transparent hover:bg-white/10 text-white border-2 border-white font-bold text-sm uppercase tracking-wider px-6 py-3 rounded-full transition-all duration-200 hover:-translate-y-0.5 min-h-[44px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 ${className}`
-    : `inline-flex items-center justify-center gap-2 bg-transparent hover:bg-[#8B1E1E] text-[#8B1E1E] hover:text-white border-2 border-[#8B1E1E] font-bold text-sm uppercase tracking-wider px-6 py-3 rounded-full transition-all duration-200 hover:-translate-y-0.5 min-h-[44px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#8B1E1E] focus-visible:outline-offset-2 ${className}`;
+    ? `inline-flex items-center justify-center gap-2 bg-transparent hover:bg-[#FFD700]/15 text-[#FFD700] border-2 border-[#D4AF37] font-bold text-sm uppercase tracking-wider px-6 py-3 rounded-full transition-all duration-200 hover:-translate-y-0.5 min-h-[44px] ${className}`
+    : `inline-flex items-center justify-center gap-2 bg-transparent hover:bg-[#8B0000] text-[#8B0000] hover:text-[#FFD700] border-2 border-[#8B0000] font-bold text-sm uppercase tracking-wider px-6 py-3 rounded-full transition-all duration-200 hover:-translate-y-0.5 min-h-[44px] ${className}`;
 
   if (external) {
     return (
@@ -42,4 +41,3 @@ export default function ButtonOutline({
     </a>
   );
 }
-

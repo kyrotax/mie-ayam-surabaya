@@ -3,40 +3,44 @@
 @tailwind utilities;
 
 /* ════════════════════════════════════════════════════════════════
-   SAIGETSU ASIAN FOOD PRESENTATION DESIGN SYSTEM
-   Ref: Saigetsu Presentation Deck (Japanese and Asian Food Presentation)
-   Palette: Terracotta Red (#BA382A), Deep Wine (#8B1E1E), 
-            Warm Ochre (#D97330), Crisp Porcelain White (#FFFFFF),
-            Soft Warm Ivory (#FAF8F5), Dark Stone (#1C1917)
+   MIE AYAM SURABAYA - CHINESE TRADITIONAL MODERN DESIGN SYSTEM
+   Primary Red: #C41E3A | Deep Red: #8B0000
+   Gold: #D4AF37 | Bright Gold: #FFD700
+   Cream: #FFF8E7 | Dark Text: #2C1810 | Warm Gray: #6B4423
 ════════════════════════════════════════════════════════════════ */
 
 :root {
-  --color-red:        #BA382A;
-  --color-red-dark:   #8B1E1E;
-  --color-red-light:  #FDF2F0;
-  --color-orange:     #D97330;
-  --color-dark:       #1C1917;
-  --color-stone:      #44403C;
-  --color-muted:      #78716C;
-  --color-cream:      #FAF8F5;
-  --color-border:     #E7E5E4;
+  --color-red:         #C41E3A;
+  --color-deep-red:    #8B0000;
+  --color-gold:        #D4AF37;
+  --color-bright-gold: #FFD700;
+  --color-cream:       #FFF8E7;
+  --color-white:       #FFFFFF;
+  --color-dark:        #2C1810;
+  --color-warm:        #6B4423;
+
+  /* Global Centralized Typography Variables */
+  --font-heading: 'Fraunces', Georgia, serif;
+  --font-display: var(--font-heading);
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+  --font-body: var(--font-sans);
 }
 
-/* ═══════════ ACCESSIBILITY & BASE ═══════════ */
+/* ═══════════ BASE & ACCESSIBILITY ═══════════ */
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  background-color: #FFFFFF;
-  color: #1C1917;
-  font-family: var(--font-sans), 'Plus Jakarta Sans', system-ui, sans-serif;
+  background-color: #FAF7F2;
+  color: #2C1810;
+  font-family: var(--font-sans), 'DM Sans', system-ui, sans-serif;
+  font-weight: 400; /* DM Sans regular */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* R-39: Cursor pointer on all interactive controls */
 a[href],
 button,
 summary,
@@ -55,152 +59,402 @@ a[aria-disabled="true"] {
   cursor: not-allowed;
 }
 
-/* R-32: Visible focus indicators */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 2px solid #BA382A;
+  outline: 2px solid #D4AF37;
   outline-offset: 3px;
 }
 
 /* ═══════════ SCROLLBAR ═══════════ */
 ::-webkit-scrollbar {
-  width: 7px;
+  width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #FAF8F5;
+  background: #FFF8E7;
 }
 ::-webkit-scrollbar-thumb {
-  background: #BA382A;
+  background: #C41E3A;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #8B1E1E;
+  background: #8B0000;
 }
 
-/* ═══════════ TYPOGRAPHY ═══════════ */
+/* ═══════════ CENTRALIZED TYPOGRAPHY CLASSES ═══════════ */
+.font-heading,
 .font-display {
-  font-family: var(--font-display), 'Oswald', 'Impact', sans-serif;
-  letter-spacing: -0.01em;
+  font-family: var(--font-heading), 'Fraunces', Georgia, serif;
 }
 
-.font-sans {
-  font-family: var(--font-sans), 'Plus Jakarta Sans', system-ui, sans-serif;
+.font-serif-sc {
+  font-family: 'Noto Serif SC', Georgia, serif;
 }
 
-/* ═══════════ BUTTONS (SAIGETSU STYLE) ═══════════ */
-.btn-saigetsu {
+.font-sans,
+.font-body {
+  font-family: var(--font-sans), 'DM Sans', system-ui, sans-serif;
+}
+
+/*
+  STANDARDIZASI FONT GLOBAL SELURUH WEBSITE:
+  - Heading (semua judul section): Fraunces (bold), ukuran seragam
+  - Subheading: DM Sans (medium), ukuran seragam
+  - Body text: DM Sans (regular), ukuran seragam
+  - Eyebrow / Label kategori: DM Sans (semibold), uppercase tracking seragam
+*/
+.section-heading-unified {
+  font-family: var(--font-heading), 'Fraunces', Georgia, serif;
+  font-weight: 700;
+  font-size: 2.125rem; /* 34px */
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+@media (min-width: 640px) {
+  .section-heading-unified {
+    font-size: 2.625rem; /* 42px */
+  }
+}
+@media (min-width: 1024px) {
+  .section-heading-unified {
+    font-size: 3rem; /* 48px */
+  }
+}
+
+.section-subheading-unified {
+  font-family: var(--font-sans), 'DM Sans', system-ui, sans-serif;
+  font-weight: 500; /* medium */
+  font-size: 0.9375rem; /* 15px */
+  line-height: 1.625;
+}
+@media (min-width: 640px) {
+  .section-subheading-unified {
+    font-size: 1rem; /* 16px */
+  }
+}
+
+.section-body-unified {
+  font-family: var(--font-sans), 'DM Sans', system-ui, sans-serif;
+  font-weight: 400; /* regular */
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.65;
+}
+@media (min-width: 640px) {
+  .section-body-unified {
+    font-size: 0.9375rem; /* 15px */
+  }
+}
+
+.section-eyebrow-unified {
+  font-family: var(--font-sans), 'DM Sans', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.6875rem; /* 11px */
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+}
+
+/* ═══════════ GOLD BUTTONS & LINKS ═══════════ */
+.btn-gold {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background-color: #BA382A;
-  color: #FFFFFF;
+  background-color: #D4AF37;
+  color: #2C1810;
   font-weight: 700;
   font-size: 0.875rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.75rem;
-  border: 1px solid transparent;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 14px rgba(186, 56, 42, 0.25);
+  padding: 0.75rem 1.75rem;
+  border-radius: 9999px;
+  border: 1.5px solid #FFD700;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
   text-decoration: none;
   min-height: 44px;
 }
-.btn-saigetsu:hover {
-  background-color: #A32E22;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(186, 56, 42, 0.35);
+.btn-gold:hover {
+  background-color: #FFD700;
+  transform: scale(1.05) translateY(-1px);
+  box-shadow: 0 10px 28px rgba(255, 215, 0, 0.45);
 }
-.btn-saigetsu:active {
-  transform: translateY(0);
+.btn-gold:active {
+  transform: scale(1);
 }
 
-.btn-saigetsu-outline {
+.btn-red-gold {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background-color: transparent;
-  color: #BA382A;
+  background-color: #8B0000;
+  color: #FFD700;
   font-weight: 700;
   font-size: 0.875rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.75rem;
-  border: 1.5px solid #BA382A;
-  transition: all 0.2s ease;
+  padding: 0.75rem 1.75rem;
+  border-radius: 9999px;
+  border: 1.5px solid #D4AF37;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(139, 0, 0, 0.28);
   text-decoration: none;
   min-height: 44px;
 }
-.btn-saigetsu-outline:hover {
-  background-color: #BA382A;
+.btn-red-gold:hover {
+  background-color: #C41E3A;
   color: #FFFFFF;
-  transform: translateY(-1px);
+  border-color: #FFD700;
+  transform: scale(1.04) translateY(-1px);
+  box-shadow: 0 8px 24px rgba(196, 30, 58, 0.36);
 }
-.btn-saigetsu-outline:active {
-  transform: translateY(0);
+.btn-red-gold:active {
+  transform: scale(1);
 }
 
-.btn-saigetsu-white {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background-color: #FFFFFF;
-  color: #BA382A;
-  font-weight: 700;
-  font-size: 0.875rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-  text-decoration: none;
-  min-height: 44px;
+/* Link underline gold from left to right */
+.link-gold-underline {
+  position: relative;
 }
-.btn-saigetsu-white:hover {
-  background-color: #FAF8F5;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.18);
-}
-
-/* ═══════════ ASIAN SEAL STAMP ═══════════ */
-.saigetsu-stamp {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #BA382A;
-  color: #FFFFFF;
-  font-weight: 800;
-  font-size: 0.75rem;
-  padding: 0.15rem 0.45rem;
+.link-gold-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, #D4AF37, #FFD700);
+  transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 2px;
-  letter-spacing: 0.05em;
-  line-height: 1.2;
+}
+.link-gold-underline:hover::after,
+.link-gold-underline[data-active="true"]::after {
+  width: 100%;
 }
 
-/* Dot leader for menu board */
-.saigetsu-dot-leader {
+/* ═══════════ CHINESE CLOUD & GEOMETRIC PATTERNS ═══════════ */
+.bg-chinese-cloud {
+  background-image: url("data:image/svg+xml,%3Csvg width='120' height='60' viewBox='0 0 120 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M25 45c-8.284 0-15-6.716-15-15 0-7.03 4.84-12.93 11.37-14.54C23.58 9.25 29.74 5 37 5c8.837 0 16 7.163 16 16 0 .45-.019.895-.056 1.335C56.86 23.63 60 27.94 60 33c0 6.627-5.373 12-12 12H25zm60 0c-6.627 0-12-5.373-12-12 0-5.06 3.14-9.37 7.556-10.665-.037-.44-.056-.885-.056-1.335 0-8.837 7.163-16 16-16 7.26 0 13.42 4.25 15.63 10.46C115.16 17.07 120 22.97 120 30c0 8.284-6.716 15-15 15H85z' fill='none' stroke='%23D4AF37' stroke-opacity='0.11' stroke-width='1.2'/%3E%3C/svg%3E");
+}
+
+.bg-chinese-lattice {
+  background-image: url("data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 24h12v-12h24v12h12M24 0v12h-12v24h12v12' fill='none' stroke='%23FFD700' stroke-opacity='0.07' stroke-width='1'/%3E%3C/svg%3E");
+}
+
+/* ═══════════ SPECIAL ANIMATIONS ═══════════ */
+@keyframes lampion-swing {
+  0%, 100% {
+    transform: rotate(-3.5deg);
+  }
+  50% {
+    transform: rotate(3.5deg);
+  }
+}
+
+@keyframes lampion-swing-reverse {
+  0%, 100% {
+    transform: rotate(3deg);
+  }
+  50% {
+    transform: rotate(-3deg);
+  }
+}
+
+@keyframes gold-glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 22px rgba(212, 175, 55, 0.4), 0 0 48px rgba(255, 215, 0, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 34px rgba(255, 215, 0, 0.65), 0 0 68px rgba(212, 175, 55, 0.28);
+  }
+}
+
+.animate-lampion {
+  transform-origin: top center;
+  animation: lampion-swing 4.5s ease-in-out infinite;
+}
+
+.animate-lampion-delay {
+  transform-origin: top center;
+  animation: lampion-swing-reverse 5s ease-in-out infinite;
+}
+
+.animate-gold-glow {
+  animation: gold-glow-pulse 3.6s ease-in-out infinite;
+}
+
+/* Dot leader for digital menu reference */
+.chinese-dot-leader {
   flex: 1;
-  border-bottom: 1.5px dotted #D6D3D1;
+  border-bottom: 1.5px dotted rgba(212, 175, 55, 0.65);
   margin: 0 0.75rem;
   transform: translateY(-4px);
 }
 
-/* Badge */
-.badge-saigetsu {
+/* Consistent Chinese badge & card surfaces */
+.badge-chinese {
   display: inline-flex;
   align-items: center;
   font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
   text-transform: uppercase;
-  padding: 0.2rem 0.65rem;
+  letter-spacing: 0.08em;
+  padding: 0.25rem 0.65rem;
   border-radius: 9999px;
-  background-color: #FDF2F0;
-  color: #BA382A;
-  border: 1px solid rgba(186, 56, 42, 0.25);
+  background-color: #8B0000;
+  color: #FFD700;
+  border: 1px solid rgba(212, 175, 55, 0.65);
+}
+
+.card-chinese {
+  border-radius: 1rem;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  background-color: #FFFFFF;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.28s ease;
+}
+.card-chinese:hover {
+  border-color: #D4AF37;
+  box-shadow: 0 14px 32px -8px rgba(139, 0, 0, 0.14), 0 4px 12px -2px rgba(212, 175, 55, 0.25);
+}
+
+/* ═══════════ HOVER TRANSITIONS (0.3s with Apple / Framer quintic cubic-bezier) ═══════════ */
+.btn-gold,
+.btn-red-gold,
+button:not(:disabled) {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.btn-gold:hover {
+  background-color: #FFD700;
+  color: #2C1810;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 26px rgba(255, 215, 0, 0.42);
+}
+
+.btn-red-gold:hover {
+  background-color: #A01414;
+  color: #FFFFFF;
+  border-color: #FFD700;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 26px rgba(160, 20, 20, 0.38);
+}
+
+/* Card hover: naik 6px (translateY -6px) dan shadow lebih tebal dengan transisi 0.3s halus */
+.card-hover-unified,
+.card-chinese,
+article.group {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.card-hover-unified:hover,
+.card-chinese:hover {
+  transform: translateY(-6px) translateZ(0);
+  box-shadow: 0 20px 35px -8px rgba(139, 0, 0, 0.16), 0 8px 18px -4px rgba(212, 175, 55, 0.20);
+}
+
+/* ═══════════ HERO ENTRY ANIMATIONS ═══════════ */
+/* 1. Hero: judul fade-in + subtle glide 1.2 detik (cubic-bezier) */
+@keyframes heroTitleFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) translateZ(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+.animate-hero-title {
+  animation: heroTitleFadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+@keyframes heroFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes heroFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) translateZ(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+.animate-fade-in {
+  animation: heroFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity;
+}
+
+.animate-fade-up {
+  animation: heroFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* 1. Hero: gambar latar zoom-in pelan, scale 1 ke 1.08 selama 20 detik (ultra smooth continuous) */
+@keyframes heroZoomBg {
+  0% {
+    transform: scale(1) translateZ(0);
+  }
+  100% {
+    transform: scale(1.08) translateZ(0);
+  }
+}
+
+.animate-zoom-bg {
+  animation: heroZoomBg 20s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+  will-change: transform;
+  transform-origin: center center;
+  backface-visibility: hidden;
+}
+
+/* Stagger delays with both fill-mode to prevent flash before animation starts */
+.delay-100 { animation-delay: 0.10s; }
+.delay-200 { animation-delay: 0.20s; }
+.delay-300 { animation-delay: 0.30s; }
+.delay-400 { animation-delay: 0.40s; }
+.delay-500 { animation-delay: 0.50s; }
+.delay-600 { animation-delay: 0.60s; }
+.delay-700 { animation-delay: 0.70s; }
+.delay-800 { animation-delay: 0.80s; }
+.delay-1000 { animation-delay: 1.00s; }
+
+/* ═══════════ CAROUSEL SCROLLBAR HIDE ═══════════ */
+/* Hide webkit scrollbar for all snap-carousels */
+.snap-x::-webkit-scrollbar {
+  display: none;
+}
+
+/* ═══════════ SCROLL-REVEAL (IntersectionObserver driven) ═══════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -212,4 +466,5 @@ select:focus-visible {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  .reveal { opacity: 1; transform: none; }
 }

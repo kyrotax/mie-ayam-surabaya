@@ -64,7 +64,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         className="fixed bottom-4 left-1/2 -translate-x-1/2 sm:left-auto sm:right-6 sm:bottom-6 sm:translate-x-0 z-50 flex flex-col gap-2 max-w-sm w-full px-4 sm:px-0 pointer-events-none"
       >
         {toasts.map((t) => {
-          let bgClass = "bg-[#F6E4C4] text-[#6B5240] border-[#E5D2AF]";
+          let bgClass = "bg-[#FAF0DC] text-[#6B4423] border-[#D4AF37]/30";
           let Icon = Info;
           if (t.type === "sukses") {
             bgClass = "bg-[#E4F2E5] text-[#276B2B] border-[#C2E4C4]";
