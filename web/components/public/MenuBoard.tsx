@@ -5,6 +5,7 @@ import { MessageCircle } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
 import { ChineseKnotDivider } from "./ChineseOrnaments";
 import PriceCounter from "./PriceCounter";
+import { useLiveData } from "@/lib/public/LiveDataContext";
 
 export interface MenuItemProps {
   id: number;
@@ -41,7 +42,45 @@ function resolveMenuImage(imageUrl?: string | null): string {
 }
 
 export default function MenuBoard({ categories }: { categories: CategoryProps[] }) {
-  if (!categories || categories.length === 0) {
+  const { siteData } = useLiveData();
+
+  const displayCategories: CategoryProps[] =
+    categories && categories.length > 0
+      ? categories
+      : [
+          {
+            id: 1,
+            name: "Mie Ayam & Makanan",
+            slug: "makanan",
+            items: siteData.menuMakanan.map((m, i) => ({
+              id: Number(m.id) || i + 1,
+              name: m.nama,
+              description: m.deskripsi,
+              price: m.harga,
+              imageUrl: m.foto,
+              isAvailable: m.isAvailable ?? true,
+              isFeatured: false,
+              badge: m.badge,
+            })),
+          },
+          {
+            id: 2,
+            name: "Minuman Segar",
+            slug: "minuman",
+            items: siteData.menuMinuman.map((m, i) => ({
+              id: Number(m.id) || 100 + i + 1,
+              name: m.nama,
+              description: m.deskripsi,
+              price: m.harga,
+              imageUrl: m.foto,
+              isAvailable: m.isAvailable ?? true,
+              isFeatured: false,
+              badge: m.badge,
+            })),
+          },
+        ];
+
+  if (!displayCategories || displayCategories.length === 0) {
     return (
       <div className="text-center py-16 px-6 rounded-2xl bg-white border-2 border-[#D4AF37]/50 text-[#2C1810] shadow-gold">
         <p className="font-display text-2xl font-bold uppercase text-[#8B0000] mb-2">
@@ -65,7 +104,7 @@ export default function MenuBoard({ categories }: { categories: CategoryProps[] 
 
   return (
     <div className="space-y-14">
-      {categories.map((cat) => (
+      {displayCategories.map((cat) => (
         <section key={cat.id} aria-labelledby={`category-title-${cat.id}`}>
           {/* Category Header */}
           <div className="text-center mb-6">

@@ -1,10 +1,12 @@
 interface StatusBadgeProps {
   isOpen?: boolean;
+  note?: string;
   className?: string;
 }
 
 export default function StatusBadge({
   isOpen = true,
+  note,
   className = "",
 }: StatusBadgeProps) {
   return (
@@ -29,7 +31,7 @@ export default function StatusBadge({
         {isOpen ? "Open" : "Closed"}
       </span>
       <span className="text-xs text-white/80 font-normal hidden sm:inline">
-        {isOpen ? "Selasa - Minggu: 13.00 - Habis" : "Buka kembali hari Selasa"}
+        {note || (isOpen ? "Selasa - Minggu: 13.00 - Habis" : "Tutup sementara")}
       </span>
     </div>
   );

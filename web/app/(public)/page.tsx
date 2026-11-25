@@ -1,6 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { siteConfig } from "@/data/site.config";
+import { useLiveData } from "@/lib/public/LiveDataContext";
 import StatusBadge from "@/components/public/StatusBadge";
 import SectionHeading from "@/components/public/SectionHeading";
 import MenuCarousel from "@/components/public/MenuCarousel";
@@ -20,14 +22,23 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-export const revalidate = 60;
-
 export default function HomePage() {
-  const { copy, kontak, sosmed, menuMakanan, menuMinuman, testimoni, statusBuka } =
-    siteConfig;
+  const { siteData } = useLiveData();
+  const {
+    copy,
+    kontak,
+    sosmed,
+    menuMakanan,
+    menuMinuman,
+    testimoni,
+    statusBuka,
+    statusBukaNote,
+    brandName,
+    galeri,
+  } = siteData;
 
   const waLink = `https://wa.me/${kontak.wa}?text=Halo%20${encodeURIComponent(
-    siteConfig.brandName
+    brandName
   )}%2C%20saya%20ingin%20memesan.`;
 
   return (
@@ -63,7 +74,7 @@ export default function HomePage() {
           <div className="max-w-2xl">
             {/* Status Highlight: Open / Closed */}
             <div className="mb-4 animate-fade-in delay-100">
-              <StatusBadge isOpen={statusBuka} />
+              <StatusBadge isOpen={statusBuka} note={statusBukaNote} />
             </div>
 
             {/* Main Headline: Fraunces Bold dengan fade-in 1.2s ease-out */}
@@ -276,7 +287,7 @@ export default function HomePage() {
                     <div className="relative rounded-2xl overflow-hidden aspect-[4/5] bg-stone-100 border border-stone-200 shadow-md group">
                       <Image
                         src="/images/1.png"
-                        alt={`Suasana Warung ${siteConfig.brandName}`}
+                        alt={`Suasana Warung ${brandName}`}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                         sizes="(max-width: 1024px) 60vw, 30vw"
@@ -289,7 +300,7 @@ export default function HomePage() {
                       <div className="relative w-full h-full min-h-[140px] rounded-2xl overflow-hidden bg-stone-100 border border-stone-200 shadow-sm group">
                         <Image
                           src="/images/2.png"
-                          alt={`Area makan ${siteConfig.brandName}`}
+                          alt={`Area makan ${brandName}`}
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                           sizes="(max-width: 1024px) 40vw, 20vw"
@@ -301,7 +312,7 @@ export default function HomePage() {
                       <div className="relative w-full h-full min-h-[140px] rounded-2xl overflow-hidden bg-stone-100 border border-stone-200 shadow-sm group">
                         <Image
                           src="/images/3.png"
-                          alt={`Tampak warung ${siteConfig.brandName}`}
+                          alt={`Tampak warung ${brandName}`}
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                           sizes="(max-width: 1024px) 40vw, 20vw"
@@ -333,7 +344,7 @@ export default function HomePage() {
           </ScrollReveal>
 
           <ScrollReveal animation="scale" delay={120}>
-            <GalleryCarousel items={siteConfig.galeri} />
+            <GalleryCarousel items={galeri} />
           </ScrollReveal>
         </div>
       </section>

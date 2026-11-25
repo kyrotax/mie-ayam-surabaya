@@ -17,12 +17,12 @@ import { useToast } from "@/components/admin/ui/Toast";
 import { Skeleton } from "@/components/admin/ui/Skeleton";
 import {
   UserPlus,
-  Shield,
   Trash2,
   KeyRound,
   CheckCircle2,
   XCircle,
   AlertCircle,
+  Pencil,
 } from "lucide-react";
 
 export default function AdminAkunPage() {
@@ -41,6 +41,14 @@ export default function AdminAkunPage() {
   const [formRole, setFormRole] = useState<Role>("admin");
   const [formPassword, setFormPassword] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
+
+  // Modal Edit Profil Pengguna
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editRole, setEditRole] = useState<Role>("admin");
+  const [editStatus, setEditStatus] = useState<"active" | "inactive">("active");
+  const [editError, setEditError] = useState<string | null>(null);
 
   // Dialog Konfirmasi Hapus
   const [deleteTarget, setDeleteTarget] = useState<User | null>(null);
@@ -80,8 +88,8 @@ export default function AdminAkunPage() {
     try {
       const created = await createUserService(
         {
-          name: formName,
-          email: formEmail,
+          name: formName.trim(),
+          email: formEmail.trim(),
           role: formRole,
           status: "active",
           password: formPassword,
@@ -93,6 +101,45 @@ export default function AdminAkunPage() {
       setIsCreateModalOpen(false);
     } catch (err: any) {
       setFormError(err.message || "Gagal menambah pengguna.");
+    }
+  };
+
+  const openEditModal = (user: User) => {
+    setEditingUser(user);
+    setEditName(user.name);
+    setEditEmail(user.email);
+    setEditRole(user.role);
+    setEditStatus(user.status);
+    setEditError(null);
+  };
+
+  const handleEditUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+    setEditError(null);
+
+    if (!editName.trim() || !editEmail.trim()) {
+      setEditError("Nama dan email wajib diisi.");
+      return;
+    }
+
+    try {
+      const updated = await updateUserService(
+        editingUser.id,
+        {
+          name: editName.trim(),
+          email: editEmail.trim(),
+          role: editRole,
+          status: editStatus,
+        },
+        currentUserId,
+        currentUserRole
+      );
+      setUsers((prev) => prev.map((u) => (u.id === updated.id ? updated : u)));
+      sukses(`Profil akun "${updated.name}" berhasil diperbarui.`);
+      setEditingUser(null);
+    } catch (err: any) {
+      setEditError(err.message || "Gagal memperbarui profil akun.");
     }
   };
 
@@ -109,21 +156,6 @@ export default function AdminAkunPage() {
       sukses(`Status akun "${targetUser.name}" diubah ke ${nextStatus === "active" ? "Aktif" : "Nonaktif"}.`);
     } catch (err: any) {
       bahaya(err.message || "Gagal mengubah status akun.");
-    }
-  };
-
-  const handleChangeRole = async (targetUser: User, nextRole: Role) => {
-    try {
-      const updated = await updateUserService(
-        targetUser.id,
-        { role: nextRole },
-        currentUserId,
-        currentUserRole
-      );
-      setUsers((prev) => prev.map((u) => (u.id === updated.id ? updated : u)));
-      sukses(`Peran "${targetUser.name}" diubah menjadi ${nextRole}.`);
-    } catch (err: any) {
-      bahaya(err.message || "Gagal mengubah peran akun.");
     }
   };
 
@@ -158,16 +190,16 @@ export default function AdminAkunPage() {
     return (
       <div className="space-y-6">
         <Skeleton className="h-14 w-1/3" />
-        <Skeleton className="h-64 rounded-2xl" />
+        <Skeleton className="h-64 w-full rounded-2xl" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader
         title="Kelola Akun & Hak Akses"
-        description="Atur pengguna yang berhak masuk ke sistem, peran Owner atau Admin, dan status akun."
+        description="Kelola akun karyawan, atur hak akses (Owner / Admin Kasir), dan edit profil profil pengguna secara fleksibel."
         action={
           <button
             type="button"
@@ -179,19 +211,19 @@ export default function AdminAkunPage() {
               setFormError(null);
               setIsCreateModalOpen(true);
             }}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#8D0D00] hover:bg-[#6B0A00] text-white text-xs font-semibold shadow-xs transition"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#8B0000] hover:bg-[#6B0000] text-[#FFF8E7] text-xs font-semibold shadow-xs transition"
           >
             <UserPlus className="w-4 h-4" />
-            <span>Tambah Pengguna</span>
+            <span>Tambah Karyawan / Pengguna</span>
           </button>
         }
       />
 
       {/* Tabel Pengguna */}
-      <div className="overflow-hidden rounded-2xl border border-[#3B2416]/10 bg-white shadow-xs">
+      <div className="overflow-hidden rounded-2xl border border-[#D4AF37]/20 bg-white shadow-xs">
         <table className="w-full text-left text-sm hidden md:table">
           <thead>
-            <tr className="bg-[#FAF8F5] border-b border-[#3B2416]/10 text-xs font-bold uppercase text-[#3B2416]">
+            <tr className="bg-[#FAF7F2] border-b border-[#D4AF37]/20 text-xs font-bold uppercase text-[#2C1810]">
               <th className="py-3 px-4">Nama Pengguna</th>
               <th className="py-3 px-4">Email</th>
               <th className="py-3 px-4">Peran</th>
@@ -200,15 +232,15 @@ export default function AdminAkunPage() {
               <th className="py-3 px-4 text-right">Aksi</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#3B2416]/10 text-xs">
+          <tbody className="divide-y divide-[#D4AF37]/15 text-xs">
             {users.map((u) => {
               const isSelf = u.id === currentUserId;
               return (
-                <tr key={u.id} className="hover:bg-[#FAF8F5]/60 transition">
-                  <td className="py-3 px-4 font-bold text-[#3B2416]">
+                <tr key={u.id} className="hover:bg-[#FAF7F2]/60 transition">
+                  <td className="py-3 px-4 font-bold text-[#2C1810]">
                     {u.name} {isSelf && <span className="text-[10px] text-[#8A5A00]">(Anda)</span>}
                   </td>
-                  <td className="py-3 px-4 text-[#6B5240] font-mono">{u.email}</td>
+                  <td className="py-3 px-4 text-[#6B4423] font-mono">{u.email}</td>
                   <td className="py-3 px-4">
                     <RoleBadge role={u.role} />
                   </td>
@@ -236,7 +268,7 @@ export default function AdminAkunPage() {
                       )}
                     </button>
                   </td>
-                  <td className="py-3 px-4 text-[#6B5240]">
+                  <td className="py-3 px-4 text-[#6B4423]">
                     {u.lastLogin
                       ? new Date(u.lastLogin).toLocaleDateString("id-ID", {
                           day: "numeric",
@@ -247,11 +279,19 @@ export default function AdminAkunPage() {
                       : "Belum pernah"}
                   </td>
                   <td className="py-3 px-4 text-right">
-                    <div className="inline-flex items-center gap-2">
+                    <div className="inline-flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => openEditModal(u)}
+                        className="p-1.5 rounded-lg text-[#6B4423] hover:text-[#2C1810] hover:bg-[#FAF7F2] transition"
+                        title="Edit Profil Karyawan"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </button>
                       <button
                         type="button"
                         onClick={() => handleResetPassword(u)}
-                        className="p-1.5 rounded-lg text-[#6B5240] hover:text-[#3B2416] hover:bg-[#FAF8F5]"
+                        className="p-1.5 rounded-lg text-[#6B4423] hover:text-[#2C1810] hover:bg-[#FAF7F2] transition"
                         title="Reset Kata Sandi"
                       >
                         <KeyRound className="w-4 h-4" />
@@ -260,7 +300,7 @@ export default function AdminAkunPage() {
                         type="button"
                         disabled={isSelf}
                         onClick={() => setDeleteTarget(u)}
-                        className="p-1.5 rounded-lg text-[#B42318] hover:bg-[#FBE4E1] disabled:opacity-30 disabled:hover:bg-transparent"
+                        className="p-1.5 rounded-lg text-[#B42318] hover:bg-[#FBE4E1] disabled:opacity-30 disabled:hover:bg-transparent transition"
                         title={isSelf ? "Tidak bisa menghapus akun sendiri" : "Hapus Akun"}
                       >
                         <Trash2 className="w-4 h-4" />
@@ -274,21 +314,21 @@ export default function AdminAkunPage() {
         </table>
 
         {/* Mobile View Card */}
-        <div className="md:hidden divide-y divide-[#3B2416]/10">
+        <div className="md:hidden divide-y divide-[#D4AF37]/15">
           {users.map((u) => {
             const isSelf = u.id === currentUserId;
             return (
               <div key={u.id} className="p-4 space-y-2 text-xs">
                 <div className="flex justify-between items-start">
                   <div>
-                    <div className="font-bold text-[#3B2416]">
+                    <div className="font-bold text-[#2C1810]">
                       {u.name} {isSelf && <span className="text-[10px] text-[#8A5A00]">(Anda)</span>}
                     </div>
-                    <div className="font-mono text-[#6B5240] text-[11px]">{u.email}</div>
+                    <div className="font-mono text-[#6B4423] text-[11px]">{u.email}</div>
                   </div>
                   <RoleBadge role={u.role} />
                 </div>
-                <div className="flex items-center justify-between pt-2 border-t border-[#3B2416]/5">
+                <div className="flex items-center justify-between pt-2 border-t border-[#D4AF37]/15">
                   <span
                     className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
                       u.status === "active"
@@ -298,19 +338,26 @@ export default function AdminAkunPage() {
                   >
                     {u.status === "active" ? "Aktif" : "Nonaktif"}
                   </span>
-                  <div className="flex gap-2">
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => openEditModal(u)}
+                      className="px-2.5 py-1 rounded-lg border border-[#D4AF37]/30 text-[11px] font-semibold text-[#2C1810] hover:bg-[#FAF7F2]"
+                    >
+                      Edit
+                    </button>
                     <button
                       type="button"
                       onClick={() => handleResetPassword(u)}
-                      className="px-2.5 py-1 rounded-lg border border-[#3B2416]/15 text-[11px] font-semibold"
+                      className="px-2 py-1 rounded-lg border border-[#2C1810]/15 text-[11px] font-semibold text-[#6B4423]"
                     >
-                      Reset Sandi
+                      Reset
                     </button>
                     {!isSelf && (
                       <button
                         type="button"
                         onClick={() => setDeleteTarget(u)}
-                        className="px-2.5 py-1 rounded-lg bg-[#FBE4E1] text-[#B42318] text-[11px] font-semibold"
+                        className="px-2 py-1 rounded-lg bg-[#FBE4E1] text-[#B42318] text-[11px] font-semibold"
                       >
                         Hapus
                       </button>
@@ -323,11 +370,78 @@ export default function AdminAkunPage() {
         </div>
       </div>
 
+      {/* Modal Edit Profil Pengguna */}
+      <Modal
+        isOpen={!!editingUser}
+        onClose={() => setEditingUser(null)}
+        title="Edit Profil Pengguna"
+      >
+        <form onSubmit={handleEditUser} className="space-y-4">
+          {editError && (
+            <div className="p-3 rounded-xl bg-[#FBE4E1] border border-[#F4BEB7] text-[#B42318] text-xs font-semibold flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{editError}</span>
+            </div>
+          )}
+
+          <InputField
+            label="Nama Lengkap"
+            required
+            value={editName}
+            onChange={(e) => setEditName(e.target.value)}
+            placeholder="mis. Budi Santoso"
+          />
+
+          <InputField
+            label="Alamat Email"
+            type="email"
+            required
+            value={editEmail}
+            onChange={(e) => setEditEmail(e.target.value)}
+            placeholder="budi@mieayam.test"
+          />
+
+          <SelectField
+            label="Peran Akun"
+            value={editRole}
+            onChange={(e) => setEditRole(e.target.value as Role)}
+          >
+            <option value="admin">Admin Kasir (Akses Operasional)</option>
+            <option value="owner">Owner (Akses Penuh Seluruh Sistem)</option>
+          </SelectField>
+
+          <SelectField
+            label="Status Akun"
+            value={editStatus}
+            onChange={(e) => setEditStatus(e.target.value as any)}
+          >
+            <option value="active">Aktif</option>
+            <option value="inactive">Nonaktif</option>
+          </SelectField>
+
+          <div className="pt-4 border-t border-[#D4AF37]/20 flex justify-end gap-3">
+            <button
+              type="button"
+              onClick={() => setEditingUser(null)}
+              className="px-4 py-2 rounded-xl border border-[#2C1810]/20 text-xs font-semibold text-[#2C1810] hover:bg-[#FAF7F2]"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              className="px-5 py-2 rounded-xl bg-[#8B0000] hover:bg-[#6B0000] text-white text-xs font-semibold transition"
+            >
+              Simpan Perubahan
+            </button>
+          </div>
+        </form>
+      </Modal>
+
       {/* Modal Tambah Pengguna */}
       <Modal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        title="Tambah Akun Pengguna Baru"
+        title="Tambah Akun Karyawan / Pengguna Baru"
       >
         <form onSubmit={handleCreateUser} className="space-y-4">
           {formError && (
@@ -342,7 +456,7 @@ export default function AdminAkunPage() {
             required
             value={formName}
             onChange={(e) => setFormName(e.target.value)}
-            placeholder="mis. Budi Santoso"
+            placeholder="mis. Siti Rahma"
           />
 
           <InputField
@@ -351,7 +465,7 @@ export default function AdminAkunPage() {
             required
             value={formEmail}
             onChange={(e) => setFormEmail(e.target.value)}
-            placeholder="budi@mieayam.test"
+            placeholder="siti@mieayam.test"
           />
 
           <SelectField
@@ -365,13 +479,13 @@ export default function AdminAkunPage() {
 
           <div>
             <div className="flex justify-between items-center mb-1">
-              <label className="text-xs font-semibold uppercase text-[#3B2416]">
+              <label className="text-xs font-semibold uppercase text-[#2C1810]">
                 Kata Sandi Sementara
               </label>
               <button
                 type="button"
                 onClick={handleGeneratePassword}
-                className="text-[11px] font-semibold text-[#8D0D00] hover:underline"
+                className="text-[11px] font-semibold text-[#8B0000] hover:underline"
               >
                 Buat Otomatis
               </button>
@@ -382,21 +496,21 @@ export default function AdminAkunPage() {
               value={formPassword}
               onChange={(e) => setFormPassword(e.target.value)}
               placeholder="Minimal 8 karakter..."
-              className="w-full h-11 px-3.5 rounded-xl border border-[#3B2416]/25 font-mono text-sm"
+              className="w-full h-11 px-3.5 rounded-xl border border-[#2C1810]/20 bg-white text-[#2C1810] font-mono text-sm"
             />
           </div>
 
-          <div className="pt-4 border-t border-[#3B2416]/10 flex justify-end gap-3">
+          <div className="pt-4 border-t border-[#D4AF37]/20 flex justify-end gap-3">
             <button
               type="button"
               onClick={() => setIsCreateModalOpen(false)}
-              className="px-4 py-2 rounded-xl border border-[#3B2416]/20 text-xs font-semibold text-[#3B2416]"
+              className="px-4 py-2 rounded-xl border border-[#2C1810]/20 text-xs font-semibold text-[#2C1810] hover:bg-[#FAF7F2]"
             >
               Batal
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl bg-[#8D0D00] hover:bg-[#6B0A00] text-white text-xs font-semibold transition"
+              className="px-5 py-2 rounded-xl bg-[#8B0000] hover:bg-[#6B0000] text-white text-xs font-semibold transition"
             >
               Buat Pengguna
             </button>
@@ -417,4 +531,3 @@ export default function AdminAkunPage() {
     </div>
   );
 }
-

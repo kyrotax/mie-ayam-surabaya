@@ -1,10 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { siteConfig } from "@/data/site.config";
+import { useLiveData } from "@/lib/public/LiveDataContext";
 import { MapPin, Phone, Instagram, ExternalLink } from "lucide-react";
 import { ChineseBorderStrip } from "./ChineseOrnaments";
 
 export default function Footer() {
+  const { siteData } = useLiveData();
   return (
     <footer className="bg-[#6B0000] text-[#FFF8E7]" aria-label="Footer Mie Ayam Surabaya">
       <ChineseBorderStrip />
@@ -17,7 +20,7 @@ export default function Footer() {
               <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-[#D4AF37] shrink-0 bg-[#8B0000]">
                 <Image
                   src="/images/logo-umkm.jpg"
-                  alt={`Logo ${siteConfig.brandName}`}
+                  alt={`Logo ${siteData.brandName}`}
                   fill
                   className="object-cover"
                   sizes="48px"
@@ -25,7 +28,7 @@ export default function Footer() {
               </div>
               <div>
                 <p className="font-heading text-xl font-bold text-[#FFD700] leading-tight">
-                  {siteConfig.brandName}
+                  {siteData.brandName}
                 </p>
                 <p className="text-[10px] tracking-[0.2em] uppercase text-[#FFF8E7]/80 font-medium font-sans">
                   Oriental Noodle House
@@ -34,7 +37,7 @@ export default function Footer() {
             </div>
 
             <p className="text-sm text-[#FFF8E7]/90 leading-relaxed font-sans">
-              {siteConfig.tagline}
+              {siteData.tagline}
             </p>
 
             <p className="text-xs text-[#FFF8E7]/75 font-sans leading-relaxed">
@@ -77,39 +80,39 @@ export default function Footer() {
 
             <div className="space-y-3.5 font-sans text-xs sm:text-sm">
               <a
-                href={siteConfig.kontak.mapsLink}
+                href={siteData.kontak.mapsLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`Buka peta lokasi: ${siteConfig.kontak.alamat}`}
+                aria-label={`Buka peta lokasi: ${siteData.kontak.alamat}`}
                 className="flex items-start gap-2.5 text-[#FFF8E7]/90 hover:text-[#FFD700] transition-colors group"
               >
                 <MapPin className="w-4 h-4 text-[#D4AF37] group-hover:scale-110 transition-transform shrink-0 mt-0.5" aria-hidden="true" />
-                <span className="text-xs leading-relaxed">{siteConfig.kontak.alamat}</span>
+                <span className="text-xs leading-relaxed">{siteData.kontak.alamat}</span>
               </a>
 
               <a
-                href={`https://wa.me/${siteConfig.kontak.wa}?text=Halo%20${encodeURIComponent(
-                  siteConfig.brandName
+                href={`https://wa.me/${siteData.kontak.wa}?text=Halo%20${encodeURIComponent(
+                  siteData.brandName
                 )}%2C%20saya%20ingin%20memesan.`}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`WhatsApp ${siteConfig.kontak.waDisplay} (buka di tab baru)`}
+                aria-label={`WhatsApp ${siteData.kontak.waDisplay} (buka di tab baru)`}
                 className="flex items-center gap-2.5 text-[#FFF8E7]/90 hover:text-[#FFD700] transition-colors group"
               >
                 <Phone className="w-4 h-4 text-[#D4AF37] group-hover:scale-110 group-hover:rotate-6 transition-transform shrink-0" aria-hidden="true" />
-                <span className="font-semibold text-xs">{siteConfig.kontak.waDisplay}</span>
+                <span className="font-semibold text-xs">{siteData.kontak.waDisplay}</span>
                 <ExternalLink className="w-3 h-3 text-[#D4AF37]/80 group-hover:text-[#FFD700]" aria-hidden="true" />
               </a>
 
               <a
-                href={siteConfig.sosmed.igUrl}
+                href={siteData.sosmed.igUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`Instagram ${siteConfig.sosmed.ig} (buka di tab baru)`}
+                aria-label={`Instagram ${siteData.sosmed.ig} (buka di tab baru)`}
                 className="flex items-center gap-2.5 text-[#FFF8E7]/90 hover:text-[#FFD700] transition-colors group"
               >
                 <Instagram className="w-4 h-4 text-[#D4AF37] group-hover:scale-125 group-hover:-rotate-6 transition-transform shrink-0" aria-hidden="true" />
-                <span className="font-semibold text-xs">{siteConfig.sosmed.ig}</span>
+                <span className="font-semibold text-xs">{siteData.sosmed.ig}</span>
                 <ExternalLink className="w-3 h-3 text-[#D4AF37]/80 group-hover:text-[#FFD700]" aria-hidden="true" />
               </a>
             </div>
@@ -118,7 +121,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-10 pt-6 border-t border-[#D4AF37]/30 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#FFF8E7]/75 font-sans">
-          <p>&copy; {new Date().getFullYear()} {siteConfig.brandName}. Hak cipta dilindungi.</p>
+          <p>&copy; {new Date().getFullYear()} {siteData.brandName}. Hak cipta dilindungi.</p>
           <div className="flex items-center gap-4">
             <Link
               href="/admin/login"

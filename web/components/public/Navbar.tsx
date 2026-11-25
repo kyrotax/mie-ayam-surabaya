@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { siteConfig } from "@/data/site.config";
+import { useLiveData } from "@/lib/public/LiveDataContext";
 import { Menu, X, MessageCircle } from "lucide-react";
 
 const NAV_LINKS = [
@@ -15,6 +15,7 @@ const NAV_LINKS = [
 ];
 
 export default function Navbar() {
+  const { siteData } = useLiveData();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -32,8 +33,8 @@ export default function Navbar() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [mobileOpen]);
 
-  const waLink = `https://wa.me/${siteConfig.kontak.wa}?text=Halo%20${encodeURIComponent(
-    siteConfig.brandName
+  const waLink = `https://wa.me/${siteData.kontak.wa}?text=Halo%20${encodeURIComponent(
+    siteData.brandName
   )}%2C%20saya%20ingin%20memesan.`;
 
   return (
@@ -49,12 +50,12 @@ export default function Navbar() {
         <Link
           href="/"
           className="flex items-center gap-3 group shrink-0"
-          aria-label={`Beranda ${siteConfig.brandName}`}
+          aria-label={`Beranda ${siteData.brandName}`}
         >
           <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden border-2 border-[#D4AF37] shadow-sm shrink-0 bg-[#6B0000] group-hover:border-[#FFD700] transition-colors">
             <Image
               src="/images/logo-umkm.jpg"
-              alt={`Logo ${siteConfig.brandName}`}
+              alt={`Logo ${siteData.brandName}`}
               fill
               className="object-cover"
               priority
@@ -63,7 +64,7 @@ export default function Navbar() {
           </div>
           <div className="flex flex-col">
             <span className="font-heading text-base sm:text-xl font-bold tracking-tight text-[#FFD700] group-hover:text-white transition-colors leading-none">
-              {siteConfig.brandName}
+              {siteData.brandName}
             </span>
             <span className="text-[10px] tracking-[0.2em] uppercase text-[#FFF8E7]/80 font-medium mt-1 hidden sm:block">
               Oriental Noodle House
