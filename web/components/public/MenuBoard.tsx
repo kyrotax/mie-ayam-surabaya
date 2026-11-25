@@ -49,11 +49,8 @@ export default function MenuBoard({ categories }: { categories: CategoryProps[] 
     <div className="space-y-16">
       {categories.map((cat) => (
         <section key={cat.id} aria-labelledby={`category-title-${cat.id}`}>
-          {/* Category Header (Saigetsu Editorial Style) */}
+          {/* Category Header (Editorial Clean Style) */}
           <div className="flex items-center gap-4 mb-6">
-            <span className="saigetsu-stamp text-xs py-1 px-2.5">
-              {cat.slug === "makanan" ? "料理" : "飲品"}
-            </span>
             <h2
               id={`category-title-${cat.id}`}
               className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-stone-900 uppercase"

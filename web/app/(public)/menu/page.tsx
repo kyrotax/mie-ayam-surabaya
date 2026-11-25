@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
 import MenuBoard from "@/components/public/MenuBoard";
-import { MessageCircle, AlertCircle } from "lucide-react";
+import { MessageCircle, CheckCircle2 } from "lucide-react";
 
 export const revalidate = 60;
 
@@ -30,9 +30,8 @@ export default async function MenuPage() {
 
           <div className="relative z-10 max-w-2xl space-y-4">
             <div className="flex items-center gap-2">
-              <span className="saigetsu-stamp">菜單</span>
               <span className="text-xs uppercase tracking-[0.2em] text-[#BA382A] font-bold">
-                Daftar Sajian Pilihan
+                Pilihan Sajian Lezat
               </span>
             </div>
 
@@ -41,15 +40,15 @@ export default async function MenuPage() {
             </h1>
 
             <p className="text-sm sm:text-base text-stone-600 font-sans leading-relaxed">
-              Nikmati racikan mie ayam oriental dengan bumbu khas yang meresap sempurna, tekstur mie kenyal dibuat segar setiap hari, disajikan hangat bersama kuah kaldu istimewa.
+              Semua menu makanan dibuat fresh dari mie kenyal buatan sendiri, disajikan hangat dengan kuah kaldu sapi sedap, bumbu ayam yang gurih meresap, dan aneka minuman dingin pelepas dahaga.
             </p>
 
             {/* Quick Notice Pill */}
             <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-stone-100 mt-4">
               <div className="flex items-center gap-2.5 text-xs text-stone-600 font-sans">
-                <AlertCircle className="w-4 h-4 text-[#BA382A] shrink-0" aria-hidden="true" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" aria-hidden="true" />
                 <span>
-                  Bisa dinikmati di tempat, dibawa pulang, atau dipesan via <strong>WhatsApp</strong>.
+                  Bisa makan di tempat, bungkus bawa pulang, atau pesan antar ke rumah lewat <strong>WhatsApp</strong>.
                 </span>
               </div>
               <a

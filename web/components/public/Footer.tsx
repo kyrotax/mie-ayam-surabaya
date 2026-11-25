@@ -1,128 +1,125 @@
-import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Phone, Instagram, Clock, ExternalLink } from "lucide-react";
+import { siteConfig } from "@/data/site.config";
+import { MapPin, Phone, Instagram, ExternalLink } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#FAF8F5] border-t border-stone-200 pt-16 pb-12 px-5 sm:px-8 text-stone-700">
-      <div className="max-w-6xl mx-auto">
-        {/* Main Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-stone-200">
-          {/* Brand Column (5 cols) */}
-          <div className="lg:col-span-5 space-y-4">
+    <footer className="bg-[#6B1515] text-[#F5E6D3]" aria-label="Footer Mie Ayam Surabaya">
+      <div className="border-t border-white/10" aria-hidden="true" />
+
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-8">
+          {/* Kolom 1: Brand & Tagline */}
+          <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="relative w-11 h-11 rounded-full overflow-hidden border-2 border-[#BA382A] shadow-sm shrink-0 bg-white">
+              <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-[#F5E6D3]/40 shrink-0 bg-stone-50">
                 <Image
                   src="/images/logo.jpg"
-                  alt="Logo Mie Ayam Surabaya"
+                  alt={`Logo ${siteConfig.brandName}`}
                   fill
                   className="object-cover"
+                  sizes="40px"
                 />
               </div>
               <div>
-                <div className="flex items-center gap-1.5">
-                  <span className="font-display text-2xl font-bold tracking-tight text-stone-900 uppercase leading-none">
-                    Mie Ayam Surabaya
-                  </span>
-                  <span className="saigetsu-stamp">東方</span>
-                </div>
-                <p className="text-[10px] tracking-[0.2em] uppercase text-stone-500 font-semibold mt-0.5">
-                  Autentik Oriental · Sejak 2024
+                <p className="font-display text-lg font-bold text-white uppercase leading-tight">
+                  {siteConfig.brandName}
+                </p>
+                <p className="text-[9px] tracking-[0.2em] uppercase text-[#F5E6D3]/60 font-semibold">
+                  Autentik Oriental
                 </p>
               </div>
             </div>
-            <p className="text-sm text-stone-600 font-sans leading-relaxed max-w-sm">
-              Menyajikan mie ayam oriental dengan tekstur kenyal, bumbu gurih meresap, dan topping pilihan melimpah. Warung kuliner keluarga di Sidoarjo, Jawa Timur.
+
+            <p className="text-sm text-[#F5E6D3]/80 leading-relaxed font-sans">
+              {siteConfig.tagline}
+            </p>
+
+            <p className="text-xs text-[#F5E6D3]/60 font-sans leading-relaxed">
+              Semangkuk mie kenyal buatan sendiri tiap pagi, disajikan hangat dengan bumbu ayam gurih meresap, kuah kaldu sapi, dan aneka minuman segar di Sidoarjo.
             </p>
           </div>
 
-          {/* Navigation Links (2 cols) */}
-          <div className="lg:col-span-2 space-y-3">
-            <p className="text-xs tracking-[0.15em] uppercase text-[#BA382A] font-bold">
-              Navigasi
-            </p>
-            <ul className="space-y-2 text-sm font-sans">
+          {/* Kolom 2: Navigasi Cepat (Pengganti Jam Buka) */}
+          <div className="space-y-4">
+            <h3 className="text-[11px] tracking-[0.2em] uppercase text-[#F5E6D3]/70 font-bold">
+              Navigasi Halaman
+            </h3>
+
+            <ul className="space-y-2.5 font-sans text-xs">
               {[
-                { label: "Beranda", href: "/" },
-                { label: "Daftar Menu", href: "/menu" },
-                { label: "Tentang Kami", href: "/tentang" },
-                { label: "Lokasi & Jam", href: "/lokasi" },
-              ].map((item) => (
-                <li key={item.href}>
-                  <Link
+                { label: "Beranda Utama", href: "#beranda" },
+                { label: "Cerita & Tentang Kami", href: "#tentang" },
+                { label: "Daftar Menu & Minuman", href: "#menu" },
+                { label: "Kelebihan Warung", href: "#kenapa-kami" },
+                { label: "Galeri Hidangan", href: "#galeri" },
+                { label: "Petunjuk Arah & Lokasi", href: "#lokasi" },
+              ].map((item, idx) => (
+                <li key={idx}>
+                  <a
                     href={item.href}
-                    className="text-stone-600 hover:text-[#BA382A] font-medium transition-colors py-1 inline-block"
+                    className="text-white/80 hover:text-white transition-colors inline-block py-0.5"
                   >
                     {item.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Operating Hours (2 cols) */}
-          <div className="lg:col-span-2 space-y-3">
-            <p className="text-xs tracking-[0.15em] uppercase text-[#BA382A] font-bold flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-[#BA382A]" aria-hidden="true" />
-              <span>Jam Buka</span>
-            </p>
-            <p className="text-sm text-stone-800 font-bold font-sans">
-              Setiap Hari
-            </p>
-            <p className="text-sm font-display font-bold text-[#BA382A]">
-              09.00 sampai 21.00 WIB
-            </p>
-            <p className="text-xs text-stone-500 leading-relaxed">
-              Makan di tempat, bawa pulang, dan pesanan WhatsApp / Gojek.
-            </p>
-          </div>
+          {/* Kolom 3: Kontak, Alamat & Sosmed */}
+          <div className="space-y-4">
+            <h3 className="text-[11px] tracking-[0.2em] uppercase text-[#F5E6D3]/70 font-bold">
+              Kontak & Lokasi
+            </h3>
 
-          {/* Contact & Address (3 cols) */}
-          <div className="lg:col-span-3 space-y-3">
-            <p className="text-xs tracking-[0.15em] uppercase text-[#BA382A] font-bold">
-              Kontak & Alamat
-            </p>
-            <div className="space-y-2.5 text-sm font-sans">
-              <div className="flex items-start gap-2.5 text-stone-600">
-                <MapPin className="w-4 h-4 text-[#BA382A] shrink-0 mt-0.5" aria-hidden="true" />
-                <span className="text-xs leading-relaxed">
-                  Taman Pinang Indah, Sidoarjo, Jawa Timur
-                </span>
-              </div>
+            <div className="space-y-3 font-sans text-xs sm:text-sm">
               <a
-                href="https://wa.me/6282319195854"
+                href={siteConfig.kontak.mapsLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2.5 text-stone-700 hover:text-[#BA382A] transition-colors group"
-                aria-label="Nomor WhatsApp 0823-1919-5854 (buka di tab baru)"
+                aria-label={`Buka peta lokasi: ${siteConfig.kontak.alamat}`}
+                className="flex items-start gap-2.5 text-[#F5E6D3]/80 hover:text-white transition-colors group"
               >
-                <Phone className="w-4 h-4 text-[#BA382A] shrink-0" aria-hidden="true" />
-                <span className="font-semibold text-xs">0823-1919-5854</span>
-                <ExternalLink className="w-3 h-3 text-stone-400 group-hover:text-[#BA382A]" aria-hidden="true" />
+                <MapPin className="w-4 h-4 text-[#F5E6D3]/50 group-hover:text-[#F5E6D3] shrink-0 mt-0.5" aria-hidden="true" />
+                <span className="text-xs leading-relaxed">{siteConfig.kontak.alamat}</span>
               </a>
+
               <a
-                href="https://www.instagram.com/mieayamsurabaya_/"
+                href={`https://wa.me/${siteConfig.kontak.wa}?text=Halo%20${encodeURIComponent(
+                  siteConfig.brandName
+                )}%2C%20saya%20ingin%20memesan.`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2.5 text-stone-700 hover:text-[#BA382A] transition-colors group"
-                aria-label="Instagram @mieayamsurabaya_ (buka di tab baru)"
+                aria-label={`WhatsApp ${siteConfig.kontak.waDisplay} (buka di tab baru)`}
+                className="flex items-center gap-2.5 text-[#F5E6D3]/80 hover:text-white transition-colors group"
               >
-                <Instagram className="w-4 h-4 text-[#BA382A] shrink-0" aria-hidden="true" />
-                <span className="font-semibold text-xs">@mieayamsurabaya_</span>
-                <ExternalLink className="w-3 h-3 text-stone-400 group-hover:text-[#BA382A]" aria-hidden="true" />
+                <Phone className="w-4 h-4 text-[#F5E6D3]/50 group-hover:text-[#F5E6D3] shrink-0" aria-hidden="true" />
+                <span className="font-semibold text-xs">{siteConfig.kontak.waDisplay}</span>
+                <ExternalLink className="w-3 h-3 text-[#F5E6D3]/40 group-hover:text-[#F5E6D3]" aria-hidden="true" />
+              </a>
+
+              <a
+                href={siteConfig.sosmed.igUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Instagram ${siteConfig.sosmed.ig} (buka di tab baru)`}
+                className="flex items-center gap-2.5 text-[#F5E6D3]/80 hover:text-white transition-colors group"
+              >
+                <Instagram className="w-4 h-4 text-[#F5E6D3]/50 group-hover:text-[#F5E6D3] shrink-0" aria-hidden="true" />
+                <span className="font-semibold text-xs">{siteConfig.sosmed.ig}</span>
+                <ExternalLink className="w-3 h-3 text-[#F5E6D3]/40 group-hover:text-[#F5E6D3]" aria-hidden="true" />
               </a>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-stone-500 font-sans">
-          <p>© {new Date().getFullYear()} Mie Ayam Surabaya. Seluruh hak cipta dilindungi.</p>
-          <div className="flex items-center gap-4">
-            <span className="text-[11px] tracking-wider uppercase text-stone-400 font-semibold">
-              UMKM Kuliner Oriental Sidoarjo
-            </span>
-          </div>
+        <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#F5E6D3]/50 font-sans">
+          <p>&copy; {new Date().getFullYear()} {siteConfig.brandName}. Hak cipta dilindungi.</p>
+          <span className="text-[10px] tracking-widest uppercase text-[#F5E6D3]/40 font-semibold">
+            Warung Kuliner Oriental Sidoarjo
+          </span>
         </div>
       </div>
     </footer>
