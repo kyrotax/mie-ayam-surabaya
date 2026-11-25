@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { MenuItem, MenuCategoryType, Role } from "@/lib/admin/types";
+import { uploadFileToStorage } from "@/lib/storage";
 import {
   getMenuListService,
   createMenuItemService,
@@ -26,6 +27,7 @@ import {
   ArrowDown,
   UtensilsCrossed,
   Tag,
+  Upload,
 } from "lucide-react";
 
 export default function AdminMenuPage() {
@@ -46,6 +48,28 @@ export default function AdminMenuPage() {
   const [formAliases, setFormAliases] = useState<string[]>([]);
   const [formImageUrl, setFormImageUrl] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const imageFileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploadingImage(true);
+    try {
+      const itemId = editingItem ? String(editingItem.id) : `new_${Date.now()}`;
+      const { filePath } = await uploadFileToStorage(file, {
+        featureName: "menu",
+        itemId,
+        filename: file.name,
+      });
+      setFormImageUrl(filePath);
+      sukses("Foto menu berhasil diunggah ke Storage.");
+    } catch (err: any) {
+      bahaya(err.message || "Gagal mengunggah foto menu.");
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
 
   // Dialog Hapus
   const [deleteTarget, setDeleteTarget] = useState<MenuItem | null>(null);
@@ -483,13 +507,33 @@ export default function AdminMenuPage() {
             placeholder="Deskripsi singkat rasa dan topping..."
           />
 
-          <InputField
-            label="URL Foto Menu"
-            value={formImageUrl}
-            onChange={(e) => setFormImageUrl(e.target.value)}
-            placeholder="/images/menu/mie-ayam.png"
-            helperText="Gunakan path gambar publik lokal"
-          />
+          <div className="space-y-1.5">
+            <InputField
+              label="URL Foto Menu"
+              value={formImageUrl}
+              onChange={(e) => setFormImageUrl(e.target.value)}
+              placeholder="/images/menu/mie-ayam.png"
+              helperText="Gunakan path gambar atau pilih berkas untuk diunggah ke Supabase Storage"
+            />
+            <div className="flex items-center gap-2 pt-1">
+              <input
+                ref={imageFileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                className="hidden"
+                onChange={handleImageFileChange}
+              />
+              <button
+                type="button"
+                onClick={() => imageFileInputRef.current?.click()}
+                disabled={isUploadingImage}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#3B2416]/20 bg-white hover:bg-[#FAF8F5] text-xs font-semibold text-[#3B2416] transition"
+              >
+                <Upload className="w-3.5 h-3.5" />
+                <span>{isUploadingImage ? "Mengunggah..." : "Pilih Berkas Foto"}</span>
+              </button>
+            </div>
+          </div>
 
           <SwitchField
             checked={formAvailable}

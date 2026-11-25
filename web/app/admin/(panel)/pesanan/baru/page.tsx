@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { processPhotoExtractionService } from "@/lib/admin/services/order-service";
+import { uploadFileToStorage } from "@/lib/storage";
 import { PageHeader } from "@/components/admin/ui/PageHeader";
 import { useToast } from "@/components/admin/ui/Toast";
 import {
@@ -104,14 +105,24 @@ export default function AdminPesananBaruPage() {
     setErrorMessage(null);
 
     try {
-      setProcessingStep("Mengunggah foto catatan…");
-      await new Promise((r) => setTimeout(r, 600));
+      setProcessingStep("Mengunggah foto catatan ke Storage…");
+      let uploadedPhotoPath = photoPreview;
+      try {
+        const { filePath } = await uploadFileToStorage(selectedFile, {
+          featureName: "orders",
+          itemId: `draft_${Date.now()}`,
+          filename: selectedFile.name,
+        });
+        uploadedPhotoPath = filePath;
+      } catch (uploadErr) {
+        console.warn("Storage upload fallback:", uploadErr);
+      }
 
       setProcessingStep("Membaca tulisan tangan dengan OCR…");
-      await new Promise((r) => setTimeout(r, 800));
+      await new Promise((r) => setTimeout(r, 600));
 
       setProcessingStep("Mencocokkan menu & menghitung keyakinan…");
-      const job = await processPhotoExtractionService(selectedFile.name, photoPreview);
+      const job = await processPhotoExtractionService(selectedFile.name, uploadedPhotoPath);
 
       // Selesai -> navigasi ke review
       router.push(`/admin/pesanan/${job.id}/review`);

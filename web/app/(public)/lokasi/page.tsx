@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { prisma } from "@/lib/db";
 import { ChineseKnotDivider } from "@/components/public/ChineseOrnaments";
 import { MapPin, Phone, Instagram, ExternalLink, MessageCircle, Clock } from "lucide-react";
 
@@ -11,8 +10,18 @@ export const metadata: Metadata = {
     "Lokasi warung Mie Ayam Surabaya di kawasan Taman Pinang Indah, Sidoarjo. Petunjuk arah Google Maps dan pemesanan via WhatsApp.",
 };
 
+// Static profile data (not yet stored in Supabase — uses defaults)
+const DEFAULT_PROFILE = {
+  address: "Jl. Raya Taman Pinang Indah, Jetis, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213",
+  whatsappNumber: "6282319195854",
+  instagramUrl: "https://www.instagram.com/mieayamsurabaya_/",
+  mapsUrl: "https://www.google.com/maps/place/MIE+AYAM+SURABAYA,+Jl.+Raya+Taman+Pinang+Indah",
+  mapsEmbedUrl:
+    "https://maps.google.com/maps?q=MIE%20AYAM%20SURABAYA%20Taman%20Pinang%20Indah%20Sidoarjo&t=&z=15&ie=UTF8&iwloc=&output=embed",
+};
+
 export default async function LokasiPage() {
-  const profile = await prisma.storeProfile.findFirst();
+  const profile = DEFAULT_PROFILE;
 
   return (
     <div className="bg-[#FAF7F2] min-h-screen pt-28 pb-24 text-[#2C1810]">

@@ -15,6 +15,7 @@ import {
   createOrderService,
 } from "@/lib/admin/services/order-service";
 import { getMenuListService } from "@/lib/admin/services/menu-service";
+import { getSignedFileUrl } from "@/lib/storage";
 import { PageHeader } from "@/components/admin/ui/PageHeader";
 import { StepperField } from "@/components/admin/ui/Field";
 import { ErrorState } from "@/components/admin/ui/ErrorState";
@@ -59,6 +60,13 @@ export default function PesananReviewPage() {
   const [isPhotoCollapsed, setIsPhotoCollapsed] = useState(false);
   const [photoZoom, setPhotoZoom] = useState(1);
   const [isSaving, setIsSaving] = useState(false);
+  const [displayPhotoUrl, setDisplayPhotoUrl] = useState<string>("/images/dummy-catatan-01.jpg");
+
+  useEffect(() => {
+    if (job?.photoUrl) {
+      getSignedFileUrl(job.photoUrl).then(setDisplayPhotoUrl);
+    }
+  }, [job?.photoUrl]);
 
   useEffect(() => {
     async function load() {
@@ -310,7 +318,7 @@ export default function PesananReviewPage() {
                     className="relative w-full h-full transition-transform duration-150"
                   >
                     <Image
-                      src={photoUrl}
+                      src={displayPhotoUrl}
                       alt="Foto catatan pesanan"
                       fill
                       className="object-contain"

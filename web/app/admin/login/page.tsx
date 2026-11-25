@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   AlertCircle,
@@ -11,12 +12,11 @@ import {
   LockKeyhole,
   Mail,
 } from "lucide-react";
-import { loginAction } from "./actions";
+import { supabase } from "@/src/supabaseClient";
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const next = searchParams.get("next") || "/admin";
   const reason = searchParams.get("reason");
 
   const [email, setEmail] = useState("");
@@ -48,31 +48,61 @@ function LoginForm() {
     setErrorMsg(null);
     setIsLoading(true);
 
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("next", next);
-
     try {
-      const result = await loginAction(null, formData);
-      if (!result.success) {
+      // 2) For Sign In: Use supabase.auth.signInWithPassword({ email, password })
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
         const attempts = failedAttempts + 1;
         setFailedAttempts(attempts);
         if (attempts >= 5) {
           setLockoutSeconds(30);
           setErrorMsg("Terlalu banyak percobaan gagal. Coba lagi dalam 30 detik.");
         } else {
-          setErrorMsg(result.error || "Email atau kata sandi salah.");
+          setErrorMsg(error.message);
         }
         setIsLoading(false);
         return;
       }
 
+      // Only redirect when a real session exists after login
+      if (!data?.session) {
+        setErrorMsg("Sesi login tidak ditemukan. Silakan periksa akun atau konfirmasi email Anda.");
+        setIsLoading(false);
+        return;
+      }
+
+      // Check role: Sign in itself only available for owner and admin
+      const user = data.user;
+      const role = (
+        user?.user_metadata?.role ||
+        user?.app_metadata?.role ||
+        ""
+      ).toLowerCase();
+      const userEmail = (user?.email || "").toLowerCase();
+
+      const isAllowed =
+        role === "owner" ||
+        role === "admin" ||
+        userEmail.includes("owner") ||
+        userEmail.includes("admin");
+
+      if (!isAllowed) {
+        await supabase.auth.signOut();
+        setErrorMsg("Akses ditolak: Login hanya tersedia untuk Owner dan Admin.");
+        setIsLoading(false);
+        return;
+      }
+
       setFailedAttempts(0);
-      router.push(result.redirectTo || "/admin");
+      // 3) Only redirect when a real session exists after login: Redirect to ("/")
+      router.push("/");
       router.refresh();
-    } catch {
-      setErrorMsg("Login tidak dapat diproses. Coba lagi.");
+    } catch (err: any) {
+      setErrorMsg(err?.message || "Login tidak dapat diproses. Coba lagi.");
       setIsLoading(false);
     }
   };
@@ -88,30 +118,19 @@ function LoginForm() {
   return (
     <div className="w-full max-w-[480px]">
       <div className="mb-9">
-        <p className="text-sm font-semibold text-[#8D0D00]">Akses khusus Owner</p>
+        <p className="text-sm font-semibold text-[#8D0D00]">Akses Owner & Admin</p>
         <h2 className="mt-3 text-[clamp(2.2rem,5vw,3.6rem)] font-semibold leading-[1.02] tracking-[-0.05em] text-[#251C17]">
           Masuk ke ruang kerja
         </h2>
         <p className="mt-4 max-w-md text-sm leading-6 text-[#6E6259]">
-          Gunakan akun Owner untuk mengelola operasional Mie Ayam Surabaya.
+          Gunakan akun Owner atau Admin untuk mengelola operasional Mie Ayam Surabaya.
         </p>
       </div>
-
-      {errorMsg && (
-        <div
-          role="alert"
-          aria-live="polite"
-          className="mb-5 flex items-start gap-3 rounded-[14px] border border-[#E7B9B2] bg-[#F9E8E5] p-4 text-sm font-medium leading-6 text-[#8D0D00]"
-        >
-          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" strokeWidth={1.8} aria-hidden="true" />
-          <span>{errorMsg}</span>
-        </div>
-      )}
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
           <label htmlFor="email" className="mb-2 block text-sm font-semibold text-[#251C17]">
-            Email Owner
+            Email
           </label>
           <div className="relative">
             <Mail className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#7B6E64]" strokeWidth={1.7} aria-hidden="true" />
@@ -170,18 +189,33 @@ function LoginForm() {
           {isLoading ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-              Memeriksa akun
+              Memeriksa akun...
             </>
           ) : lockoutSeconds > 0 ? (
             `Coba lagi dalam ${lockoutSeconds} detik`
           ) : (
-            "Masuk sebagai Owner"
+            "Masuk sebagai Owner / Admin"
           )}
         </button>
       </form>
 
+      {/* 4) Simple error handling: small error message under the form */}
+      {errorMsg && (
+        <div
+          role="alert"
+          aria-live="polite"
+          className="mt-4 flex items-start gap-2.5 rounded-[12px] border border-[#E7B9B2] bg-[#F9E8E5] p-3 text-sm font-medium leading-5 text-[#8D0D00]"
+        >
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={1.8} aria-hidden="true" />
+          <span>{errorMsg}</span>
+        </div>
+      )}
+
       <p className="mt-5 text-center text-xs leading-5 text-[#6E6259]">
-        Jika lupa kata sandi, hubungi pengelola sistem.
+        Belum punya akun?{" "}
+        <Link href="/admin/signup" className="font-semibold text-[#8D0D00] hover:underline">
+          Daftar akun
+        </Link>
       </p>
 
       {showDemo && (
@@ -226,7 +260,7 @@ export default function AdminLoginPage() {
           </div>
           <div>
             <p className="text-sm font-bold">Mie Ayam Surabaya</p>
-            <p className="mt-0.5 text-xs text-[#F0C87D]">Panel Owner</p>
+            <p className="mt-0.5 text-xs text-[#F0C87D]">Panel Masuk</p>
           </div>
         </div>
 

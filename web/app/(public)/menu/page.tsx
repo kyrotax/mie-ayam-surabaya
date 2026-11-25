@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { prisma } from "@/lib/db";
+import { supabase } from "@/src/supabaseClient";
 import MenuBoard from "@/components/public/MenuBoard";
 import { ChineseKnotDivider } from "@/components/public/ChineseOrnaments";
 import { MessageCircle, CheckCircle2 } from "lucide-react";
@@ -13,14 +13,47 @@ export const metadata: Metadata = {
 };
 
 export default async function MenuPage() {
-  const categories = await prisma.menuCategory.findMany({
-    orderBy: { order: "asc" },
-    include: {
-      items: {
-        orderBy: { order: "asc" },
-      },
-    },
-  });
+  const { data: items } = await supabase
+    .from("menu_items")
+    .select("*")
+    .order("order_index", { ascending: true });
+
+  // Group into the CategoryProps shape expected by MenuBoard
+  const categoryMap: Record<
+    string,
+    { id: number; name: string; slug: string; order: number; items: ReturnType<typeof mapItem>[] }
+  > = {};
+
+  let catIdCounter = 1;
+
+  function mapItem(row: NonNullable<typeof items>[number]) {
+    return {
+      id: Number(row.id),
+      name: row.name as string,
+      description: (row.description as string | null) ?? null,
+      price: Number(row.price ?? 0),
+      imageUrl: (row.image_url as string | null) ?? null,
+      isAvailable: Boolean(row.is_available),
+      isFeatured: false,
+      badge: null,
+    };
+  }
+
+  for (const item of items ?? []) {
+    const cat = (item.category as string) ?? "Lainnya";
+    if (!categoryMap[cat]) {
+      categoryMap[cat] = {
+        id: catIdCounter++,
+        name: cat,
+        slug: cat.toLowerCase().replace(/\s+/g, "-"),
+        order: (item.order_index as number) ?? 99,
+        items: [],
+      };
+    }
+    categoryMap[cat].items.push(mapItem(item));
+  }
+
+  const categories = Object.values(categoryMap).sort((a, b) => a.order - b.order);
 
   return (
     <div className="bg-[#FAF7F2] min-h-screen pt-28 pb-24 text-[#2C1810]">

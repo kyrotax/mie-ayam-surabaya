@@ -1,18 +1,18 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { supabase } from "@/src/supabaseClient";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const [status, schedule] = await Promise.all([
-      prisma.storeStatus.findFirst(),
-      prisma.operatingSchedule.findMany({
-        orderBy: { dayOfWeek: "asc" },
-      }),
-    ]);
+    const { data: status, error } = await supabase
+      .from("store_status")
+      .select("*")
+      .order("id", { ascending: false })
+      .limit(1)
+      .single();
 
-    if (!status) {
+    if (error || !status) {
       return NextResponse.json({
         isOpen: true,
         statusNote: "Buka",
@@ -21,26 +21,20 @@ export async function GET() {
     }
 
     // Determine current status based on manual override or schedule
-    let isOpen = status.isOpen;
+    let isOpen = Boolean(status.is_open);
 
-    // If not manually overridden, check current time
-    if (!status.manualOverride) {
+    // If no manual override, check current WIB time against default schedule
+    if (!status.manual_override || status.manual_override === "none") {
       const now = new Date();
-      // WIB is UTC+7
       const utc = now.getTime() + now.getTimezoneOffset() * 60000;
       const wibDate = new Date(utc + 3600000 * 7);
-      const currentDay = wibDate.getDay();
-      const currentHour = wibDate.getHours();
-      const currentMinute = wibDate.getMinutes();
-      const currentTimeNum = currentHour * 60 + currentMinute;
+      const currentDay = wibDate.getDay(); // 0=Sun, 1=Mon...
+      const currentTimeNum = wibDate.getHours() * 60 + wibDate.getMinutes();
 
-      const todaySchedule = schedule.find((s) => s.dayOfWeek === currentDay);
-      if (todaySchedule && !todaySchedule.isClosed) {
-        const [openH, openM] = todaySchedule.openTime.split(":").map(Number);
-        const [closeH, closeM] = todaySchedule.closeTime.split(":").map(Number);
-        const openNum = openH * 60 + openM;
-        const closeNum = closeH * 60 + closeM;
-        isOpen = currentTimeNum >= openNum && currentTimeNum < closeNum;
+      // Default schedule: open Tue-Sun (days 0,2-6), 13:00-21:00; closed Mon (day 1)
+      const isClosedDay = currentDay === 1;
+      if (!isClosedDay) {
+        isOpen = currentTimeNum >= 780 && currentTimeNum < 1260; // 13:00-21:00
       } else {
         isOpen = false;
       }
@@ -48,11 +42,10 @@ export async function GET() {
 
     return NextResponse.json({
       isOpen,
-      manualOverride: status.manualOverride,
-      statusNote: status.statusNote || (isOpen ? "Warung sedang Buka" : "Warung sedang Tutup"),
-      nextOpenText: status.nextOpenText,
-      updatedAt: status.updatedAt,
-      schedule,
+      manualOverride: status.manual_override,
+      statusNote: status.status_note || (isOpen ? "Warung sedang Buka" : "Warung sedang Tutup"),
+      nextOpenText: status.next_open_text,
+      updatedAt: status.updated_at,
     });
   } catch (error) {
     console.error("Error in GET /api/status:", error);

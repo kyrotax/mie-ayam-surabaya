@@ -9,6 +9,9 @@
     "start": "npm --prefix web run start",
     "db:seed": "npm --prefix web run db:seed",
     "db:push": "npm --prefix web run db:push"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.119.2"
   }
 }
-

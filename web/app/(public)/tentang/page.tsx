@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { prisma } from "@/lib/db";
 import { ChineseKnotDivider } from "@/components/public/ChineseOrnaments";
 import { Instagram, MessageCircle, Sparkles, Award, Heart } from "lucide-react";
 
@@ -11,8 +10,14 @@ export const metadata: Metadata = {
     "Cerita di balik Mie Ayam Surabaya di Sidoarjo: mie kenyal buatan sendiri setiap pagi, kuah kaldu sapi hangat, dan bumbu ayam oriental yang meresap sedap.",
 };
 
+// Static profile data (not yet stored in Supabase — uses defaults)
+const DEFAULT_PROFILE = {
+  instagramUrl: "https://www.instagram.com/mieayamsurabaya_/",
+  whatsappNumber: "6282319195854",
+};
+
 export default async function TentangPage() {
-  const profile = await prisma.storeProfile.findFirst();
+  const profile = DEFAULT_PROFILE;
 
   return (
     <div className="bg-[#FAF7F2] min-h-screen pt-28 pb-24 text-[#2C1810]">
