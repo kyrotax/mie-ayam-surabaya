@@ -16,6 +16,10 @@ export default async function AdminPanelLayout({
     redirect("/admin/login");
   }
 
+  if (user.role !== "owner") {
+    redirect("/admin/login?reason=owner-only");
+  }
+
   return <PanelShell user={user}>{children}</PanelShell>;
 }
 

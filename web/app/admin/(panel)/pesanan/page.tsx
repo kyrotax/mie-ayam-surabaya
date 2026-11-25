@@ -16,6 +16,7 @@ import {
   Calendar,
   ChevronLeft,
   ChevronRight,
+  PenLine,
 } from "lucide-react";
 
 export default function AdminPesananPage() {
@@ -123,8 +124,9 @@ export default function AdminPesananPage() {
     {
       header: "Sumber",
       render: (o) => (
-        <span className="text-xs font-medium">
-          {o.source === "foto" ? "📸 Foto Catatan" : "✍️ Manual"}
+        <span className="inline-flex items-center gap-1.5 text-xs font-medium">
+          {o.source === "foto" ? <Camera className="h-3.5 w-3.5" aria-hidden="true" /> : <PenLine className="h-3.5 w-3.5" aria-hidden="true" />}
+          {o.source === "foto" ? "Foto Catatan" : "Manual"}
         </span>
       ),
     },
@@ -241,8 +243,8 @@ export default function AdminPesananPage() {
           <div className="inline-flex items-center rounded-xl border border-[#3B2416]/15 bg-[#FAF8F5] p-1 gap-1 text-xs">
             {[
               { id: "all", label: "Semua Sumber" },
-              { id: "foto", label: "📸 Foto" },
-              { id: "manual", label: "✍️ Manual" },
+              { id: "foto", label: "Foto" },
+              { id: "manual", label: "Manual" },
             ].map((s) => (
               <button
                 key={s.id}
@@ -288,7 +290,10 @@ export default function AdminPesananPage() {
               </span>
             </div>
             <div className="flex justify-between text-[11px] text-[#6B5240]">
-              <span>{order.source === "foto" ? "📸 Foto" : "✍️ Manual"}</span>
+              <span className="inline-flex items-center gap-1.5">
+                {order.source === "foto" ? <Camera className="h-3 w-3" aria-hidden="true" /> : <PenLine className="h-3 w-3" aria-hidden="true" />}
+                {order.source === "foto" ? "Foto" : "Manual"}
+              </span>
               <span>
                 {new Date(order.createdAt).toLocaleDateString("id-ID", {
                   day: "numeric",

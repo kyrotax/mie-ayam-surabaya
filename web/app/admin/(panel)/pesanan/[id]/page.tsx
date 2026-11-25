@@ -19,6 +19,7 @@ import {
   User,
   ShoppingBag,
   CheckCircle2,
+  PenLine,
 } from "lucide-react";
 
 export default function PesananDetailPage() {
@@ -140,8 +141,9 @@ export default function PesananDetailPage() {
                 <span className="text-[10px] px-2.5 py-0.5 rounded-full font-bold bg-[#E4F2E5] text-[#276B2B]">
                   Terkonfirmasi
                 </span>
-                <span className="text-xs font-medium text-[#6B5240]">
-                  Sumber: {order.source === "foto" ? "📸 Foto Catatan AI" : "✍️ Input Manual"}
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#6B5240]">
+                  {order.source === "foto" ? <Camera className="h-3.5 w-3.5" aria-hidden="true" /> : <PenLine className="h-3.5 w-3.5" aria-hidden="true" />}
+                  Sumber: {order.source === "foto" ? "Foto Catatan AI" : "Input Manual"}
                 </span>
               </div>
             </div>

@@ -1,28 +1,34 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { SessionUser } from "@/lib/admin/types";
-import { RoleBadge } from "../ui/RoleBadge";
-import { LogOut, ChevronDown } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown, LogOut } from "lucide-react";
+import type { SessionUser } from "@/lib/admin/types";
 import { logoutAction } from "@/app/admin/login/actions";
 
-export function UserMenu({ user }: { user: SessionUser }) {
+export function UserMenu({ user, compact = false }: { user: SessionUser; compact?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
+    const closeOnOutsideClick = (event: MouseEvent) => {
+      if (!menuRef.current?.contains(event.target as Node)) setIsOpen(false);
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsOpen(false);
+    };
+
+    document.addEventListener("mousedown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("mousedown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
   }, []);
 
   const initials = user.name
     .split(" ")
-    .map((n) => n[0])
+    .filter(Boolean)
+    .map((part) => part[0])
     .slice(0, 2)
     .join("")
     .toUpperCase();
@@ -31,37 +37,37 @@ export function UserMenu({ user }: { user: SessionUser }) {
     <div className="relative" ref={menuRef}>
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2.5 p-1.5 sm:px-3 rounded-xl hover:bg-black/5 transition"
+        onClick={() => setIsOpen((current) => !current)}
+        className={`flex min-h-9 items-center gap-2 rounded-[11px] transition-colors hover:bg-[#F3F0EC] ${compact ? "px-1" : "px-1.5 sm:px-2.5"}`}
         aria-expanded={isOpen}
+        aria-haspopup="menu"
       >
-        <div className="w-9 h-9 rounded-full bg-[#8D0D00] text-[#FFF4E0] border-2 border-[#CBA857] flex items-center justify-center font-bold text-xs shadow-xs">
+        <span className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-[#8D0D00] text-[11px] font-bold text-white">
           {initials}
-        </div>
-        <div className="hidden sm:flex flex-col items-start text-left">
-          <span className="text-xs font-bold text-[#3B2416] leading-tight line-clamp-1">
-            {user.name}
-          </span>
-          <RoleBadge role={user.role} />
-        </div>
-        <ChevronDown className="w-4 h-4 text-[#6B5240] hidden sm:block" />
+        </span>
+        <span className="hidden max-w-32 truncate text-xs font-semibold text-[#251C17] 2xl:block">
+          {user.name}
+        </span>
+        <ChevronDown className="hidden h-4 w-4 text-[#6E6259] sm:block" strokeWidth={1.8} aria-hidden="true" />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl border border-[#3B2416]/10 shadow-lg py-2 z-50 animate-in fade-in duration-100">
-          <div className="px-4 py-2 border-b border-[#3B2416]/10 sm:hidden">
-            <div className="font-bold text-xs text-[#3B2416]">{user.name}</div>
-            <div className="mt-1">
-              <RoleBadge role={user.role} />
-            </div>
+        <div
+          role="menu"
+          className="absolute right-0 mt-2 w-60 rounded-[16px] border border-[#D8D1C9] bg-white p-2 shadow-[0_18px_50px_rgba(63,36,22,0.14)]"
+        >
+          <div className="border-b border-[#E7E1DA] px-3 pb-3 pt-2">
+            <p className="truncate text-sm font-semibold text-[#251C17]">{user.name}</p>
+            <p className="mt-1 truncate text-xs text-[#6E6259]">{user.email}</p>
           </div>
-          <form action={logoutAction}>
+          <form action={logoutAction} className="pt-2">
             <button
               type="submit"
-              className="w-full px-4 py-2 text-left text-xs font-semibold text-[#B42318] hover:bg-[#FBE4E1] flex items-center gap-2 transition"
+              role="menuitem"
+              className="flex min-h-11 w-full items-center gap-2.5 rounded-[10px] px-3 text-left text-xs font-semibold text-[#8D0D00] transition-colors hover:bg-[#F8ECE8]"
             >
-              <LogOut className="w-4 h-4" />
-              <span>Keluar dari Akun</span>
+              <LogOut className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
+              Keluar dari panel
             </button>
           </form>
         </div>
@@ -69,4 +75,3 @@ export function UserMenu({ user }: { user: SessionUser }) {
     </div>
   );
 }
-

@@ -3,7 +3,7 @@ import { DummyStoreProvider } from "@/lib/admin/mock/store";
 import { ToastProvider } from "@/components/admin/ui/Toast";
 
 export const metadata: Metadata = {
-  title: "Admin Dashboard | Mie Ayam Surabaya",
+  title: "Panel Owner",
   robots: {
     index: false,
     follow: false,

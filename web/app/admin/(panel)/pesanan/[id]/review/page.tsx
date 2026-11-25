@@ -187,14 +187,14 @@ export default function PesananReviewPage() {
           items: orderItems,
           total: totalAmount,
           source: "manual",
-          createdBy: "Admin Kasir",
+          createdBy: "H. Bambang (Owner)",
         });
       } else {
         savedOrder = await confirmOrderFromJobService(
           jobId,
           orderItems,
           totalAmount,
-          "Admin Kasir",
+          "H. Bambang (Owner)",
           job?.photoUrl
         );
       }

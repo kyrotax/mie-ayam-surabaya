@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Oswald, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/public/Navbar";
-import Footer from "@/components/public/Footer";
-import WhatsAppFloating from "@/components/public/WhatsAppFloating";
 
 const oswald = Oswald({
   subsets: ["latin"],
@@ -49,11 +46,8 @@ export default function RootLayout({
       lang="id"
       className={`${oswald.variable} ${plusJakarta.variable}`}
     >
-      <body className="min-h-screen flex flex-col bg-white text-stone-900 font-sans antialiased overflow-x-hidden selection:bg-[#BA382A] selection:text-white">
-        <Navbar />
-        <main className="flex-grow">{children}</main>
-        <Footer />
-        <WhatsAppFloating />
+      <body className="min-h-screen bg-white text-stone-900 font-sans antialiased overflow-x-hidden selection:bg-[#BA382A] selection:text-white">
+        {children}
       </body>
     </html>
   );

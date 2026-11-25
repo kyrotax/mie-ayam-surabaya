@@ -145,14 +145,14 @@ export const INITIAL_STATUS_LOGS: StatusLogEntry[] = [
   {
     id: "log_2",
     timestamp: "2026-11-13T21:15:00.000Z",
-    actorName: "Siti Rahma (Admin)",
+    actorName: "H. Bambang (Owner)",
     action: "Tutup Toko",
     note: "Tutup reguler malam.",
   },
   {
     id: "log_3",
     timestamp: "2026-11-13T09:00:00.000Z",
-    actorName: "Siti Rahma (Admin)",
+    actorName: "H. Bambang (Owner)",
     action: "Buka Toko",
     note: "Persiapan stok mie pagi lengkap.",
   },
@@ -173,7 +173,7 @@ export const INITIAL_STATUS_LOGS: StatusLogEntry[] = [
   {
     id: "log_6",
     timestamp: "2026-11-11T21:00:00.000Z",
-    actorName: "Siti Rahma (Admin)",
+    actorName: "H. Bambang (Owner)",
     action: "Tutup Toko",
     note: "Tutup reguler.",
   },
@@ -399,7 +399,7 @@ export function generateSeedData() {
       total: orderTotal,
       source: isPhoto ? "foto" : "manual",
       status: "terkonfirmasi",
-      createdBy: isPhoto ? "Siti Rahma (Admin Kasir)" : "H. Bambang (Owner)",
+      createdBy: "H. Bambang (Owner)",
       photoUrl: isPhoto ? (rng() > 0.5 ? "/images/dummy-catatan-01.jpg" : "/images/dummy-catatan-02.jpg") : undefined,
     });
   }

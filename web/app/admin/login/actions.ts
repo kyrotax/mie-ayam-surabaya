@@ -20,9 +20,11 @@ export async function loginAction(prevState: any, formData: FormData): Promise<L
     return { success: false, error: "Email dan kata sandi wajib diisi." };
   }
 
-  // Cari di dummy users
   const user = INITIAL_DUMMY_USERS.find(
-    (u) => u.email.toLowerCase() === email && u.password === password
+    (u) =>
+      u.role === "owner" &&
+      u.email.toLowerCase() === email &&
+      u.password === password
   );
 
   if (!user) {
@@ -33,7 +35,6 @@ export async function loginAction(prevState: any, formData: FormData): Promise<L
     return { success: false, error: "Akun dinonaktifkan. Silakan hubungi Owner." };
   }
 
-  // Buat session token
   const token = encodeSession({
     uid: user.id,
     name: user.name,
@@ -49,7 +50,6 @@ export async function loginAction(prevState: any, formData: FormData): Promise<L
     maxAge: SESSION_DURATION_SECONDS,
   });
 
-  // Validasi target redirect
   let targetUrl = "/admin";
   if (next && next.startsWith("/admin") && !next.startsWith("//")) {
     targetUrl = next;
