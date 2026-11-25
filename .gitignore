@@ -36,6 +36,9 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Local UI/UX audit reports and screenshots
+/anti-slop/
+
 # Duplikat Model Weights (cukup disimpan 1 di ml/app/ocr/)
 data-science/models/*.pth
 
