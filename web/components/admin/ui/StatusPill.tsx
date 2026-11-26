@@ -5,7 +5,7 @@ import { Loader2, AlertTriangle, CheckCircle2, AlertCircle } from "lucide-react"
 export function StatusPill({ status }: { status: JobStatus }) {
   if (status === "diproses") {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#F6E4C4] text-[#6B5240] border border-[#E5D2AF]">
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#FAF0DC] text-[#6B4423] border border-[#D4AF37]/30">
         <Loader2 className="w-3.5 h-3.5 animate-spin" />
         <span>Diproses</span>
       </span>

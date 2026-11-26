@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { MenuItem, MenuCategoryType, Role } from "@/lib/admin/types";
+import { uploadFileToStorage } from "@/lib/storage";
 import {
   getMenuListService,
   createMenuItemService,
@@ -26,6 +27,7 @@ import {
   ArrowDown,
   UtensilsCrossed,
   Tag,
+  Upload,
 } from "lucide-react";
 
 export default function AdminMenuPage() {
@@ -46,6 +48,28 @@ export default function AdminMenuPage() {
   const [formAliases, setFormAliases] = useState<string[]>([]);
   const [formImageUrl, setFormImageUrl] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const imageFileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploadingImage(true);
+    try {
+      const itemId = editingItem ? String(editingItem.id) : `new_${Date.now()}`;
+      const { filePath } = await uploadFileToStorage(file, {
+        featureName: "menu",
+        itemId,
+        filename: file.name,
+      });
+      setFormImageUrl(filePath);
+      sukses("Foto menu berhasil diunggah ke Storage.");
+    } catch (err: any) {
+      bahaya(err.message || "Gagal mengunggah foto menu.");
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
 
   // Dialog Hapus
   const [deleteTarget, setDeleteTarget] = useState<MenuItem | null>(null);
@@ -205,22 +229,22 @@ export default function AdminMenuPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Daftar Menu & Harga"
-        description="Kelola item sajian makanan, minuman, harga, stok habis/tersedia, dan alias catatan AI."
+        title="Menu dan harga"
+        description="Kelola sajian, harga, ketersediaan, foto, dan singkatan yang biasa ditulis di catatan pesanan."
         action={
           <button
             type="button"
             onClick={openCreateDrawer}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#8D0D00] hover:bg-[#6B0A00] text-white font-semibold text-xs transition shadow-xs"
+            className="inline-flex min-h-11 items-center gap-2 rounded-[11px] bg-[#8D0D00] px-5 text-xs font-semibold text-white transition-colors hover:bg-[#6B0A00] active:bg-[#540800]"
           >
             <Plus className="w-4 h-4" />
-            <span>Tambah Menu Baru</span>
+            <span>Tambah menu</span>
           </button>
         }
       />
 
       {/* Filter & Pencarian */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 rounded-2xl bg-white border border-[#3B2416]/10 shadow-xs">
+      <div className="flex flex-col items-center justify-between gap-3 rounded-[14px] border border-[#DED8D1] bg-white p-4 sm:flex-row">
         <div className="relative w-full sm:w-72">
           <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#6B5240]/60" />
           <input
@@ -228,20 +252,20 @@ export default function AdminMenuPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Cari nama atau alias (mis. ma)..."
-            className="w-full h-10 pl-9 pr-3 rounded-xl border border-[#3B2416]/20 text-xs text-[#1C1917] placeholder:text-[#6B5240]/40 focus:outline-none focus:ring-2 focus:ring-[#8D0D00]"
+            className="h-11 w-full rounded-[10px] border border-[#CFC7BF] pl-9 pr-3 text-sm text-[#251C17] placeholder:text-[#93877E] focus:border-[#8D0D00] focus:outline-none focus:ring-2 focus:ring-[#8D0D00]/15"
           />
         </div>
 
-        <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
+        <div className="grid w-full grid-cols-2 gap-1.5 sm:flex sm:w-auto sm:items-center">
           {["Semua", "Mie Ayam", "Topping/Tambahan", "Minuman"].map((cat) => (
             <button
               key={cat}
               type="button"
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition ${
+              className={`min-h-9 rounded-[8px] px-3 text-xs font-semibold transition-colors ${
                 selectedCategory === cat
                   ? "bg-[#8D0D00] text-white"
-                  : "bg-[#FAF8F5] text-[#3B2416] hover:bg-[#F6E4C4]"
+                  : "bg-[#F5F2EE] text-[#51463E] hover:bg-[#EAE5DF]"
               }`}
             >
               {cat}
@@ -251,22 +275,22 @@ export default function AdminMenuPage() {
       </div>
 
       {/* Tabel Menu Desktop & Kartu Mobile */}
-      <div className="overflow-hidden rounded-2xl border border-[#3B2416]/10 bg-white shadow-xs">
+      <div className="overflow-hidden rounded-[14px] border border-[#DED8D1] bg-white">
         <table className="w-full text-left text-sm hidden md:table">
           <thead>
-            <tr className="bg-[#FAF8F5] border-b border-[#3B2416]/10 text-xs font-bold uppercase text-[#3B2416]">
+            <tr className="border-b border-[#DED8D1] bg-[#F5F2EE] text-[11px] font-semibold text-[#51463E]">
               <th className="py-3 px-4 w-12 text-center">Urutan</th>
               <th className="py-3 px-4">Menu & Foto</th>
               <th className="py-3 px-4">Kategori</th>
               <th className="py-3 px-4">Harga</th>
               <th className="py-3 px-4">Tersedia</th>
-              <th className="py-3 px-4">Alias AI</th>
+              <th className="py-3 px-4">Alias catatan</th>
               <th className="py-3 px-4 text-right">Aksi</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#3B2416]/10">
+          <tbody className="divide-y divide-[#ECE7E1]">
             {filteredMenu.map((item, idx) => (
-              <tr key={item.id} className="hover:bg-[#FAF8F5]/60 transition">
+              <tr key={item.id} className="transition-colors hover:bg-[#FAF8F5]">
                 <td className="py-3 px-4 text-center">
                   <div className="flex flex-col items-center gap-1">
                     <button
@@ -304,7 +328,7 @@ export default function AdminMenuPage() {
                       )}
                     </div>
                     <div>
-                      <div className="font-bold text-xs text-[#3B2416]">{item.name}</div>
+                      <div className="text-xs font-semibold text-[#251C17]">{item.name}</div>
                       {item.description && (
                         <div className="text-[11px] text-[#6B5240] line-clamp-1 max-w-xs">
                           {item.description}
@@ -323,7 +347,7 @@ export default function AdminMenuPage() {
                   <button
                     type="button"
                     onClick={() => handleToggleAvailable(item)}
-                    className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
+                    className={`min-h-8 rounded-[8px] px-3 text-xs font-semibold transition-colors ${
                       item.isAvailable
                         ? "bg-[#E4F2E5] text-[#276B2B]"
                         : "bg-[#FBE4E1] text-[#B42318]"
@@ -337,7 +361,7 @@ export default function AdminMenuPage() {
                     {item.aliases.map((a) => (
                       <span
                         key={a}
-                        className="text-[10px] px-2 py-0.5 rounded bg-[#FAF8F5] text-[#8D0D00] border border-[#CBA857]/30 font-semibold"
+                        className="rounded-[6px] border border-[#E1DAD3] bg-[#F5F2EE] px-2 py-0.5 text-[10px] font-semibold text-[#71645B]"
                       >
                         {a}
                       </span>
@@ -349,7 +373,7 @@ export default function AdminMenuPage() {
                     <button
                       type="button"
                       onClick={() => openEditDrawer(item)}
-                      className="p-1.5 rounded-lg text-[#6B5240] hover:text-[#3B2416] hover:bg-[#FAF8F5] transition"
+                      className="flex h-10 w-10 items-center justify-center rounded-[9px] text-[#71645B] transition-colors hover:bg-[#F5F2EE] hover:text-[#251C17]"
                       title="Ubah menu"
                     >
                       <Edit className="w-4 h-4" />
@@ -357,7 +381,7 @@ export default function AdminMenuPage() {
                     <button
                       type="button"
                       onClick={() => setDeleteTarget(item)}
-                      className="p-1.5 rounded-lg text-[#B42318] hover:bg-[#FBE4E1] transition"
+                      className="flex h-10 w-10 items-center justify-center rounded-[9px] text-[#B42318] transition-colors hover:bg-[#FBE4E1]"
                       title="Hapus menu"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -382,7 +406,7 @@ export default function AdminMenuPage() {
                   )}
                 </div>
                 <div className="flex-1">
-                  <div className="font-bold text-sm text-[#3B2416]">{item.name}</div>
+                  <div className="text-sm font-semibold text-[#251C17]">{item.name}</div>
                   <div className="text-xs font-bold text-[#8D0D00]">
                     Rp {item.price.toLocaleString("id-ID")}
                   </div>
@@ -391,7 +415,7 @@ export default function AdminMenuPage() {
                 <button
                   type="button"
                   onClick={() => handleToggleAvailable(item)}
-                  className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+                  className={`min-h-8 rounded-[8px] px-2.5 text-xs font-semibold ${
                     item.isAvailable
                       ? "bg-[#E4F2E5] text-[#276B2B]"
                       : "bg-[#FBE4E1] text-[#B42318]"
@@ -483,13 +507,33 @@ export default function AdminMenuPage() {
             placeholder="Deskripsi singkat rasa dan topping..."
           />
 
-          <InputField
-            label="URL Foto Menu"
-            value={formImageUrl}
-            onChange={(e) => setFormImageUrl(e.target.value)}
-            placeholder="/images/menu/mie-ayam.png"
-            helperText="Gunakan path gambar publik lokal"
-          />
+          <div className="space-y-1.5">
+            <InputField
+              label="URL Foto Menu"
+              value={formImageUrl}
+              onChange={(e) => setFormImageUrl(e.target.value)}
+              placeholder="/images/menu/mie-ayam.png"
+              helperText="Gunakan path gambar atau pilih berkas untuk diunggah ke Supabase Storage"
+            />
+            <div className="flex items-center gap-2 pt-1">
+              <input
+                ref={imageFileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                className="hidden"
+                onChange={handleImageFileChange}
+              />
+              <button
+                type="button"
+                onClick={() => imageFileInputRef.current?.click()}
+                disabled={isUploadingImage}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#3B2416]/20 bg-white hover:bg-[#FAF8F5] text-xs font-semibold text-[#3B2416] transition"
+              >
+                <Upload className="w-3.5 h-3.5" />
+                <span>{isUploadingImage ? "Mengunggah..." : "Pilih Berkas Foto"}</span>
+              </button>
+            </div>
+          </div>
 
           <SwitchField
             checked={formAvailable}
@@ -501,8 +545,8 @@ export default function AdminMenuPage() {
           <TagInputField
             tags={formAliases}
             onChange={setFormAliases}
-            label="Alias / Singkatan AI"
-            helperText="Dipakai AI untuk mengenali tulisan di catatan, mis. 'MA' untuk Mie Ayam."
+            label="Alias atau singkatan catatan"
+            helperText="Dipakai untuk mengenali tulisan di catatan, misalnya 'MA' untuk Mie Ayam."
           />
 
           <div className="pt-4 border-t border-[#3B2416]/10 flex justify-end gap-3">

@@ -1,54 +1,53 @@
 "use client";
 
-import React, { useState } from "react";
-import { SessionUser } from "@/lib/admin/types";
-import { DemoBanner } from "./DemoBanner";
+import { useEffect, useState, type ReactNode } from "react";
+import type { SessionUser } from "@/lib/admin/types";
+import { MobileNavDrawer } from "./MobileNavDrawer";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
-import { MobileNavDrawer } from "./MobileNavDrawer";
 
-export function PanelShell({
-  user,
-  children,
-}: {
-  user: SessionUser;
-  children: React.ReactNode;
-}) {
+export function PanelShell({ user, children }: { user: SessionUser; children: ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  useEffect(() => {
+    setSidebarCollapsed(window.localStorage.getItem("mm_sidebar_collapsed") === "true");
+  }, []);
+
+  const toggleSidebar = () => {
+    setSidebarCollapsed((current) => {
+      const next = !current;
+      window.localStorage.setItem("mm_sidebar_collapsed", String(next));
+      return next;
+    });
+  };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF8F5] text-[#1C1917]">
-      {/* Banner Demo Permanen */}
-      <DemoBanner />
+    <div className="min-h-screen bg-[#F2EFEA] font-sans text-[#251C17]">
+      <div
+        className={`fixed inset-y-0 left-0 z-40 hidden transition-[width] duration-200 lg:block ${
+          sidebarCollapsed ? "w-[72px]" : "w-[224px]"
+        }`}
+      >
+        <Sidebar user={user} collapsed={sidebarCollapsed} onToggleCollapsed={toggleSidebar} />
+      </div>
 
-      <div className="flex flex-1">
-        {/* Sidebar Desktop */}
-        <div className="hidden lg:block shrink-0">
-          <div className="fixed top-0 bottom-0 left-0 w-64 z-40">
-            <Sidebar user={user} />
-          </div>
-        </div>
+      <MobileNavDrawer
+        isOpen={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        user={user}
+      />
 
-        {/* Drawer Mobile */}
-        <MobileNavDrawer
-          isOpen={mobileMenuOpen}
-          onClose={() => setMobileMenuOpen(false)}
-          user={user}
-        />
-
-        {/* Main Area */}
-        <div className="flex-1 flex flex-col min-w-0 lg:pl-64">
-          <Topbar
-            user={user}
-            onOpenMobileMenu={() => setMobileMenuOpen(true)}
-          />
-
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1280px] w-full mx-auto">
-            {children}
-          </main>
-        </div>
+      <div
+        className={`min-h-screen transition-[padding] duration-200 ${
+          sidebarCollapsed ? "lg:pl-[72px]" : "lg:pl-[224px]"
+        }`}
+      >
+        <Topbar user={user} onOpenMobileMenu={() => setMobileMenuOpen(true)} />
+        <main className="mx-auto w-full max-w-[1540px] px-4 pb-12 pt-5 sm:px-6 sm:pt-7 xl:px-10 xl:pt-8">
+          {children}
+        </main>
       </div>
     </div>
   );
 }
-

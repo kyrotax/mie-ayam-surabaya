@@ -15,6 +15,7 @@ import {
   createOrderService,
 } from "@/lib/admin/services/order-service";
 import { getMenuListService } from "@/lib/admin/services/menu-service";
+import { getSignedFileUrl } from "@/lib/storage";
 import { PageHeader } from "@/components/admin/ui/PageHeader";
 import { StepperField } from "@/components/admin/ui/Field";
 import { ErrorState } from "@/components/admin/ui/ErrorState";
@@ -34,6 +35,7 @@ import {
   Camera,
   FileEdit,
   Save,
+  ArrowLeft,
 } from "lucide-react";
 
 type ReviewRow = {
@@ -59,6 +61,13 @@ export default function PesananReviewPage() {
   const [isPhotoCollapsed, setIsPhotoCollapsed] = useState(false);
   const [photoZoom, setPhotoZoom] = useState(1);
   const [isSaving, setIsSaving] = useState(false);
+  const [displayPhotoUrl, setDisplayPhotoUrl] = useState<string>("/images/dummy-catatan-01.jpg");
+
+  useEffect(() => {
+    if (job?.photoUrl) {
+      getSignedFileUrl(job.photoUrl).then(setDisplayPhotoUrl);
+    }
+  }, [job?.photoUrl]);
 
   useEffect(() => {
     async function load() {
@@ -187,14 +196,14 @@ export default function PesananReviewPage() {
           items: orderItems,
           total: totalAmount,
           source: "manual",
-          createdBy: "Admin Kasir",
+          createdBy: "H. Bambang (Owner)",
         });
       } else {
         savedOrder = await confirmOrderFromJobService(
           jobId,
           orderItems,
           totalAmount,
-          "Admin Kasir",
+          "H. Bambang (Owner)",
           job?.photoUrl
         );
       }
@@ -254,8 +263,21 @@ export default function PesananReviewPage() {
   return (
     <div className="space-y-6 pb-28">
       <PageHeader
-        title="Review & Verifikasi Pesanan"
-        description="Periksa teks catatan asli, sesuaikan jumlah porsi, dan pastikan setiap hidangan terhubung dengan benar ke menu toko."
+        title={isManual ? "Input pesanan manual" : "Periksa hasil catatan"}
+        description={
+          isManual
+            ? "Pilih menu dan jumlah porsi. Total dihitung otomatis sebelum pesanan disimpan."
+            : "Cocokkan hasil pembacaan foto dengan menu warung sebelum pesanan disimpan."
+        }
+        action={
+          <Link
+            href="/admin/pesanan"
+            className="inline-flex min-h-11 items-center gap-2 rounded-[10px] border border-[#CFC7BF] bg-white px-4 text-sm font-semibold text-[#51463E] hover:bg-[#F1ECE6]"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            Kembali ke riwayat
+          </Link>
+        }
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
@@ -266,7 +288,7 @@ export default function PesananReviewPage() {
               <div className="flex items-center justify-between pb-3 border-b border-[#3B2416]/10">
                 <div className="flex items-center gap-2">
                   <Camera className="w-4 h-4 text-[#8D0D00]" />
-                  <span className="font-serif font-bold text-xs text-[#3B2416]">
+                  <span className="text-xs font-semibold text-[#251C17]">
                     Foto Catatan Asli
                   </span>
                 </div>
@@ -310,7 +332,7 @@ export default function PesananReviewPage() {
                     className="relative w-full h-full transition-transform duration-150"
                   >
                     <Image
-                      src={photoUrl}
+                      src={displayPhotoUrl}
                       alt="Foto catatan pesanan"
                       fill
                       className="object-contain"
@@ -325,10 +347,10 @@ export default function PesananReviewPage() {
         {/* Kolom Kanan / Bawah: Tabel Hasil Ekstraksi */}
         <div className={isManual ? "lg:col-span-12" : "lg:col-span-7 space-y-4"}>
           {/* Bar Ringkasan Validasi */}
-          <div className="p-4 rounded-2xl bg-white border border-[#3B2416]/10 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex flex-col justify-between gap-3 rounded-[14px] border border-[#DED8D1] bg-white p-4 sm:flex-row sm:items-center">
             <div>
-              <div className="text-xs font-bold text-[#3B2416]">
-                {rows.length} Baris Item Terdeteksi
+              <div className="text-xs font-semibold text-[#251C17]">
+                {rows.length} {isManual ? "item pesanan" : "baris terbaca"}
               </div>
               <div className="text-[11px] text-[#6B5240]">
                 {needsCheckCount > 0 ? (
@@ -346,18 +368,20 @@ export default function PesananReviewPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleRetranscribe}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#3B2416]/15 hover:bg-[#FAF8F5] text-[11px] font-semibold text-[#3B2416]"
-              >
-                <RefreshCw className="w-3 h-3 text-[#8D0D00]" />
-                <span>Tulis Ulang</span>
-              </button>
+              {!isManual && (
+                <button
+                  type="button"
+                  onClick={handleRetranscribe}
+                  className="inline-flex min-h-10 items-center gap-1.5 rounded-[9px] border border-[#D8D1C9] px-3 text-[11px] font-semibold text-[#3F352E] hover:bg-[#F5F2EE]"
+                >
+                  <RefreshCw className="h-3.5 w-3.5 text-[#8D0D00]" aria-hidden="true" />
+                  <span>Baca ulang</span>
+                </button>
+              )}
               <button
                 type="button"
                 onClick={handleAddRow}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAF8F5] border border-[#CBA857]/40 hover:bg-[#FFF4E0] text-[11px] font-semibold text-[#8D0D00]"
+                className="inline-flex min-h-10 items-center gap-1.5 rounded-[9px] border border-[#D9B0A8] bg-[#F8E8E4] px-3 text-[11px] font-semibold text-[#8D0D00] hover:bg-[#F2D8D2]"
               >
                 <Plus className="w-3 h-3" />
                 <span>Tambah Item</span>
@@ -374,17 +398,17 @@ export default function PesananReviewPage() {
               return (
                 <div
                   key={idx}
-                  className={`p-4 rounded-2xl border transition shadow-xs ${
+                  className={`rounded-[14px] border p-4 transition-colors ${
                     isInvalid
                       ? "bg-[#FBE4E1]/40 border-[#F4BEB7]"
                       : isWarning
                       ? "bg-[#FBEBC8]/30 border-[#E8D19F]"
-                      : "bg-white border-[#3B2416]/10"
+                      : "border-[#DED8D1] bg-white"
                   }`}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                     {/* Teks Catatan Asli */}
-                    <div className="sm:w-1/3">
+                    {!isManual && <div className="sm:w-1/3">
                       <span className="text-[10px] font-bold uppercase tracking-wider text-[#6B5240] block mb-1">
                         Teks Asli Catatan
                       </span>
@@ -411,19 +435,19 @@ export default function PesananReviewPage() {
                           </span>
                         )}
                       </div>
-                    </div>
+                    </div>}
 
                     {/* Pemilihan Menu & Jumlah */}
                     <div className="flex-1 space-y-2.5">
                       <div>
-                        <label className="text-[10px] font-bold uppercase tracking-wider text-[#3B2416] block mb-1">
-                          Cocokkan Menu Resmi
+                        <label className="mb-1 block text-xs font-semibold text-[#3F352E]">
+                          Pilih menu
                         </label>
                         <select
                           value={row.menuItemId ?? ""}
                           onChange={(e) => handleMenuChange(idx, e.target.value)}
-                          className={`w-full h-9 px-2.5 rounded-xl border text-xs font-medium bg-white focus:outline-none focus:ring-2 focus:ring-[#8D0D00] ${
-                            isInvalid ? "border-[#B42318]" : "border-[#3B2416]/20"
+                          className={`h-11 w-full rounded-[10px] border bg-white px-3 text-sm font-medium focus:border-[#8D0D00] focus:outline-none focus:ring-2 focus:ring-[#8D0D00]/15 ${
+                            isInvalid ? "border-[#B42318]" : "border-[#CFC7BF]"
                           }`}
                         >
                           <option value="">-- Pilih Menu Resmi --</option>
@@ -437,7 +461,7 @@ export default function PesananReviewPage() {
 
                       <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-[11px] font-bold text-[#3B2416]">Porsi:</span>
+                          <span className="text-xs font-semibold text-[#3F352E]">Porsi</span>
                           <StepperField
                             value={row.qty}
                             onChange={(q) => handleQtyChange(idx, q)}
@@ -459,7 +483,7 @@ export default function PesananReviewPage() {
                           value={row.note}
                           onChange={(e) => handleNoteChange(idx, e.target.value)}
                           placeholder="Catatan porsi (mis. tanpa sawi, pedas)..."
-                          className="w-full h-8 px-2.5 text-xs rounded-lg border border-[#3B2416]/15 bg-white placeholder:text-[#6B5240]/40"
+                          className="h-10 w-full rounded-[9px] border border-[#CFC7BF] bg-white px-3 text-xs placeholder:text-[#93877E] focus:border-[#8D0D00] focus:outline-none focus:ring-2 focus:ring-[#8D0D00]/15"
                         />
                       </div>
                     </div>
@@ -468,7 +492,7 @@ export default function PesananReviewPage() {
                     <button
                       type="button"
                       onClick={() => handleDeleteRow(idx)}
-                      className="p-1.5 rounded-lg text-[#B42318] hover:bg-[#FBE4E1] transition shrink-0"
+                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[9px] text-[#B42318] transition-colors hover:bg-[#FBE4E1]"
                       title="Hapus baris item"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -482,11 +506,11 @@ export default function PesananReviewPage() {
       </div>
 
       {/* Floating Bottom Bar Simpan Pesanan */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-[#3B2416]/15 shadow-2xl p-4">
-        <div className="max-w-[1280px] mx-auto flex items-center justify-between gap-4">
+      <div className="sticky bottom-4 z-30 rounded-[16px] border border-[#D8D1C9] bg-white p-4 shadow-[0_16px_50px_rgba(37,28,23,0.16)]">
+        <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-4">
           <div>
             <div className="text-[11px] text-[#6B5240]">Total Estimasi Pembayaran</div>
-            <div className="font-serif font-bold text-xl sm:text-2xl text-[#8D0D00]">
+            <div className="text-xl font-semibold tracking-[-0.03em] text-[#8D0D00] sm:text-2xl">
               Rp {totalAmount.toLocaleString("id-ID")}
             </div>
           </div>
@@ -496,10 +520,10 @@ export default function PesananReviewPage() {
               type="button"
               disabled={isSaving || invalidRowsCount > 0 || rows.length === 0}
               onClick={handleSaveOrder}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#8D0D00] hover:bg-[#6B0A00] disabled:bg-[#8D0D00]/40 text-white font-bold text-xs sm:text-sm shadow-md transition"
+              className="inline-flex min-h-12 items-center gap-2 rounded-[11px] bg-[#8D0D00] px-6 text-xs font-semibold text-white transition-colors hover:bg-[#6B0A00] disabled:bg-[#BDAFA4] sm:text-sm"
             >
               <Save className="w-4 h-4" />
-              <span>{isSaving ? "Menyimpan…" : "Konfirmasi & Simpan Pesanan"}</span>
+              <span>{isSaving ? "Menyimpan..." : "Simpan pesanan"}</span>
             </button>
           </div>
         </div>

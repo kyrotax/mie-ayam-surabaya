@@ -1,15 +1,21 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Eye, EyeOff, Lock, Mail, AlertCircle, Info, Loader2 } from "lucide-react";
-import { loginAction } from "./actions";
+import {
+  AlertCircle,
+  Eye,
+  EyeOff,
+  Loader2,
+  LockKeyhole,
+  Mail,
+} from "lucide-react";
+import { supabase } from "@/src/supabaseClient";
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const next = searchParams.get("next") || "/admin";
   const reason = searchParams.get("reason");
 
   const [email, setEmail] = useState("");
@@ -17,192 +23,214 @@ function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  // Rate limit / lockout simulasi: 5 kali gagal -> kunci 30 detik
   const [failedAttempts, setFailedAttempts] = useState(0);
   const [lockoutSeconds, setLockoutSeconds] = useState(0);
 
   useEffect(() => {
-    if (reason === "expired") {
-      setErrorMsg("Sesi berakhir, silakan masuk lagi.");
-    }
+    if (reason === "expired") setErrorMsg("Sesi berakhir. Masuk kembali untuk melanjutkan.");
+    if (reason === "owner-only") setErrorMsg("Panel ini hanya dapat dibuka oleh Owner.");
   }, [reason]);
 
   useEffect(() => {
-    if (lockoutSeconds > 0) {
-      const timer = setTimeout(() => {
-        setLockoutSeconds((prev) => prev - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
+    if (lockoutSeconds <= 0) return;
+    const timer = window.setTimeout(
+      () => setLockoutSeconds((current) => current - 1),
+      1000
+    );
+    return () => window.clearTimeout(timer);
   }, [lockoutSeconds]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     if (lockoutSeconds > 0 || isLoading) return;
 
     setErrorMsg(null);
     setIsLoading(true);
 
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("next", next);
-
     try {
-      const res = await loginAction(null, formData);
-      if (!res.success) {
-        const nextAttempts = failedAttempts + 1;
-        setFailedAttempts(nextAttempts);
-        if (nextAttempts >= 5) {
+      // 2) For Sign In: Use supabase.auth.signInWithPassword({ email, password })
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        const attempts = failedAttempts + 1;
+        setFailedAttempts(attempts);
+        if (attempts >= 5) {
           setLockoutSeconds(30);
-          setErrorMsg("Terlalu banyak percobaan gagal. Tombol masuk dikunci selama 30 detik.");
+          setErrorMsg("Terlalu banyak percobaan gagal. Coba lagi dalam 30 detik.");
         } else {
-          setErrorMsg(res.error || "Email atau kata sandi salah.");
+          setErrorMsg(error.message);
         }
         setIsLoading(false);
-      } else {
-        setFailedAttempts(0);
-        router.push(res.redirectTo || "/admin");
-        router.refresh();
+        return;
       }
-    } catch {
-      setErrorMsg("Terjadi kesalahan sistem. Silakan coba kembali.");
+
+      // Only redirect when a real session exists after login
+      if (!data?.session) {
+        setErrorMsg("Sesi login tidak ditemukan. Silakan periksa akun atau konfirmasi email Anda.");
+        setIsLoading(false);
+        return;
+      }
+
+      // Check role: Sign in itself only available for owner and admin
+      const user = data.user;
+      const role = (
+        user?.user_metadata?.role ||
+        user?.app_metadata?.role ||
+        ""
+      ).toLowerCase();
+      const userEmail = (user?.email || "").toLowerCase();
+
+      const isAllowed =
+        role === "owner" ||
+        role === "admin" ||
+        userEmail.includes("owner") ||
+        userEmail.includes("admin");
+
+      if (!isAllowed) {
+        await supabase.auth.signOut();
+        setErrorMsg("Akses ditolak: Login hanya tersedia untuk Owner dan Admin.");
+        setIsLoading(false);
+        return;
+      }
+
+      setFailedAttempts(0);
+      const requestedPath = searchParams.get("next");
+      const destination =
+        requestedPath?.startsWith("/admin") && !requestedPath.startsWith("//")
+          ? requestedPath
+          : "/admin";
+      router.replace(destination);
+      router.refresh();
+    } catch (err: any) {
+      setErrorMsg(err?.message || "Login tidak dapat diproses. Coba lagi.");
       setIsLoading(false);
     }
   };
 
-  const handleFillDemo = (demoEmail: string, demoPass: string) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
+  const fillOwnerDemo = () => {
+    setEmail("mieayamsurabaya.owner@gmail.com");
+    setPassword("Owner12345!");
     setErrorMsg(null);
   };
 
   const showDemo = process.env.NEXT_PUBLIC_SHOW_DEMO_CREDENTIALS !== "false";
 
   return (
-    <div className="w-full max-w-md bg-white rounded-2xl border border-[#3B2416]/10 p-7 sm:p-10 shadow-sm">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold font-serif text-[#3B2416]">Masuk ke Dasbor</h2>
-        <p className="text-sm text-[#6B5240] mt-1">
-          Gunakan kredensial resmi Owner atau Admin Anda.
+    <div className="w-full max-w-[480px]">
+      <div className="mb-9">
+        <p className="text-sm font-semibold text-[#8D0D00]">Akses Owner & Admin</p>
+        <h2 className="mt-3 text-[clamp(2.2rem,5vw,3.6rem)] font-semibold leading-[1.02] tracking-[-0.05em] text-[#251C17]">
+          Masuk ke ruang kerja
+        </h2>
+        <p className="mt-4 max-w-md text-sm leading-6 text-[#6E6259]">
+          Gunakan akun Owner atau Admin untuk mengelola operasional Mie Ayam Surabaya.
         </p>
       </div>
 
-      {/* Banner Pesan Error */}
-      {errorMsg && (
-        <div
-          role="alert"
-          className="mb-5 p-3.5 rounded-xl bg-[#FBE4E1] border border-[#F4BEB7] text-[#B42318] text-sm flex items-start gap-2.5 font-medium animate-in fade-in"
-        >
-          <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
-          <div className="flex-1">{errorMsg}</div>
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label
-            htmlFor="email"
-            className="block text-xs font-semibold uppercase tracking-wider text-[#3B2416] mb-1.5"
-          >
+          <label htmlFor="email" className="mb-2 block text-sm font-semibold text-[#251C17]">
             Email
           </label>
           <div className="relative">
-            <Mail className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B5240]/60" />
+            <Mail className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#7B6E64]" strokeWidth={1.7} aria-hidden="true" />
             <input
               id="email"
               type="email"
+              autoComplete="username"
               required
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="nama@mieayam.test"
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="Email Owner"
               disabled={lockoutSeconds > 0}
-              className="w-full h-11 pl-11 pr-4 rounded-xl border border-[#3B2416]/25 bg-white text-base text-[#1C1917] placeholder:text-[#6B5240]/40 focus:outline-none focus:ring-2 focus:ring-[#8D0D00] transition"
+              className="h-14 w-full rounded-[14px] border border-[#CFC6BC] bg-white pl-12 pr-4 text-base text-[#251C17] placeholder:text-[#8A7E75] focus:border-[#8D0D00] focus:ring-2 focus:ring-[#8D0D00]/15 disabled:bg-[#EEE9E4]"
             />
           </div>
         </div>
 
         <div>
-          <label
-            htmlFor="password"
-            className="block text-xs font-semibold uppercase tracking-wider text-[#3B2416] mb-1.5"
-          >
-            Kata Sandi
+          <label htmlFor="password" className="mb-2 block text-sm font-semibold text-[#251C17]">
+            Kata sandi
           </label>
           <div className="relative">
-            <Lock className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B5240]/60" />
+            <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#7B6E64]" strokeWidth={1.7} aria-hidden="true" />
             <input
               id="password"
               type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
               required
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="Masukkan kata sandi"
               disabled={lockoutSeconds > 0}
-              className="w-full h-11 pl-11 pr-11 rounded-xl border border-[#3B2416]/25 bg-white text-base text-[#1C1917] placeholder:text-[#6B5240]/40 focus:outline-none focus:ring-2 focus:ring-[#8D0D00] transition"
+              className="h-14 w-full rounded-[14px] border border-[#CFC6BC] bg-white pl-12 pr-14 text-base text-[#251C17] placeholder:text-[#8A7E75] focus:border-[#8D0D00] focus:ring-2 focus:ring-[#8D0D00]/15 disabled:bg-[#EEE9E4]"
             />
             <button
               type="button"
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={() => setShowPassword((current) => !current)}
               aria-pressed={showPassword}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#6B5240]/60 hover:text-[#3B2416] p-1"
+              className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-[10px] text-[#6E6259] transition-colors hover:bg-[#F2EFEA] hover:text-[#251C17]"
               aria-label={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
             >
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {showPassword ? (
+                <EyeOff className="h-5 w-5" strokeWidth={1.7} aria-hidden="true" />
+              ) : (
+                <Eye className="h-5 w-5" strokeWidth={1.7} aria-hidden="true" />
+              )}
             </button>
           </div>
         </div>
 
-        <div className="pt-2">
-          <button
-            type="submit"
-            disabled={isLoading || lockoutSeconds > 0}
-            className="w-full h-11 rounded-xl bg-[#8D0D00] hover:bg-[#6B0A00] disabled:bg-[#8D0D00]/50 text-white font-semibold text-sm transition shadow-sm flex items-center justify-center gap-2"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Memeriksa…</span>
-              </>
-            ) : lockoutSeconds > 0 ? (
-              <span>Terkunci ({lockoutSeconds} detik)</span>
-            ) : (
-              <span>Masuk ke Dasbor</span>
-            )}
-          </button>
-        </div>
+        <button
+          type="submit"
+          disabled={isLoading || lockoutSeconds > 0}
+          className="flex min-h-14 w-full items-center justify-center gap-2 rounded-[14px] bg-[#7B1007] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#5C0D06] active:bg-[#4B0A04] disabled:bg-[#A99E96]"
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+              Memeriksa akun...
+            </>
+          ) : lockoutSeconds > 0 ? (
+            `Coba lagi dalam ${lockoutSeconds} detik`
+          ) : (
+            "Masuk sebagai Owner / Admin"
+          )}
+        </button>
       </form>
 
-      <div className="mt-6 text-center text-xs text-[#6B5240]">
-        Lupa kata sandi? Hubungi Owner.
-      </div>
+      {/* 4) Simple error handling: small error message under the form */}
+      {errorMsg && (
+        <div
+          role="alert"
+          aria-live="polite"
+          className="mt-4 flex items-start gap-2.5 rounded-[12px] border border-[#E7B9B2] bg-[#F9E8E5] p-3 text-sm font-medium leading-5 text-[#8D0D00]"
+        >
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={1.8} aria-hidden="true" />
+          <span>{errorMsg}</span>
+        </div>
+      )}
 
-      {/* Kotak Akun Demo */}
+      <p className="mt-5 text-center text-xs leading-5 text-[#6E6259]">
+        Akses panel diberikan melalui akun Owner atau Admin yang terdaftar.
+      </p>
+
       {showDemo && (
-        <div className="mt-8 pt-6 border-t border-[#3B2416]/10">
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-[#8A5A00] mb-2.5">
-            <Info className="w-3.5 h-3.5" />
-            <span>Akun Demo Cepat (Klik untuk Isi Otomatis)</span>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-            <button
-              type="button"
-              onClick={() => handleFillDemo("owner@mieayam.test", "Owner123!")}
-              className="p-2.5 text-left rounded-lg bg-[#FAF8F5] border border-[#CBA857]/40 hover:border-[#8D0D00] hover:bg-[#FFF4E0] transition"
-            >
-              <div className="font-bold text-[#8D0D00]">👑 Owner</div>
-              <div className="text-[11px] text-[#6B5240] truncate">owner@mieayam.test</div>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleFillDemo("admin@mieayam.test", "Admin123!")}
-              className="p-2.5 text-left rounded-lg bg-[#FAF8F5] border border-[#CBA857]/40 hover:border-[#8D0D00] hover:bg-[#FFF4E0] transition"
-            >
-              <div className="font-bold text-[#3B2416]">👤 Admin Kasir</div>
-              <div className="text-[11px] text-[#6B5240] truncate">admin@mieayam.test</div>
-            </button>
-          </div>
+        <div className="mt-8 border-t border-[#D9D1C9] pt-6">
+          <button
+            type="button"
+            onClick={fillOwnerDemo}
+            className="flex min-h-14 w-full items-center justify-between gap-4 rounded-[14px] border border-[#CFC2AE] bg-[#FFF9F0] px-4 text-left transition-colors hover:border-[#8D0D00] hover:bg-white"
+          >
+            <span>
+              <span className="block text-xs font-semibold text-[#8D0D00]">Isi akun demo Owner</span>
+              <span className="mt-1 block text-xs text-[#6E6259]">mieayamsurabaya.owner@gmail.com</span>
+            </span>
+            <span className="text-xs font-semibold text-[#251C17]">Isi otomatis</span>
+          </button>
         </div>
       )}
     </div>
@@ -211,47 +239,48 @@ function LoginForm() {
 
 export default function AdminLoginPage() {
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-[#FAF8F5]">
-      {/* Panel Kiri (Branding) */}
-      <div className="lg:w-5/12 bg-[#8D0D00] text-[#FFF4E0] p-8 lg:p-14 flex flex-col justify-between items-center text-center relative overflow-hidden">
-        {/* Ornamen Latar Tipis */}
-        <div className="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#CBA857_1px,transparent_1px)] [background-size:16px_16px]" />
+    <main className="min-h-screen bg-[#7B1007] lg:grid lg:grid-cols-[minmax(360px,.82fr)_minmax(560px,1.18fr)]">
+      <section className="relative flex min-h-[250px] overflow-hidden px-6 py-7 text-white sm:px-10 lg:min-h-screen lg:flex-col lg:justify-between lg:p-12 xl:p-16" aria-labelledby="brand-heading">
+        <div className="pointer-events-none absolute -bottom-16 -left-24 h-80 w-[620px] rotate-[-8deg] opacity-75" aria-hidden="true">
+          <span className="absolute left-0 top-6 h-28 w-[620px] rounded-[50%] border-t-2 border-[#D6AC58]" />
+          <span className="absolute left-8 top-20 h-28 w-[620px] rounded-[50%] border-t-2 border-[#D6AC58]" />
+          <span className="absolute left-16 top-[136px] h-28 w-[620px] rounded-[50%] border-t-2 border-[#D6AC58]" />
+        </div>
 
-        <div className="w-full max-w-sm my-auto py-8">
-          <div className="w-24 h-24 sm:w-28 sm:h-28 mx-auto rounded-full overflow-hidden border-4 border-[#CBA857] shadow-xl mb-6 relative">
+        <div className="relative flex items-center gap-3">
+          <div className="relative h-12 w-12 overflow-hidden rounded-[14px] border border-[#D6AC58] bg-[#FFF9F0]">
             <Image
-              src="/images/logo.jpg"
+              src="/images/logo-umkm.jpg"
               alt="Logo Mie Ayam Surabaya"
               fill
+              sizes="48px"
               className="object-cover"
               priority
             />
           </div>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-white mb-3">
-            Mie Ayam Surabaya
+          <div>
+            <p className="text-sm font-bold">Mie Ayam Surabaya</p>
+            <p className="mt-0.5 text-xs text-[#F0C87D]">Panel Masuk</p>
+          </div>
+        </div>
+
+        <div className="relative ml-auto max-w-[280px] self-center text-right lg:ml-0 lg:max-w-md lg:self-auto lg:text-left">
+          <h1 id="brand-heading" className="font-display text-[clamp(2.5rem,6vw,5.8rem)] font-semibold uppercase leading-[.9] tracking-[-0.035em]">
+            Kendali warung, satu tempat.
           </h1>
-          <p className="text-sm sm:text-base text-[#F4CE90] font-medium leading-relaxed max-w-xs mx-auto">
-            Panel Pengelolaan UMKM & Ekstraksi Pesanan Cerdas
-          </p>
-
-          <div className="w-24 h-0.5 bg-[#CBA857] mx-auto my-6" />
-
-          <p className="text-xs text-[#FFF4E0]/80">
-            Fase 2: Validasi Alur Kerja & Antarmuka Dasbor
+          <p className="mt-5 hidden max-w-sm text-sm leading-6 text-[#F0D8C7] sm:block">
+            Kelola status toko, pesanan, menu, dan laporan dari satu panel.
           </p>
         </div>
 
-        <div className="text-xs text-[#FFF4E0]/60 hidden lg:block">
-          &copy; 2026 Mie Ayam Surabaya. Sistem Terproteksi.
-        </div>
-      </div>
+        <p className="relative hidden text-xs text-[#D9B6A0] lg:block">Mie Ayam Surabaya, Sidoarjo</p>
+      </section>
 
-      {/* Panel Kanan (Form Login dibungkus Suspense) */}
-      <div className="lg:w-7/12 flex-1 flex items-center justify-center p-6 sm:p-12 lg:p-16">
-        <Suspense fallback={<div className="text-xs text-[#6B5240]">Memuat form login...</div>}>
+      <section className="relative flex min-h-[calc(100vh-250px)] items-center justify-center rounded-t-[30px] bg-[#F2EFEA] px-6 py-12 sm:px-10 lg:min-h-screen lg:rounded-l-[38px] lg:rounded-tr-none lg:px-14 xl:px-20">
+        <Suspense fallback={<p className="text-sm text-[#6E6259]">Memuat halaman login...</p>}>
           <LoginForm />
         </Suspense>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }

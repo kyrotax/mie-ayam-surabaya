@@ -1,21 +1,20 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { decodeSession, SESSION_COOKIE_NAME } from "@/lib/admin/auth/session";
 import { PanelShell } from "@/components/admin/shell/PanelShell";
+import { resolveUserRole, toSessionUser } from "@/lib/admin/auth/supabase-user";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export default async function AdminPanelLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const cookieStore = await cookies();
-  const sessionToken = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-  const user = decodeSession(sessionToken);
+export default async function AdminPanelLayout({ children }: { children: React.ReactNode }) {
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/admin/login");
+    redirect("/admin/login?reason=expired");
   }
 
-  return <PanelShell user={user}>{children}</PanelShell>;
-}
+  const role = resolveUserRole(user);
+  if (!role) {
+    redirect("/admin/akses-ditolak");
+  }
 
+  return <PanelShell user={toSessionUser(user, role)}>{children}</PanelShell>;
+}

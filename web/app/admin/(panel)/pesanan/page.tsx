@@ -8,14 +8,14 @@ import { getOrdersService } from "@/lib/admin/services/order-service";
 import { PageHeader } from "@/components/admin/ui/PageHeader";
 import { DataTable, Column } from "@/components/admin/ui/DataTable";
 import { Skeleton } from "@/components/admin/ui/Skeleton";
+import { ManualOrderModal } from "@/components/admin/features/ManualOrderModal";
 import {
   Camera,
   Download,
   Search,
-  Filter,
-  Calendar,
   ChevronLeft,
   ChevronRight,
+  PenLine,
 } from "lucide-react";
 
 export default function AdminPesananPage() {
@@ -26,6 +26,7 @@ export default function AdminPesananPage() {
   const [sourceFilter, setSourceFilter] = useState<"all" | "foto" | "manual">("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isManualModalOpen, setIsManualModalOpen] = useState(false);
   const pageSize = 10;
 
   useEffect(() => {
@@ -43,12 +44,18 @@ export default function AdminPesananPage() {
   }, []);
 
   // Filter logika
-  const now = new Date("2026-11-14T23:59:59.999Z").getTime();
+  const now = Date.now();
   const filteredOrders = orders.filter((order) => {
     const orderTime = new Date(order.createdAt).getTime();
 
     if (dateRangeFilter === "today") {
-      if (!order.createdAt.startsWith("2026-11-14")) return false;
+      const today = new Date();
+      const created = new Date(order.createdAt);
+      if (
+        created.getFullYear() !== today.getFullYear() ||
+        created.getMonth() !== today.getMonth() ||
+        created.getDate() !== today.getDate()
+      ) return false;
     } else if (dateRangeFilter === "7d") {
       if (now - orderTime > 7 * 24 * 60 * 60 * 1000) return false;
     } else if (dateRangeFilter === "30d") {
@@ -123,8 +130,9 @@ export default function AdminPesananPage() {
     {
       header: "Sumber",
       render: (o) => (
-        <span className="text-xs font-medium">
-          {o.source === "foto" ? "📸 Foto Catatan" : "✍️ Manual"}
+        <span className="inline-flex items-center gap-1.5 text-xs font-medium">
+          {o.source === "foto" ? <Camera className="h-3.5 w-3.5" aria-hidden="true" /> : <PenLine className="h-3.5 w-3.5" aria-hidden="true" />}
+          {o.source === "foto" ? "Foto Catatan" : "Manual"}
         </span>
       ),
     },
@@ -172,9 +180,9 @@ export default function AdminPesananPage() {
     <div className="space-y-6">
       <PageHeader
         title="Riwayat Pesanan"
-        description="Daftar seluruh transaksi yang berhasil dicatat melalui verifikasi foto AI maupun input manual kasir."
+        description="Daftar transaksi yang dicatat dari foto catatan maupun input manual."
         action={
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={handleExportCSV}
@@ -183,12 +191,20 @@ export default function AdminPesananPage() {
               <Download className="w-4 h-4 text-[#8D0D00]" />
               <span>Ekspor CSV</span>
             </button>
+            <button
+              type="button"
+              onClick={() => setIsManualModalOpen(true)}
+              className="inline-flex min-h-11 items-center gap-2 rounded-[11px] border border-[#8D0D00] bg-white px-4 text-xs font-semibold text-[#8D0D00] transition-colors hover:bg-[#F8E8E4] active:bg-[#F2D8D2]"
+            >
+              <PenLine className="h-4 w-4" aria-hidden="true" />
+              <span>Input manual</span>
+            </button>
             <Link
               href="/admin/pesanan/baru"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#8D0D00] hover:bg-[#6B0A00] text-white text-xs font-semibold shadow-xs transition"
+              className="inline-flex min-h-11 items-center gap-2 rounded-[11px] bg-[#8D0D00] px-4 text-xs font-semibold text-white transition-colors hover:bg-[#6B0A00] active:bg-[#540800]"
             >
-              <Camera className="w-4 h-4" />
-              <span>Input Baru</span>
+              <Camera className="h-4 w-4" aria-hidden="true" />
+              <span>Baca catatan foto</span>
             </Link>
           </div>
         }
@@ -241,8 +257,8 @@ export default function AdminPesananPage() {
           <div className="inline-flex items-center rounded-xl border border-[#3B2416]/15 bg-[#FAF8F5] p-1 gap-1 text-xs">
             {[
               { id: "all", label: "Semua Sumber" },
-              { id: "foto", label: "📸 Foto" },
-              { id: "manual", label: "✍️ Manual" },
+              { id: "foto", label: "Foto" },
+              { id: "manual", label: "Manual" },
             ].map((s) => (
               <button
                 key={s.id}
@@ -288,7 +304,10 @@ export default function AdminPesananPage() {
               </span>
             </div>
             <div className="flex justify-between text-[11px] text-[#6B5240]">
-              <span>{order.source === "foto" ? "📸 Foto" : "✍️ Manual"}</span>
+              <span className="inline-flex items-center gap-1.5">
+                {order.source === "foto" ? <Camera className="h-3 w-3" aria-hidden="true" /> : <PenLine className="h-3 w-3" aria-hidden="true" />}
+                {order.source === "foto" ? "Foto" : "Manual"}
+              </span>
               <span>
                 {new Date(order.createdAt).toLocaleDateString("id-ID", {
                   day: "numeric",
@@ -333,6 +352,17 @@ export default function AdminPesananPage() {
           </div>
         </div>
       )}
+
+      <ManualOrderModal
+        isOpen={isManualModalOpen}
+        onClose={() => setIsManualModalOpen(false)}
+        onSaved={(order) => {
+          setOrders((current) => [order, ...current]);
+          setDateRangeFilter("all");
+          setSourceFilter("all");
+          setCurrentPage(1);
+        }}
+      />
     </div>
   );
 }

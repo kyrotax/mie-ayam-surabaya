@@ -58,6 +58,7 @@ export interface SiteConfig {
   galeri: {
     src: string;
     alt: string;
+    caption?: string;
   }[];
   copy: {
     hero: {

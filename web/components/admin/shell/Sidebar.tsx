@@ -1,185 +1,241 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SessionUser } from "@/lib/admin/types";
+import type { LucideIcon } from "lucide-react";
 import {
-  LayoutDashboard,
-  Store,
-  FileText,
-  UtensilsCrossed,
-  MessageSquare,
-  Camera,
-  ClipboardList,
   BarChart3,
-  Users,
+  Camera,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardList,
+  FileText,
+  LayoutDashboard,
+  MessageSquare,
   LogOut,
   RotateCcw,
+  Store,
+  UtensilsCrossed,
 } from "lucide-react";
+import type { SessionUser } from "@/lib/admin/types";
 import { logoutAction } from "@/app/admin/login/actions";
-import { useToast } from "../ui/Toast";
 import { resetDummyState } from "@/lib/admin/mock/store";
+import { useToast } from "../ui/Toast";
 
-interface NavItem {
+type NavItem = {
   href: string;
   label: string;
-  icon: any;
-  exact?: boolean;
-}
+  icon: LucideIcon;
+  match?: (pathname: string) => boolean;
+};
 
-interface NavGroup {
-  title: string;
-  items: NavItem[];
-  ownerOnly?: boolean;
+const overviewItems: NavItem[] = [
+  {
+    href: "/admin",
+    label: "Ringkasan",
+    icon: LayoutDashboard,
+    match: (pathname) => pathname === "/admin",
+  },
+];
+
+const orderItems: NavItem[] = [
+  {
+    href: "/admin/pesanan",
+    label: "Riwayat pesanan",
+    icon: ClipboardList,
+    match: (pathname) =>
+      pathname.startsWith("/admin/pesanan") &&
+      !pathname.startsWith("/admin/pesanan/baru"),
+  },
+  { href: "/admin/pesanan/baru", label: "Baca catatan foto", icon: Camera },
+];
+
+const managementItems: NavItem[] = [
+  { href: "/admin/toko", label: "Toko dan jadwal", icon: Store },
+  { href: "/admin/menu", label: "Menu dan harga", icon: UtensilsCrossed },
+  { href: "/admin/chatbot", label: "Pesan otomatis", icon: MessageSquare },
+];
+
+const publishingItems: NavItem[] = [
+  { href: "/admin/konten", label: "Konten situs", icon: FileText },
+];
+
+const insightItems: NavItem[] = [
+  { href: "/admin/laporan", label: "Laporan", icon: BarChart3 },
+];
+
+const navigationGroups = [
+  { label: "Utama", items: overviewItems },
+  { label: "Pesanan", items: orderItems },
+  { label: "Operasional", items: managementItems },
+  { label: "Publikasi", items: publishingItems },
+  { label: "Analitik", items: insightItems },
+];
+
+function NavigationItem({
+  item,
+  pathname,
+  collapsed,
+  onNavigate,
+}: {
+  item: NavItem;
+  pathname: string;
+  collapsed: boolean;
+  onNavigate?: () => void;
+}) {
+  const isActive = item.match
+    ? item.match(pathname)
+    : pathname === item.href || pathname.startsWith(`${item.href}/`);
+  const Icon = item.icon;
+
+  return (
+    <Link
+      href={item.href}
+      onClick={onNavigate}
+      aria-current={isActive ? "page" : undefined}
+      aria-label={collapsed ? item.label : undefined}
+      title={collapsed ? item.label : undefined}
+      className={`flex min-h-10 items-center rounded-[10px] text-[13px] transition-colors ${
+        collapsed ? "justify-center px-0" : "gap-2.5 px-3"
+      } ${
+        isActive
+          ? "bg-[#8D0D00] font-semibold text-white shadow-[0_8px_20px_rgba(141,13,0,0.18)]"
+          : "text-[#51463E] hover:bg-[#EEE9E3] hover:text-[#8D0D00]"
+      }`}
+    >
+      <Icon className="h-4 w-4 shrink-0" strokeWidth={1.8} aria-hidden="true" />
+      {!collapsed && <span className="truncate">{item.label}</span>}
+    </Link>
+  );
 }
 
 export function Sidebar({
   user,
+  collapsed = false,
+  canCollapse = true,
+  onToggleCollapsed,
   onNavigate,
 }: {
   user: SessionUser;
+  collapsed?: boolean;
+  canCollapse?: boolean;
+  onToggleCollapsed?: () => void;
   onNavigate?: () => void;
 }) {
   const pathname = usePathname();
   const { sukses } = useToast();
 
-  const groups: NavGroup[] = [
-    {
-      title: "Ringkasan",
-      items: [
-        { href: "/admin", label: "Ringkasan Dasbor", icon: LayoutDashboard, exact: true },
-      ],
-    },
-    {
-      title: "Profil & Toko",
-      items: [
-        { href: "/admin/toko", label: "Status Toko & Jadwal", icon: Store },
-        { href: "/admin/konten", label: "Konten Situs", icon: FileText },
-        { href: "/admin/menu", label: "Menu & Harga", icon: UtensilsCrossed },
-        { href: "/admin/chatbot", label: "Chatbot & FAQ", icon: MessageSquare },
-      ],
-    },
-    {
-      title: "Pesanan & AI",
-      items: [
-        { href: "/admin/pesanan/baru", label: "Input Pesanan (Foto)", icon: Camera },
-        { href: "/admin/pesanan", label: "Riwayat Pesanan", icon: ClipboardList, exact: true },
-        { href: "/admin/laporan", label: "Laporan & Analitik", icon: BarChart3 },
-      ],
-    },
-    {
-      title: "Pengaturan",
-      ownerOnly: true,
-      items: [{ href: "/admin/akun", label: "Kelola Pengguna", icon: Users }],
-    },
-  ];
-
   const handleResetData = () => {
-    if (confirm("Reset seluruh data dummy ke kondisi awal bawaan?")) {
-      resetDummyState();
-      sukses("Data dummy berhasil di-reset.");
-      window.location.reload();
-    }
+    if (!window.confirm("Kembalikan seluruh data demo ke kondisi awal?")) return;
+    resetDummyState();
+    sukses("Data demo sudah dikembalikan.");
+    window.location.reload();
   };
 
   return (
-    <aside className="w-64 bg-[#8D0D00] text-[#FFF4E0] flex flex-col h-full select-none">
-      {/* Brand Header */}
-      <div className="p-5 border-b border-[#6B0A00] flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#CBA857] relative shrink-0">
+    <aside className="flex h-full w-full select-none flex-col border-r border-[#DDD7D0] bg-[#FAF9F7] text-[#251C17]">
+      <div className={`relative flex min-h-[68px] items-center border-b border-[#E7E1DA] ${collapsed ? "justify-center px-2" : "gap-2.5 px-3"}`}>
+        <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-[11px] border border-[#CDA35D] bg-[#FFF8ED]">
           <Image
-            src="/images/logo.jpg"
-            alt="Logo Mie Ayam"
+            src="/images/logo-umkm.jpg"
+            alt="Logo Mie Ayam Surabaya"
             fill
+            sizes="36px"
             className="object-cover"
+            priority
           />
         </div>
-        <div>
-          <div className="font-serif font-bold text-sm tracking-wide text-white leading-tight">
-            Mie Ayam Surabaya
+        {!collapsed && (
+          <div className="min-w-0">
+            <p className="truncate text-[13px] font-bold tracking-[-0.025em]">Mie Ayam Surabaya</p>
+            <p className="mt-0.5 text-[11px] text-[#74675E]">Panel Owner</p>
           </div>
-          <div className="text-[11px] text-[#F4CE90] font-medium">Panel Admin</div>
-        </div>
-      </div>
-
-      {/* Nav Menu */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-5">
-        {groups.map((group) => {
-          if (group.ownerOnly && user.role !== "owner") return null;
-
-          return (
-            <div key={group.title}>
-              <div className="px-3 mb-1.5 text-xs font-medium text-[#F4CE90]">
-                {group.title}
-              </div>
-              <div className="space-y-0.5">
-                {group.items.map((item) => {
-                  const isActive = item.exact
-                    ? pathname === item.href
-                    : pathname.startsWith(item.href);
-                  const Icon = item.icon;
-
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={onNavigate}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition ${
-                        isActive
-                          ? "bg-[#6B0A00] text-white font-bold border-l-4 border-[#CBA857]"
-                          : "text-[#FFF4E0]/90 hover:bg-[#FFF4E0]/10 hover:text-white"
-                      }`}
-                    >
-                      <Icon className="w-4 h-4 shrink-0 text-[#CBA857]" />
-                      <span>{item.label}</span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
-
-        {/* Reset Data Button (Owner Only) */}
-        {user.role === "owner" && (
-          <div className="pt-2 px-1">
-            <button
-              type="button"
-              onClick={handleResetData}
-              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-[#F4CE90] hover:bg-[#6B0A00] transition"
-            >
-              <RotateCcw className="w-4 h-4 shrink-0" />
-              <span>Reset Data Dummy</span>
-            </button>
-          </div>
+        )}
+        {canCollapse && (
+          <button
+            type="button"
+            onClick={onToggleCollapsed}
+            className="absolute -right-3 top-5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-[#D8D1C9] bg-white text-[#5E5148] shadow-[0_4px_12px_rgba(46,31,21,0.1)] transition-colors hover:border-[#8D0D00] hover:text-[#8D0D00]"
+            aria-label={collapsed ? "Tampilkan label navigasi" : "Sembunyikan label navigasi"}
+            aria-expanded={!collapsed}
+            title={collapsed ? "Buka sidebar" : "Ringkas sidebar"}
+          >
+            {collapsed ? (
+              <ChevronRight className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+            ) : (
+              <ChevronLeft className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+            )}
+          </button>
         )}
       </div>
 
-      {/* Footer User Info */}
-      <div className="p-3.5 border-t border-[#6B0A00] bg-[#6B0A00]/40 flex items-center justify-between">
-        <div className="flex items-center gap-2 overflow-hidden">
-          <div className="w-8 h-8 rounded-full bg-[#CBA857] text-[#3B2416] font-bold text-xs flex items-center justify-center shrink-0">
-            {user.name[0]}
-          </div>
-          <div className="truncate">
-            <div className="text-xs font-bold text-white truncate">{user.name}</div>
-            <div className="text-[10px] text-[#F4CE90] capitalize">{user.role}</div>
-          </div>
+      <nav aria-label="Navigasi panel Owner" className="flex-1 overflow-y-auto px-2.5 py-3">
+        <div className="space-y-4">
+          {navigationGroups.map((group, groupIndex) => (
+            <div key={group.label}>
+              {groupIndex > 0 && (
+                <div className={`mb-3 h-px bg-[#E5DFD8] ${collapsed ? "mx-1" : "mx-2.5"}`} />
+              )}
+              {!collapsed && (
+                <p className="px-3 pb-1.5 text-[11px] font-medium text-[#74675E]">{group.label}</p>
+              )}
+              <div className="space-y-1">
+                {group.items.map((item) => (
+                  <NavigationItem
+                    key={item.href}
+                    item={item}
+                    pathname={pathname}
+                    collapsed={collapsed}
+                    onNavigate={onNavigate}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
+      </nav>
+
+      <div className="space-y-1 border-t border-[#E5DFD8] p-2.5">
+        <button
+          type="button"
+          onClick={handleResetData}
+          aria-label={collapsed ? "Kembalikan data demo" : undefined}
+          title={collapsed ? "Kembalikan data demo" : undefined}
+          className={`flex min-h-9 w-full items-center rounded-[10px] text-[11px] font-medium text-[#685B52] transition-colors hover:bg-[#EEE9E3] hover:text-[#8D0D00] ${
+            collapsed ? "justify-center" : "gap-2.5 px-2.5"
+          }`}
+        >
+          <RotateCcw className="h-4 w-4 shrink-0" strokeWidth={1.8} aria-hidden="true" />
+          {!collapsed && <span>Kembalikan data demo</span>}
+        </button>
+
+        <div className={`flex min-h-11 items-center rounded-[11px] bg-[#F1ECE6] ${collapsed ? "justify-center px-1" : "gap-2.5 px-2.5"}`}>
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px] bg-[#8D0D00] text-[11px] font-bold text-white">
+            {user.name.charAt(0)}
+          </span>
+          {!collapsed && (
+            <div className="min-w-0">
+              <p className="truncate text-xs font-semibold">{user.name}</p>
+              <p className="mt-0.5 text-[11px] text-[#74675E]">Owner</p>
+            </div>
+          )}
+        </div>
+
         <form action={logoutAction}>
           <button
             type="submit"
-            className="p-1.5 rounded-lg text-[#FFF4E0]/70 hover:text-white hover:bg-[#6B0A00] transition"
-            title="Keluar"
-            aria-label="Keluar"
+            aria-label={collapsed ? "Keluar dari panel" : undefined}
+            title={collapsed ? "Keluar dari panel" : undefined}
+            className={`flex min-h-10 w-full items-center rounded-[10px] text-[11px] font-semibold text-[#8D0D00] transition-colors hover:bg-[#F8E8E4] active:bg-[#F2D8D2] ${
+              collapsed ? "justify-center" : "gap-2.5 px-2.5"
+            }`}
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="h-4 w-4 shrink-0" strokeWidth={1.8} aria-hidden="true" />
+            {!collapsed && <span>Keluar dari panel</span>}
           </button>
         </form>
       </div>
     </aside>
   );
 }
-
