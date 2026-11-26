@@ -179,23 +179,23 @@ export default function AdminChatbotPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Chatbot & Asisten WhatsApp"
-        description="Konfigurasi pesan balasan otomatis saat warung tutup, daftar tanya-jawab umum (FAQ), dan pantau riwayat obrolan."
+        title="Pesan otomatis"
+        description="Atur balasan saat warung tutup, jawaban pertanyaan umum, dan riwayat pesan pelanggan."
       />
 
-      <div className="p-3.5 rounded-xl bg-[#FFF4E0] border border-[#CBA857]/40 text-xs text-[#8A5A00] flex items-center gap-2">
+      <div className="flex items-center gap-2 rounded-[12px] border border-[#DED8D1] bg-white p-3.5 text-xs text-[#51463E]">
         <Info className="w-4 h-4 shrink-0" />
         <span>
-          Layanan Bot saat ini dalam simulasi dummy (belum terhubung ke WhatsApp Cloud API produksi).
+          Mode demo aktif. Pesan belum dikirim ke WhatsApp pelanggan.
         </span>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-[#3B2416]/10 gap-2">
+      <div className="flex w-full gap-1 overflow-x-auto rounded-[12px] border border-[#DED8D1] bg-white p-1 sm:w-fit">
         {[
-          { id: "autoreply", label: "Auto-Reply Saat Tutup", icon: MessageSquare },
-          { id: "faq", label: "Tanya-Jawab (FAQ)", icon: HelpCircle },
-          { id: "logs", label: "Log Percakapan", icon: Clock },
+          { id: "autoreply", label: "Saat warung tutup", icon: MessageSquare },
+          { id: "faq", label: "Jawaban umum", icon: HelpCircle },
+          { id: "logs", label: "Riwayat pesan", icon: Clock },
         ].map((tab) => {
           const Icon = tab.icon;
           return (
@@ -203,10 +203,10 @@ export default function AdminChatbotPage() {
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold transition border-b-2 ${
+              className={`flex min-h-10 shrink-0 items-center gap-2 rounded-[9px] px-4 text-xs font-semibold transition-colors ${
                 activeTab === tab.id
-                  ? "border-[#8D0D00] text-[#8D0D00]"
-                  : "border-transparent text-[#6B5240] hover:text-[#3B2416]"
+                  ? "bg-[#251C17] text-white"
+                  : "text-[#71645B] hover:bg-[#F5F2EE] hover:text-[#251C17]"
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -219,17 +219,17 @@ export default function AdminChatbotPage() {
       {/* Tab 1: Auto Reply */}
       {activeTab === "autoreply" && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="p-6 rounded-2xl bg-white border border-[#3B2416]/10 shadow-xs space-y-4">
-            <h3 className="font-serif text-lg font-bold text-[#3B2416]">
-              Template Pesan Balasan Otomatis
+          <div className="space-y-4 rounded-[16px] border border-[#DED8D1] bg-white p-6">
+            <h3 className="text-lg font-semibold tracking-[-0.025em] text-[#251C17]">
+              Pesan saat warung tutup
             </h3>
             <p className="text-xs text-[#6B5240]">
-              Pesan ini otomatis dikirim ke pelanggan yang mengirim pesan WhatsApp ketika toko dalam status TUTUP.
+              Gunakan pesan singkat yang memberi alasan dan waktu buka kembali.
             </p>
 
             <div>
-              <label className="block text-xs font-semibold uppercase text-[#3B2416] mb-1">
-                Isi Pesan Template
+              <label className="mb-1 block text-xs font-semibold text-[#3F352E]">
+                Isi pesan
               </label>
               <TextareaField
                 rows={6}
@@ -241,20 +241,20 @@ export default function AdminChatbotPage() {
             {/* Tombol Sisipkan Variabel */}
             <div>
               <span className="text-[11px] font-semibold text-[#6B5240] block mb-1.5">
-                Sisipkan Variabel Cepat:
+                Sisipkan informasi
               </span>
               <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={() => handleInsertVariable("{jam_buka_kembali}")}
-                  className="px-2.5 py-1 rounded-lg bg-[#FAF8F5] border border-[#CBA857]/40 text-xs font-bold text-[#8D0D00] hover:bg-[#FFF4E0]"
+                  className="min-h-9 rounded-[8px] border border-[#D8D1C9] bg-[#F7F4F0] px-2.5 text-xs font-semibold text-[#8D0D00] hover:bg-[#F8E8E4]"
                 >
                   + {"{jam_buka_kembali}"}
                 </button>
                 <button
                   type="button"
                   onClick={() => handleInsertVariable("{alasan}")}
-                  className="px-2.5 py-1 rounded-lg bg-[#FAF8F5] border border-[#CBA857]/40 text-xs font-bold text-[#8D0D00] hover:bg-[#FFF4E0]"
+                  className="min-h-9 rounded-[8px] border border-[#D8D1C9] bg-[#F7F4F0] px-2.5 text-xs font-semibold text-[#8D0D00] hover:bg-[#F8E8E4]"
                 >
                   + {"{alasan}"}
                 </button>
@@ -262,7 +262,7 @@ export default function AdminChatbotPage() {
             </div>
 
             <InputField
-              label="Jeda Balasan per Nomor (Menit)"
+              label="Jeda balasan per nomor (menit)"
               type="number"
               min={1}
               value={autoReply.cooldownMinutes}
@@ -276,17 +276,17 @@ export default function AdminChatbotPage() {
               type="button"
               onClick={handleSaveAutoReply}
               disabled={isSavingAutoReply}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#8D0D00] hover:bg-[#6B0A00] text-white text-xs font-semibold shadow-xs transition"
+              className="inline-flex min-h-11 items-center gap-2 self-start rounded-[11px] bg-[#8D0D00] px-5 text-xs font-semibold text-white transition-colors hover:bg-[#6B0A00] disabled:opacity-60"
             >
               <Save className="w-4 h-4" />
-              <span>{isSavingAutoReply ? "Menyimpan…" : "Simpan Pengaturan"}</span>
+              <span>{isSavingAutoReply ? "Menyimpan..." : "Simpan pesan"}</span>
             </button>
           </div>
 
           {/* Pratinjau Gelembung WhatsApp */}
           <div className="space-y-2">
-            <h3 className="font-serif text-base font-bold text-[#3B2416]">
-              Pratinjau Percakapan Langsung
+            <h3 className="text-base font-semibold tracking-[-0.02em] text-[#251C17]">
+              Pratinjau pesan
             </h3>
             <WhatsAppPreview message={samplePreviewText} />
           </div>
@@ -298,7 +298,7 @@ export default function AdminChatbotPage() {
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <p className="text-xs text-[#6B5240]">
-              Pertanyaan yang otomatis dijawab oleh chatbot jika terdeteksi kata kunci serupa.
+              Jawaban yang dipakai ketika pesan pelanggan cocok dengan pertanyaan berikut.
             </p>
             <button
               type="button"
@@ -306,15 +306,15 @@ export default function AdminChatbotPage() {
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#8D0D00] hover:bg-[#6B0A00] text-white text-xs font-semibold transition"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>Tambah FAQ</span>
+              <span>Tambah jawaban</span>
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-3">
             {faqs.map((f) => (
               <div
                 key={f.id}
-                className="p-5 rounded-2xl bg-white border border-[#3B2416]/10 shadow-xs flex flex-col justify-between gap-3"
+                className="flex flex-col justify-between gap-3 rounded-[14px] border border-[#DED8D1] bg-white p-5"
               >
                 <div>
                   <div className="flex items-start justify-between gap-2">

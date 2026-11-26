@@ -1,45 +1,63 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { decodeSession, SESSION_COOKIE_NAME } from "./lib/admin/auth/session";
+import { createServerClient } from "@supabase/ssr";
+import { NextResponse, type NextRequest } from "next/server";
+import { resolveUserRole } from "./lib/admin/auth/supabase-user";
 import { canAccess } from "./lib/admin/permissions";
 
-export function middleware(request: NextRequest) {
+const publicAdminRoutes = new Set([
+  "/admin/login",
+  "/admin/signup",
+  "/admin/akses-ditolak",
+]);
+
+export async function middleware(request: NextRequest) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabasePublishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !supabasePublishableKey) {
+    return NextResponse.next({ request });
+  }
+
+  let response = NextResponse.next({ request });
+  const supabase = createServerClient(supabaseUrl, supabasePublishableKey, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet, headers) {
+        cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+        response = NextResponse.next({ request });
+        cookiesToSet.forEach(({ name, value, options }) => {
+          response.cookies.set(name, value, options);
+        });
+        Object.entries(headers).forEach(([name, value]) => {
+          response.headers.set(name, value);
+        });
+      },
+    },
+  });
+
+  const { data: { user } } = await supabase.auth.getUser();
   const { pathname, search } = request.nextUrl;
+  const isPublicAdminRoute = publicAdminRoutes.has(pathname);
 
-  // Hanya periksa rute /admin
-  if (!pathname.startsWith("/admin")) {
-    return NextResponse.next();
-  }
-
-  const cookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
-  const session = decodeSession(cookie);
-
-  // Jika membuka halaman login
-  if (pathname === "/admin/login") {
-    if (session) {
-      // Sudah login -> alihkan ke /admin
-      return NextResponse.redirect(new URL("/admin", request.url));
-    }
-    return NextResponse.next();
-  }
-
-  // Jika belum login dan mengakses halaman selain /admin/login
-  if (!session) {
+  if (!user && !isPublicAdminRoute) {
     const loginUrl = new URL("/admin/login", request.url);
-    if (cookie) {
-      loginUrl.searchParams.set("reason", "expired");
-    } else {
-      loginUrl.searchParams.set("next", pathname + search);
-    }
+    loginUrl.searchParams.set("next", pathname + search);
     return NextResponse.redirect(loginUrl);
   }
 
-  // Jika sudah login, cek hak akses rute (mis. /admin/akun hanya untuk owner)
-  if (!canAccess(session.role, pathname)) {
-    return NextResponse.redirect(new URL("/admin/akses-ditolak", request.url));
+  if (user && (pathname === "/admin/login" || pathname === "/admin/signup")) {
+    return NextResponse.redirect(new URL("/admin", request.url));
   }
 
-  return NextResponse.next();
+  if (user && !isPublicAdminRoute) {
+    const role = resolveUserRole(user);
+    if (!role || !canAccess(role, pathname)) {
+      return NextResponse.redirect(new URL("/admin/akses-ditolak", request.url));
+    }
+  }
+
+  return response;
 }
 
 export const config = {

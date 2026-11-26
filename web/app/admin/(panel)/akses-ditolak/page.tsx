@@ -7,7 +7,7 @@ export default function AksesDitolakPage() {
       <div className="w-16 h-16 rounded-full bg-[#FBE4E1] text-[#B42318] flex items-center justify-center mb-4">
         <ShieldAlert className="w-8 h-8" />
       </div>
-      <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#3B2416] mb-2">
+      <h1 className="text-2xl font-semibold tracking-[-0.04em] text-[#251C17] sm:text-3xl mb-2">
         Akses Ditolak
       </h1>
       <p className="text-sm text-[#6B5240] max-w-sm mb-6">

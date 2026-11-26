@@ -455,6 +455,7 @@ export function generateSeedData() {
     storeStatus: INITIAL_STORE_STATUS,
     statusLogs: INITIAL_STATUS_LOGS,
     hours: INITIAL_HOURS,
+    scheduledClosures: [],
     faqs: INITIAL_FAQS,
     autoReply: INITIAL_AUTOREPLY,
     siteContent: INITIAL_SITE_CONTENT,

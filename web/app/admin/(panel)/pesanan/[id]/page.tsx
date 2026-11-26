@@ -69,7 +69,7 @@ export default function PesananDetailPage() {
   if (!order) {
     return (
       <div className="py-12 text-center space-y-4">
-        <h3 className="font-serif text-lg font-bold text-[#3B2416]">Pesanan Tidak Ditemukan</h3>
+        <h3 className="text-lg font-semibold tracking-[-0.025em] text-[#251C17]">Pesanan tidak ditemukan</h3>
         <p className="text-xs text-[#6B5240]">ID pesanan yang Anda cari mungkin telah dihapus.</p>
         <Link
           href="/admin/pesanan"
@@ -117,7 +117,7 @@ export default function PesananDetailPage() {
           <div className="md:col-span-5 p-4 rounded-2xl bg-white border border-[#3B2416]/10 shadow-xs space-y-3">
             <div className="flex items-center gap-2 pb-2 border-b border-[#3B2416]/10">
               <Camera className="w-4 h-4 text-[#8D0D00]" />
-              <span className="font-serif font-bold text-xs text-[#3B2416]">
+              <span className="text-xs font-semibold text-[#251C17]">
                 Foto Catatan Asli
               </span>
             </div>
@@ -164,7 +164,7 @@ export default function PesananDetailPage() {
 
           {/* Rincian Item */}
           <div className="p-5 rounded-2xl bg-white border border-[#3B2416]/10 shadow-xs space-y-4">
-            <h4 className="font-serif font-bold text-sm text-[#3B2416]">Daftar Item Sajian</h4>
+            <h4 className="text-sm font-semibold text-[#251C17]">Daftar item pesanan</h4>
             <div className="divide-y divide-[#3B2416]/10">
               {order.items.map((item, idx) => (
                 <div key={idx} className="py-2.5 flex items-start justify-between text-xs">
@@ -191,7 +191,7 @@ export default function PesananDetailPage() {
             {/* Total Pembayaran */}
             <div className="pt-3 border-t-2 border-[#3B2416]/10 flex items-center justify-between">
               <span className="font-bold text-sm text-[#3B2416]">Total Pembayaran</span>
-              <span className="font-serif font-bold text-xl text-[#8D0D00]">
+              <span className="text-xl font-semibold tracking-[-0.025em] text-[#8D0D00]">
                 Rp {order.total.toLocaleString("id-ID")}
               </span>
             </div>

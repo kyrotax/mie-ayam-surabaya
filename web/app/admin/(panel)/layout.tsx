@@ -1,24 +1,20 @@
-import { cookies } from "next/headers";
-import { decodeSession, SESSION_COOKIE_NAME } from "@/lib/admin/auth/session";
+import { redirect } from "next/navigation";
 import { PanelShell } from "@/components/admin/shell/PanelShell";
-import type { SessionUser } from "@/lib/admin/types";
+import { resolveUserRole, toSessionUser } from "@/lib/admin/auth/supabase-user";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export default async function AdminPanelLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const cookieStore = await cookies();
-  const sessionToken = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-  const user = decodeSession(sessionToken);
+export default async function AdminPanelLayout({ children }: { children: React.ReactNode }) {
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  const fallbackUser: SessionUser = user || {
-    uid: "usr_admin",
-    name: "Pengelola Toko",
-    email: "admin@mieayam.test",
-    role: "owner" as const,
-    exp: Math.floor(Date.now() / 1000) + 86400,
-  };
+  if (!user) {
+    redirect("/admin/login?reason=expired");
+  }
 
-  return <PanelShell user={fallbackUser}>{children}</PanelShell>;
+  const role = resolveUserRole(user);
+  if (!role) {
+    redirect("/admin/akses-ditolak");
+  }
+
+  return <PanelShell user={toSessionUser(user, role)}>{children}</PanelShell>;
 }

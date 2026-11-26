@@ -36,14 +36,15 @@ export function Modal({
     <div
       role="dialog"
       aria-modal="true"
+      aria-label={title || "Dialog"}
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-150"
     >
       <div
-        className={`w-full ${maxWidth} bg-white rounded-2xl border border-[#D4AF37]/20 shadow-xl overflow-hidden flex flex-col max-h-[90vh]`}
+        className={`flex max-h-[90vh] w-full ${maxWidth} flex-col overflow-hidden rounded-[16px] border border-[#D8D1C9] bg-white shadow-[0_24px_80px_rgba(37,28,23,0.22)]`}
       >
         {title && (
-          <div className="px-6 py-4 border-b border-[#D4AF37]/20 flex items-center justify-between">
-            <h3 className="font-heading text-lg text-[#2C1810]">{title}</h3>
+          <div className="flex items-center justify-between border-b border-[#E7E1DA] px-6 py-4">
+            <h3 className="text-base font-semibold tracking-[-0.02em] text-[#251C17]">{title}</h3>
             <button
               type="button"
               onClick={onClose}

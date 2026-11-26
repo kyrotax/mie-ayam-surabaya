@@ -20,15 +20,15 @@ export function InputField({
       {label && (
         <label
           htmlFor={id}
-          className="block text-xs font-semibold uppercase tracking-wider text-[#2C1810]"
+          className="block text-xs font-semibold text-[#3F352E]"
         >
           {label}
         </label>
       )}
       <input
         id={id}
-        className={`w-full h-11 px-3.5 rounded-xl border bg-white text-base sm:text-sm text-[#1C1917] placeholder:text-[#6B4423]/40 focus:outline-none focus:ring-2 focus:ring-[#8B0000] transition ${
-          error ? "border-[#C41E3A] focus:ring-[#B42318]" : "border-[#2C1810]/25"
+        className={`h-11 w-full rounded-[10px] border bg-white px-3.5 text-base text-[#251C17] transition placeholder:text-[#93877E] focus:border-[#8D0D00] focus:outline-none focus:ring-2 focus:ring-[#8D0D00]/15 sm:text-sm ${
+          error ? "border-[#C41E3A] focus:ring-[#B42318]/15" : "border-[#CFC7BF]"
         }`}
         {...props}
       />
@@ -61,15 +61,15 @@ export function TextareaField({
       {label && (
         <label
           htmlFor={id}
-          className="block text-xs font-semibold uppercase tracking-wider text-[#2C1810]"
+          className="block text-xs font-semibold text-[#3F352E]"
         >
           {label}
         </label>
       )}
       <textarea
         id={id}
-        className={`w-full p-3 rounded-xl border bg-white text-base sm:text-sm text-[#1C1917] placeholder:text-[#6B4423]/40 focus:outline-none focus:ring-2 focus:ring-[#8B0000] transition ${
-          error ? "border-[#C41E3A] focus:ring-[#B42318]" : "border-[#2C1810]/25"
+        className={`w-full rounded-[10px] border bg-white p-3 text-base text-[#251C17] transition placeholder:text-[#93877E] focus:border-[#8D0D00] focus:outline-none focus:ring-2 focus:ring-[#8D0D00]/15 sm:text-sm ${
+          error ? "border-[#C41E3A] focus:ring-[#B42318]/15" : "border-[#CFC7BF]"
         }`}
         rows={props.rows || 3}
         {...props}
@@ -104,15 +104,15 @@ export function SelectField({
       {label && (
         <label
           htmlFor={id}
-          className="block text-xs font-semibold uppercase tracking-wider text-[#2C1810]"
+          className="block text-xs font-semibold text-[#3F352E]"
         >
           {label}
         </label>
       )}
       <select
         id={id}
-        className={`w-full h-11 px-3.5 rounded-xl border bg-white text-base sm:text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#8B0000] transition ${
-          error ? "border-[#C41E3A]" : "border-[#2C1810]/25"
+        className={`h-11 w-full rounded-[10px] border bg-white px-3.5 text-base text-[#251C17] transition focus:border-[#8D0D00] focus:outline-none focus:ring-2 focus:ring-[#8D0D00]/15 sm:text-sm ${
+          error ? "border-[#C41E3A]" : "border-[#CFC7BF]"
         }`}
         {...props}
       >
@@ -244,15 +244,15 @@ export function TagInputField({
   return (
     <div className="space-y-1.5">
       {label && (
-        <label className="block text-xs font-semibold uppercase tracking-wider text-[#2C1810]">
+        <label className="block text-xs font-semibold text-[#3F352E]">
           {label}
         </label>
       )}
-      <div className="min-h-11 p-2 rounded-xl border border-[#2C1810]/25 bg-white flex flex-wrap items-center gap-1.5 focus-within:ring-2 focus-within:ring-[#8B0000]">
+      <div className="flex min-h-11 flex-wrap items-center gap-1.5 rounded-[10px] border border-[#CFC7BF] bg-white p-2 focus-within:border-[#8D0D00] focus-within:ring-2 focus-within:ring-[#8D0D00]/15">
         {tags.map((tag) => (
           <span
             key={tag}
-            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#FAF7F2] text-xs font-semibold text-[#8B0000] border border-[#D4AF37]/40"
+            className="inline-flex items-center gap-1 rounded-[7px] border border-[#E3C1BA] bg-[#F8EAE7] px-2.5 py-1 text-xs font-semibold text-[#8D0D00]"
           >
             <span>{tag}</span>
             <button

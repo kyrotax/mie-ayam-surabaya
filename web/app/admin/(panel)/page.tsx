@@ -238,7 +238,7 @@ export default function AdminDashboardPage() {
                 <span className="h-2.5 w-2.5 rounded-full bg-[#F0C87D]" aria-hidden="true" />
                 Status warung saat ini
               </div>
-              <h2 id="store-status-heading" className="mt-5 font-display text-[clamp(4.5rem,9vw,7.5rem)] font-semibold uppercase leading-[.86] tracking-[-0.045em]">
+              <h2 id="store-status-heading" className="mt-5 text-[clamp(4.5rem,9vw,7.5rem)] font-semibold uppercase leading-[.86] tracking-[-0.06em]">
                 {storeStatus.isOpen ? "Buka" : "Tutup"}
               </h2>
               <p className="mt-5 max-w-lg text-sm leading-6 text-[#F2D7C4] sm:text-base">
@@ -264,7 +264,7 @@ export default function AdminDashboardPage() {
               <h2 className="text-xl font-semibold tracking-[-0.025em] text-[#251C17]">Perlu perhatian</h2>
               <p className="mt-1 text-sm leading-6 text-[#6E6259]">Tugas yang belum selesai hari ini.</p>
             </div>
-            <span className="font-display text-5xl font-semibold leading-none text-[#8D0D00]">
+            <span className="text-5xl font-semibold leading-none tracking-[-0.04em] text-[#8D0D00]">
               {pendingJobs.length + closedChats.length}
             </span>
           </div>

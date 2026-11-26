@@ -180,25 +180,25 @@ export default function AdminKontenPage() {
   const tabs = [
     {
       id: "beranda" as ContentTab,
-      label: "1. Halaman Beranda",
+      label: "Beranda",
       icon: Home,
       desc: "Hero Section, Galeri Foto, & Ulasan Pelanggan",
     },
     {
       id: "tentang" as ContentTab,
-      label: "2. Tentang Kami",
+      label: "Tentang warung",
       icon: BookOpen,
       desc: "Cerita Warung, Sejarah, & Keunggulan",
     },
     {
       id: "kontak" as ContentTab,
-      label: "3. Lokasi & Kontak",
+      label: "Lokasi dan kontak",
       icon: MapPin,
       desc: "Alamat, WhatsApp, Instagram, & Maps",
     },
     {
       id: "brand" as ContentTab,
-      label: "4. Identitas Brand",
+      label: "Identitas situs",
       icon: Globe,
       desc: "Nama Usaha, Tagline di Header & Footer",
     },
@@ -207,25 +207,25 @@ export default function AdminKontenPage() {
   return (
     <div className="space-y-6 pb-24">
       <PageHeader
-        title="Konten Situs & Profil"
-        description="Kelola teks, narasi, dan media website yang diurutkan per-halaman agar mudah dikustomisasi."
+        title="Konten situs"
+        description="Kelola tulisan, galeri, lokasi, dan identitas yang tampil pada situs pelanggan."
         action={
           <a
             href="/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-[#D4AF37]/30 bg-white hover:bg-[#FAF7F2] text-xs font-semibold text-[#8B0000] transition"
+            className="inline-flex min-h-11 items-center gap-2 rounded-[11px] border border-[#D8D1C9] bg-white px-4 text-xs font-semibold text-[#8D0D00] transition-colors hover:bg-[#F8E8E4]"
           >
-            <span>Buka Website Publik</span>
+            <span>Lihat situs</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
         }
       />
 
-      <div className="p-3.5 rounded-xl bg-[#FAF0DC] border border-[#D4AF37]/40 text-xs text-[#2C1810] flex items-center gap-2">
+      <div className="flex items-center gap-2 rounded-[12px] border border-[#E2D5C5] bg-[#F7F1E9] p-3.5 text-xs text-[#51463E]">
         <CheckCircle2 className="w-4 h-4 text-[#8B0000] shrink-0" />
         <span>
-          <strong>Sinkronisasi Otomatis:</strong> Setiap perubahan yang disimpan di sini langsung diterapkan ke website publik.
+          Setiap perubahan yang disimpan langsung diterapkan ke situs pelanggan.
         </span>
       </div>
 
@@ -239,15 +239,15 @@ export default function AdminKontenPage() {
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id)}
-              className={`p-3.5 rounded-2xl border text-left transition-all ${
+            className={`min-h-14 rounded-[12px] border p-3.5 text-left transition-colors ${
                 isActive
                   ? "bg-[#8B0000] text-white border-[#8B0000] shadow-sm"
-                  : "bg-white text-[#2C1810] border-[#D4AF37]/25 hover:border-[#8B0000]/40 hover:bg-[#FAF7F2]"
+                  : "border-[#DED8D1] bg-white text-[#3F352E] hover:border-[#BDAFA4] hover:bg-[#F7F4F0]"
               }`}
             >
               <div className="flex items-center gap-2 mb-1">
                 <Icon className={`w-4 h-4 ${isActive ? "text-[#FFD700]" : "text-[#8B0000]"}`} />
-                <span className="font-heading text-sm tracking-wide">{tab.label}</span>
+                <span className="text-sm font-semibold tracking-[-0.015em]">{tab.label}</span>
               </div>
               <p className={`text-[11px] leading-tight line-clamp-1 ${isActive ? "text-white/80" : "text-[#6B4423]"}`}>
                 {tab.desc}
@@ -261,10 +261,10 @@ export default function AdminKontenPage() {
       {activeTab === "beranda" && (
         <div className="space-y-6">
           {/* Card 1: Hero Section */}
-          <div className="p-6 rounded-2xl bg-white border border-[#D4AF37]/25 shadow-xs space-y-4">
-            <div className="border-b border-[#D4AF37]/20 pb-3 flex items-center justify-between">
+          <div className="space-y-4 rounded-[16px] border border-[#DED8D1] bg-white p-6">
+            <div className="flex items-center justify-between border-b border-[#E7E1DA] pb-3">
               <div>
-                <h3 className="font-heading text-lg text-[#2C1810]">Seksi Utama (Hero Section)</h3>
+                <h3 className="text-lg font-semibold tracking-[-0.025em] text-[#251C17]">Bagian utama situs</h3>
                 <p className="text-xs text-[#6B4423]">
                   Teks sambutan dan deskripsi yang tampil di layar paling pertama saat pengunjung membuka website.
                 </p>
@@ -284,10 +284,10 @@ export default function AdminKontenPage() {
           </div>
 
           {/* Card 2: Galeri Foto Beranda */}
-          <div className="p-6 rounded-2xl bg-white border border-[#D4AF37]/25 shadow-xs space-y-4">
-            <div className="border-b border-[#D4AF37]/20 pb-3 flex items-center justify-between">
+          <div className="space-y-4 rounded-[16px] border border-[#DED8D1] bg-white p-6">
+            <div className="flex items-center justify-between border-b border-[#E7E1DA] pb-3">
               <div>
-                <h3 className="font-heading text-lg text-[#2C1810]">Galeri Foto Beranda</h3>
+                <h3 className="text-lg font-semibold tracking-[-0.025em] text-[#251C17]">Galeri beranda</h3>
                 <p className="text-xs text-[#6B4423]">
                   Foto-foto hidangan dan suasana warung pada carousel slider di halaman beranda.
                 </p>
@@ -356,10 +356,10 @@ export default function AdminKontenPage() {
           </div>
 
           {/* Card 3: Ulasan & Testimoni Pelanggan */}
-          <div className="p-6 rounded-2xl bg-white border border-[#D4AF37]/25 shadow-xs space-y-4">
-            <div className="border-b border-[#D4AF37]/20 pb-3 flex items-center justify-between">
+          <div className="space-y-4 rounded-[16px] border border-[#DED8D1] bg-white p-6">
+            <div className="flex items-center justify-between border-b border-[#E7E1DA] pb-3">
               <div>
-                <h3 className="font-heading text-lg text-[#2C1810]">Ulasan & Testimoni Pelanggan</h3>
+                <h3 className="text-lg font-semibold tracking-[-0.025em] text-[#251C17]">Ulasan pelanggan</h3>
                 <p className="text-xs text-[#6B4423]">
                   Kartu testimoni bintang 5 yang ditampilkan pada slider review pelanggan di beranda.
                 </p>
@@ -395,10 +395,10 @@ export default function AdminKontenPage() {
 
       {/* ════════════════ TAB 2: TENTANG KAMI ════════════════ */}
       {activeTab === "tentang" && (
-        <div className="p-6 rounded-2xl bg-white border border-[#D4AF37]/25 shadow-xs space-y-5 max-w-3xl">
-          <div className="border-b border-[#D4AF37]/20 pb-3 flex items-center justify-between">
+        <div className="max-w-3xl space-y-5 rounded-[16px] border border-[#DED8D1] bg-white p-6">
+          <div className="flex items-center justify-between border-b border-[#E7E1DA] pb-3">
             <div>
-              <h3 className="font-heading text-lg text-[#2C1810]">Halaman & Seksi "Tentang Kami"</h3>
+              <h3 className="text-lg font-semibold tracking-[-0.025em] text-[#251C17]">Tentang warung</h3>
               <p className="text-xs text-[#6B4423]">
                 Narasi sejarah, tahun berdirinya warung, dan 3 poin keunggulan utama produk.
               </p>
@@ -426,7 +426,7 @@ export default function AdminKontenPage() {
 
           <div className="space-y-3 pt-2">
             <div>
-              <label className="block text-xs font-semibold uppercase text-[#2C1810]">
+              <label className="block text-xs font-semibold text-[#3F352E]">
                 3 Poin Keunggulan Utama (Highlights)
               </label>
               <p className="text-xs text-[#6B4423] mt-0.5">
@@ -447,10 +447,10 @@ export default function AdminKontenPage() {
 
       {/* ════════════════ TAB 3: LOKASI & KONTAK ════════════════ */}
       {activeTab === "kontak" && (
-        <div className="p-6 rounded-2xl bg-white border border-[#D4AF37]/25 shadow-xs space-y-5 max-w-3xl">
-          <div className="border-b border-[#D4AF37]/20 pb-3 flex items-center justify-between">
+        <div className="max-w-3xl space-y-5 rounded-[16px] border border-[#DED8D1] bg-white p-6">
+          <div className="flex items-center justify-between border-b border-[#E7E1DA] pb-3">
             <div>
-              <h3 className="font-heading text-lg text-[#2C1810]">Seksi Lokasi, Peta & Pemesanan WhatsApp</h3>
+              <h3 className="text-lg font-semibold tracking-[-0.025em] text-[#251C17]">Lokasi dan pemesanan</h3>
               <p className="text-xs text-[#6B4423]">
                 Informasi nomor pemesanan WhatsApp, link peta Google Maps, dan akun media sosial resmi.
               </p>
@@ -503,10 +503,10 @@ export default function AdminKontenPage() {
 
       {/* ════════════════ TAB 4: IDENTITAS BRAND ════════════════ */}
       {activeTab === "brand" && (
-        <div className="p-6 rounded-2xl bg-white border border-[#D4AF37]/25 shadow-xs space-y-5 max-w-3xl">
-          <div className="border-b border-[#D4AF37]/20 pb-3 flex items-center justify-between">
+        <div className="max-w-3xl space-y-5 rounded-[16px] border border-[#DED8D1] bg-white p-6">
+          <div className="flex items-center justify-between border-b border-[#E7E1DA] pb-3">
             <div>
-              <h3 className="font-heading text-lg text-[#2C1810]">Identitas Global (Header & Footer)</h3>
+              <h3 className="text-lg font-semibold tracking-[-0.025em] text-[#251C17]">Identitas situs</h3>
               <p className="text-xs text-[#6B4423]">
                 Nama brand dan tagline utama yang ditampilkan di bagian navigasi atas, footer bawah, dan judul tab browser.
               </p>

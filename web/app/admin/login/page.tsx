@@ -2,7 +2,6 @@
 
 import { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   AlertCircle,
@@ -98,8 +97,12 @@ function LoginForm() {
       }
 
       setFailedAttempts(0);
-      // 3) Only redirect when a real session exists after login: Redirect to ("/")
-      router.push("/");
+      const requestedPath = searchParams.get("next");
+      const destination =
+        requestedPath?.startsWith("/admin") && !requestedPath.startsWith("//")
+          ? requestedPath
+          : "/admin";
+      router.replace(destination);
       router.refresh();
     } catch (err: any) {
       setErrorMsg(err?.message || "Login tidak dapat diproses. Coba lagi.");
@@ -108,8 +111,8 @@ function LoginForm() {
   };
 
   const fillOwnerDemo = () => {
-    setEmail("owner@mieayam.test");
-    setPassword("Owner123!");
+    setEmail("mieayamsurabaya.owner@gmail.com");
+    setPassword("Owner12345!");
     setErrorMsg(null);
   };
 
@@ -141,7 +144,7 @@ function LoginForm() {
               required
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              placeholder="owner@mieayam.test"
+              placeholder="Email Owner"
               disabled={lockoutSeconds > 0}
               className="h-14 w-full rounded-[14px] border border-[#CFC6BC] bg-white pl-12 pr-4 text-base text-[#251C17] placeholder:text-[#8A7E75] focus:border-[#8D0D00] focus:ring-2 focus:ring-[#8D0D00]/15 disabled:bg-[#EEE9E4]"
             />
@@ -212,10 +215,7 @@ function LoginForm() {
       )}
 
       <p className="mt-5 text-center text-xs leading-5 text-[#6E6259]">
-        Belum punya akun?{" "}
-        <Link href="/admin/signup" className="font-semibold text-[#8D0D00] hover:underline">
-          Daftar akun
-        </Link>
+        Akses panel diberikan melalui akun Owner atau Admin yang terdaftar.
       </p>
 
       {showDemo && (
@@ -227,7 +227,7 @@ function LoginForm() {
           >
             <span>
               <span className="block text-xs font-semibold text-[#8D0D00]">Isi akun demo Owner</span>
-              <span className="mt-1 block text-xs text-[#6E6259]">owner@mieayam.test</span>
+              <span className="mt-1 block text-xs text-[#6E6259]">mieayamsurabaya.owner@gmail.com</span>
             </span>
             <span className="text-xs font-semibold text-[#251C17]">Isi otomatis</span>
           </button>

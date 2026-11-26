@@ -13,11 +13,13 @@ import {
   FileText,
   LayoutDashboard,
   MessageSquare,
+  LogOut,
   RotateCcw,
   Store,
   UtensilsCrossed,
 } from "lucide-react";
 import type { SessionUser } from "@/lib/admin/types";
+import { logoutAction } from "@/app/admin/login/actions";
 import { resetDummyState } from "@/lib/admin/mock/store";
 import { useToast } from "../ui/Toast";
 
@@ -28,16 +30,19 @@ type NavItem = {
   match?: (pathname: string) => boolean;
 };
 
-const primaryItems: NavItem[] = [
+const overviewItems: NavItem[] = [
   {
     href: "/admin",
     label: "Ringkasan",
     icon: LayoutDashboard,
     match: (pathname) => pathname === "/admin",
   },
+];
+
+const orderItems: NavItem[] = [
   {
     href: "/admin/pesanan",
-    label: "Pesanan",
+    label: "Riwayat pesanan",
     icon: ClipboardList,
     match: (pathname) =>
       pathname.startsWith("/admin/pesanan") &&
@@ -49,9 +54,23 @@ const primaryItems: NavItem[] = [
 const managementItems: NavItem[] = [
   { href: "/admin/toko", label: "Toko dan jadwal", icon: Store },
   { href: "/admin/menu", label: "Menu dan harga", icon: UtensilsCrossed },
-  { href: "/admin/konten", label: "Konten situs", icon: FileText },
   { href: "/admin/chatbot", label: "Pesan otomatis", icon: MessageSquare },
+];
+
+const publishingItems: NavItem[] = [
+  { href: "/admin/konten", label: "Konten situs", icon: FileText },
+];
+
+const insightItems: NavItem[] = [
   { href: "/admin/laporan", label: "Laporan", icon: BarChart3 },
+];
+
+const navigationGroups = [
+  { label: "Utama", items: overviewItems },
+  { label: "Pesanan", items: orderItems },
+  { label: "Operasional", items: managementItems },
+  { label: "Publikasi", items: publishingItems },
+  { label: "Analitik", items: insightItems },
 ];
 
 function NavigationItem({
@@ -152,30 +171,27 @@ export function Sidebar({
       </div>
 
       <nav aria-label="Navigasi panel Owner" className="flex-1 overflow-y-auto px-2.5 py-3">
-        <div className="space-y-1">
-          {primaryItems.map((item) => (
-            <NavigationItem
-              key={item.href}
-              item={item}
-              pathname={pathname}
-              collapsed={collapsed}
-              onNavigate={onNavigate}
-            />
-          ))}
-        </div>
-
-        <div className={`my-4 h-px bg-[#E5DFD8] ${collapsed ? "mx-1" : "mx-2.5"}`} />
-
-        {!collapsed && <p className="px-3 pb-1.5 text-[11px] font-medium text-[#74675E]">Kelola warung</p>}
-        <div className="space-y-1">
-          {managementItems.map((item) => (
-            <NavigationItem
-              key={item.href}
-              item={item}
-              pathname={pathname}
-              collapsed={collapsed}
-              onNavigate={onNavigate}
-            />
+        <div className="space-y-4">
+          {navigationGroups.map((group, groupIndex) => (
+            <div key={group.label}>
+              {groupIndex > 0 && (
+                <div className={`mb-3 h-px bg-[#E5DFD8] ${collapsed ? "mx-1" : "mx-2.5"}`} />
+              )}
+              {!collapsed && (
+                <p className="px-3 pb-1.5 text-[11px] font-medium text-[#74675E]">{group.label}</p>
+              )}
+              <div className="space-y-1">
+                {group.items.map((item) => (
+                  <NavigationItem
+                    key={item.href}
+                    item={item}
+                    pathname={pathname}
+                    collapsed={collapsed}
+                    onNavigate={onNavigate}
+                  />
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </nav>
@@ -205,6 +221,20 @@ export function Sidebar({
             </div>
           )}
         </div>
+
+        <form action={logoutAction}>
+          <button
+            type="submit"
+            aria-label={collapsed ? "Keluar dari panel" : undefined}
+            title={collapsed ? "Keluar dari panel" : undefined}
+            className={`flex min-h-10 w-full items-center rounded-[10px] text-[11px] font-semibold text-[#8D0D00] transition-colors hover:bg-[#F8E8E4] active:bg-[#F2D8D2] ${
+              collapsed ? "justify-center" : "gap-2.5 px-2.5"
+            }`}
+          >
+            <LogOut className="h-4 w-4 shrink-0" strokeWidth={1.8} aria-hidden="true" />
+            {!collapsed && <span>Keluar dari panel</span>}
+          </button>
+        </form>
       </div>
     </aside>
   );

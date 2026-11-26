@@ -14,7 +14,7 @@ import {
   RotateCw,
   RotateCcw,
   RefreshCw,
-  Sparkles,
+  ScanLine,
   FileEdit,
   AlertCircle,
   Lightbulb,
@@ -118,10 +118,10 @@ export default function AdminPesananBaruPage() {
         console.warn("Storage upload fallback:", uploadErr);
       }
 
-      setProcessingStep("Membaca tulisan tangan dengan OCR…");
+      setProcessingStep("Membaca tulisan pada catatan...");
       await new Promise((r) => setTimeout(r, 600));
 
-      setProcessingStep("Mencocokkan menu & menghitung keyakinan…");
+      setProcessingStep("Mencocokkan tulisan dengan daftar menu...");
       const job = await processPhotoExtractionService(selectedFile.name, uploadedPhotoPath);
 
       // Selesai -> navigasi ke review
@@ -133,10 +133,10 @@ export default function AdminPesananBaruPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="mx-auto max-w-5xl space-y-6">
       <PageHeader
-        title="Input Pesanan Baru"
-        description="Ambil foto catatan tangan pesanan meja atau bungkus untuk diekstraksi secara otomatis oleh AI."
+        title="Baca catatan foto"
+        description="Ambil atau unggah foto catatan pesanan, lalu periksa hasilnya sebelum disimpan."
       />
 
       {errorMessage && (
@@ -151,19 +151,16 @@ export default function AdminPesananBaruPage() {
 
       {/* State Processing Bertahap */}
       {isProcessing && (
-        <div className="p-8 rounded-2xl bg-white border border-[#3B2416]/10 text-center shadow-md space-y-4 animate-in fade-in">
-          <div className="w-16 h-16 mx-auto rounded-full bg-[#FAF8F5] border-2 border-[#CBA857] flex items-center justify-center text-[#8D0D00] animate-spin">
-            <RefreshCw className="w-8 h-8" />
+        <div className="space-y-4 rounded-[16px] border border-[#DED8D1] bg-white p-8 text-center">
+          <div className="mx-auto flex h-14 w-14 animate-spin items-center justify-center rounded-[14px] border border-[#D9B0A8] bg-[#F8E8E4] text-[#8D0D00]">
+            <RefreshCw className="h-7 w-7" aria-hidden="true" />
           </div>
-          <h3 className="font-serif text-lg font-bold text-[#3B2416]">
-            Sedang Memproses Catatan Pesanan
+          <h3 className="text-lg font-semibold tracking-[-0.025em] text-[#251C17]">
+            Membaca catatan pesanan
           </h3>
-          <p className="text-xs font-semibold text-[#8A5A00] animate-pulse">
+          <p className="text-xs font-medium text-[#71645B]">
             {processingStep}
           </p>
-          <div className="w-48 h-1.5 bg-[#FAF8F5] rounded-full mx-auto overflow-hidden">
-            <div className="w-full h-full bg-[#8D0D00] animate-pulse" />
-          </div>
         </div>
       )}
 
@@ -178,13 +175,13 @@ export default function AdminPesananBaruPage() {
                   e.preventDefault();
                   if (e.dataTransfer.files?.[0]) handleFileChange(e.dataTransfer.files[0]);
                 }}
-                className="p-8 sm:p-12 rounded-2xl border-2 border-dashed border-[#CBA857] bg-white hover:bg-[#FAF8F5] transition text-center flex flex-col items-center justify-center min-h-[300px] shadow-xs"
+                className="flex min-h-[300px] flex-col items-center justify-center rounded-[16px] border border-dashed border-[#BDAFA4] bg-white p-8 text-center transition-colors hover:border-[#8D0D00] hover:bg-[#FCFAF8] sm:p-12"
               >
-                <div className="w-16 h-16 rounded-full bg-[#FAF8F5] text-[#8D0D00] flex items-center justify-center mb-4 border border-[#CBA857]/30">
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-[14px] border border-[#D9B0A8] bg-[#F8E8E4] text-[#8D0D00]">
                   <Camera className="w-8 h-8" />
                 </div>
-                <h3 className="font-serif text-base sm:text-lg font-bold text-[#3B2416] mb-1">
-                  Ambil Foto atau Tarik File Catatan
+                <h3 className="mb-1 text-base font-semibold tracking-[-0.025em] text-[#251C17] sm:text-lg">
+                  Ambil foto atau tarik file catatan
                 </h3>
                 <p className="text-xs text-[#6B5240] max-w-xs mb-6">
                   Mendukung foto kamera langsung, JPG, PNG, atau WebP (maksimal 10 MB).
@@ -195,17 +192,17 @@ export default function AdminPesananBaruPage() {
                   <button
                     type="button"
                     onClick={() => cameraInputRef.current?.click()}
-                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#8D0D00] hover:bg-[#6B0A00] text-white font-bold text-xs shadow-xs transition"
+                    className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-[11px] bg-[#8D0D00] px-4 text-xs font-semibold text-white transition-colors hover:bg-[#6B0A00]"
                   >
                     <Camera className="w-4 h-4" />
-                    <span>Ambil Foto HP</span>
+                    <span>Ambil foto</span>
                   </button>
 
                   {/* Tombol File */}
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-[#3B2416]/20 bg-white hover:bg-[#FAF8F5] text-[#3B2416] font-bold text-xs transition"
+                    className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-[11px] border border-[#CFC7BF] bg-white px-4 text-xs font-semibold text-[#3F352E] transition-colors hover:bg-[#F5F2EE]"
                   >
                     <Upload className="w-4 h-4" />
                     <span>Pilih Berkas</span>
@@ -284,10 +281,10 @@ export default function AdminPesananBaruPage() {
                 <button
                   type="button"
                   onClick={handleProcessAI}
-                  className="w-full py-3.5 rounded-xl bg-[#8D0D00] hover:bg-[#6B0A00] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2"
+                className="flex min-h-12 w-full items-center justify-center gap-2 rounded-[11px] bg-[#8D0D00] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#6B0A00]"
                 >
-                  <Sparkles className="w-4 h-4 text-[#F4CE90]" />
-                  <span>Proses dengan AI Sekarang</span>
+                  <ScanLine className="h-4 w-4" aria-hidden="true" />
+                  <span>Baca catatan</span>
                 </button>
               </div>
             )}
@@ -299,18 +296,18 @@ export default function AdminPesananBaruPage() {
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#6B5240] hover:text-[#8D0D00] transition"
               >
                 <FileEdit className="w-4 h-4" />
-                <span>Input Pesanan Manual Tanpa Foto</span>
+                <span>Input manual tanpa foto</span>
               </Link>
             </div>
           </div>
 
           {/* Kolom Kanan: Panduan Tips Foto Catatan */}
           <div className="lg:col-span-5 space-y-4">
-            <div className="p-6 rounded-2xl bg-white border border-[#3B2416]/10 shadow-xs space-y-4">
+            <div className="space-y-4 rounded-[16px] border border-[#DED8D1] bg-white p-6">
               <div className="flex items-center gap-2 text-[#8D0D00]">
                 <Lightbulb className="w-5 h-5 text-[#CBA857]" />
-                <h3 className="font-serif text-base font-bold text-[#3B2416]">
-                  Tips Agar AI Akurat 100%
+                <h3 className="text-base font-semibold tracking-[-0.02em] text-[#251C17]">
+                  Agar catatan mudah dibaca
                 </h3>
               </div>
               <ul className="space-y-3 text-xs text-[#6B5240] leading-relaxed">
@@ -341,8 +338,8 @@ export default function AdminPesananBaruPage() {
               </ul>
             </div>
 
-            <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#CBA857]/30 text-xs text-[#6B5240] space-y-1">
-              <div className="font-bold text-[#8D0D00]">Catatan Demo Pengujian:</div>
+            <div className="space-y-1 rounded-[12px] border border-[#DED8D1] bg-[#F7F4F0] p-4 text-xs text-[#71645B]">
+              <div className="font-semibold text-[#8D0D00]">Pengujian mode demo</div>
               <p>
                 Gunakan nama file yang mengandung kata <code>gagal</code> (mis. <em>catatan-gagal.jpg</em>) untuk menguji simulasi error handling.
               </p>

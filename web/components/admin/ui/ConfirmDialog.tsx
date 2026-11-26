@@ -36,12 +36,12 @@ export function ConfirmDialog({
           <AlertTriangle className="w-6 h-6" />
         </div>
         <div>
-          <h3 className="font-heading text-lg text-[#2C1810]">{title}</h3>
+          <h3 className="text-base font-semibold tracking-[-0.02em] text-[#251C17]">{title}</h3>
           <div className="text-sm text-[#6B4423] mt-1.5 leading-relaxed">{message}</div>
         </div>
       </div>
 
-      <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-[#D4AF37]/20">
+      <div className="mt-6 flex items-center justify-end gap-3 border-t border-[#E7E1DA] pt-4">
         <button
           type="button"
           onClick={onClose}

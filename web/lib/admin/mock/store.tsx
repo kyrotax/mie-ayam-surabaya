@@ -6,6 +6,7 @@ import {
   StoreStatus,
   StatusLogEntry,
   StoreHour,
+  StoreClosure,
   MenuItem,
   Order,
   ExtractionJob,
@@ -24,6 +25,7 @@ export type DummyState = {
   storeStatus: StoreStatus;
   statusLogs: StatusLogEntry[];
   hours: StoreHour[];
+  scheduledClosures?: StoreClosure[];
   faqs: Faq[];
   autoReply: AutoReplyTemplate;
   siteContent: SiteContent;

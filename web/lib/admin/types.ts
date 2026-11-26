@@ -36,6 +36,11 @@ export type StoreHour = {
   isClosed: boolean;
 };
 
+export type StoreClosure = {
+  date: string; // YYYY-MM-DD
+  reason: string;
+};
+
 export type MenuCategoryType = "Mie Ayam" | "Topping/Tambahan" | "Minuman";
 
 export type MenuItem = {

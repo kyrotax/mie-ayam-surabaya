@@ -31,7 +31,7 @@ export function StatCard({
       </div>
 
       <div className="flex items-baseline gap-2 mb-1">
-        <div className="font-heading text-2xl sm:text-3xl text-[#2C1810]">
+        <div className="text-2xl font-semibold tracking-[-0.035em] text-[#251C17] sm:text-3xl">
           {value}
         </div>
         {badge && <div>{badge}</div>}

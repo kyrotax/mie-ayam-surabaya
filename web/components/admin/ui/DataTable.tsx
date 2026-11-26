@@ -45,10 +45,10 @@ export function DataTable<T extends { id?: string | number }>({
   return (
     <div className="w-full">
       {/* Desktop View (Tabel) */}
-      <div className="hidden md:block overflow-x-auto rounded-2xl border border-[#D4AF37]/20 bg-white shadow-xs">
+      <div className="hidden overflow-x-auto rounded-[14px] border border-[#DED8D1] bg-white md:block">
         <table className="w-full text-left text-sm border-collapse">
           <thead>
-            <tr className="bg-[#FAF0DC] border-b border-[#D4AF37]/20 text-xs font-bold uppercase tracking-wider text-[#2C1810]">
+            <tr className="border-b border-[#DED8D1] bg-[#F5F2EE] text-[11px] font-semibold text-[#51463E]">
               {columns.map((col, idx) => (
                 <th key={idx} className={`px-4 py-3.5 ${col.className || ""}`}>
                   {col.header}
@@ -56,12 +56,12 @@ export function DataTable<T extends { id?: string | number }>({
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#3B2416]/5 text-[#2C1810]">
+          <tbody className="divide-y divide-[#ECE7E1] text-[#251C17]">
             {data.map((row, rIdx) => (
               <tr
                 key={row.id ?? rIdx}
                 onClick={() => onRowClick?.(row)}
-                className={`min-h-[52px] hover:bg-[#FAF7F2] transition ${
+                className={`min-h-[52px] transition-colors hover:bg-[#FAF8F5] ${
                   onRowClick ? "cursor-pointer" : ""
                 }`}
               >
@@ -81,13 +81,13 @@ export function DataTable<T extends { id?: string | number }>({
       </div>
 
       {/* Mobile View (Daftar Kartu atau Card List) */}
-      <div className="md:hidden space-y-3">
+      <div className="space-y-3 md:hidden">
         {data.map((row, idx) => (
           <div
             key={row.id ?? idx}
             onClick={() => onRowClick?.(row)}
-            className={`p-4 rounded-xl bg-white border border-[#D4AF37]/20 shadow-xs ${
-              onRowClick ? "cursor-pointer hover:border-[#8B0000]" : ""
+            className={`rounded-[14px] border border-[#DED8D1] bg-white p-4 ${
+              onRowClick ? "cursor-pointer hover:border-[#8D0D00] active:bg-[#FAF8F5]" : ""
             }`}
           >
             {mobileRender ? (
@@ -96,7 +96,7 @@ export function DataTable<T extends { id?: string | number }>({
               <div className="space-y-2">
                 {columns.map((col, cIdx) => (
                   <div key={cIdx} className="flex justify-between items-center text-xs">
-                    <span className="font-semibold text-[#6B4423]">{col.header}:</span>
+                    <span className="font-medium text-[#71645B]">{col.header}</span>
                     <div>
                       {col.render
                         ? col.render(row, idx)

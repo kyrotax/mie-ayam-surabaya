@@ -1,17 +1,11 @@
-import { createClient } from "@supabase/supabase-js";
+import { createBrowserClient } from "@supabase/ssr";
 
-// ============================================================================
-// SUPABASE CONFIGURATION — reads from .env (NEXT_PUBLIC_*) with hardcoded fallback
-// ============================================================================
-export const SUPABASE_URL =
-  process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  "https://fidpdnscwysqrcadagmq.supabase.co";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabasePublishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
-export const SUPABASE_PUBLIC_KEY =
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  "sb_publishable_DPohBpc8xplzlccUCxILjQ_UyOI0SKy";
+if (!supabaseUrl || !supabasePublishableKey) {
+  throw new Error("Konfigurasi Supabase belum lengkap. Periksa .env.local.");
+}
 
-// Initialize and export the Supabase client (both named and default export)
-export const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
+export const supabase = createBrowserClient(supabaseUrl, supabasePublishableKey);
 export default supabase;

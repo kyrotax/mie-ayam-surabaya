@@ -1,6 +1,24 @@
-import { StoreStatus, StoreHour, StatusLogEntry } from "../types";
+import { StoreStatus, StoreHour, StoreClosure, StatusLogEntry } from "../types";
 import { getDummyState, saveDummyState } from "../mock/store";
 import { supabase } from "@/src/supabaseClient";
+
+function applyScheduledClosure(status: StoreStatus): StoreStatus {
+  const now = new Date();
+  const dateKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(
+    now.getDate()
+  ).padStart(2, "0")}`;
+  const closure = (getDummyState().scheduledClosures ?? []).find(
+    (item) => item.date === dateKey
+  );
+  if (!closure || status.manualOverride === "force_open") return status;
+
+  return {
+    ...status,
+    isOpen: false,
+    statusNote: `Warung tutup terjadwal (${closure.reason}).`,
+    nextOpenText: "Buka kembali mengikuti jadwal operasional berikutnya.",
+  };
+}
 
 export async function getStoreStatusService(): Promise<StoreStatus> {
   try {
@@ -13,23 +31,23 @@ export async function getStoreStatusService(): Promise<StoreStatus> {
 
     if (error) {
       console.error("Supabase getStoreStatusService error:", error.message);
-      return getDummyState().storeStatus;
+      return applyScheduledClosure(getDummyState().storeStatus);
     }
 
     if (!data) {
-      return getDummyState().storeStatus;
+      return applyScheduledClosure(getDummyState().storeStatus);
     }
 
-    return {
+    return applyScheduledClosure({
       isOpen: Boolean(data.is_open),
       manualOverride: data.manual_override || "none",
       statusNote: data.status_note || undefined,
       nextOpenText: data.next_open_text || undefined,
       updatedAt: data.updated_at || new Date().toISOString(),
-    };
+    });
   } catch (err) {
     console.error("Failed to fetch store status from Supabase:", err);
-    return getDummyState().storeStatus;
+    return applyScheduledClosure(getDummyState().storeStatus);
   }
 }
 
@@ -86,6 +104,18 @@ export async function updateStoreHoursService(hours: StoreHour[]): Promise<Store
   const state = getDummyState();
   saveDummyState({ ...state, hours });
   return hours;
+}
+
+export async function getStoreClosuresService(): Promise<StoreClosure[]> {
+  return getDummyState().scheduledClosures ?? [];
+}
+
+export async function updateStoreClosuresService(
+  closures: StoreClosure[]
+): Promise<StoreClosure[]> {
+  const state = getDummyState();
+  saveDummyState({ ...state, scheduledClosures: closures });
+  return closures;
 }
 
 export async function getStatusLogsService(): Promise<StatusLogEntry[]> {
