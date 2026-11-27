@@ -35,14 +35,14 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@600;700&family=Inter:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Bebas+Neue&family=Montserrat:wght@600;700&family=Inter:wght@400;500;600;700&display=swap"
         />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&display=swap"
         />
       </head>
-      <body className="min-h-screen flex flex-col bg-[#FFF8E7] text-[#2C1810] font-body antialiased overflow-x-hidden selection:bg-[#C41E3A] selection:text-[#FFD700]">
+      <body className="min-h-screen flex flex-col bg-[#FAF9F7] text-[#251C17] font-body antialiased overflow-x-hidden selection:bg-[#8D0D00] selection:text-white">
         {children}
       </body>
     </html>

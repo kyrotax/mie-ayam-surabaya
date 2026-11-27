@@ -19,7 +19,7 @@ export default function WhatsAppFloating() {
         className="group flex items-center gap-2.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white px-4 py-3 rounded-full shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366] min-h-[44px]"
       >
         <MessageCircle className="w-5 h-5 text-white shrink-0" aria-hidden="true" />
-        <span className="text-xs uppercase tracking-wider font-bold hidden sm:inline-block">
+        <span className="text-xs uppercase tracking-wider font-semibold hidden sm:inline-block">
           Pesan via WhatsApp
         </span>
       </a>

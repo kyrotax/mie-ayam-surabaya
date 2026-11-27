@@ -43,6 +43,7 @@ export interface SiteConfig {
     alamat: string;
     mapsLink: string;
     mapsEmbedUrl: string;
+    gofoodUrl?: string;
   };
   sosmed: {
     ig: string;
@@ -50,6 +51,7 @@ export interface SiteConfig {
     tiktok: string;
     tiktokUrl: string;
     maps: string;
+    gofoodUrl?: string;
   };
   menuMakanan: MenuItem[];
   menuMinuman: MenuItem[];
@@ -75,7 +77,7 @@ export interface SiteConfig {
       headingAccent: string;
       p1: string;
       p2: string;
-      badgeText: string;
+      badgeText?: string;
       foto: string;
     };
     kenapaPilihKami: {

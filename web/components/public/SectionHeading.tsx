@@ -1,5 +1,3 @@
-import { ChineseKnotDivider } from "./ChineseOrnaments";
-
 interface SectionHeadingProps {
   eyebrow?: string;
   heading: string;
@@ -17,29 +15,26 @@ export default function SectionHeading({
   subheading,
   align = "center",
   light = false,
-  showKnot = false,
 }: SectionHeadingProps) {
   const alignClass = align === "center" ? "text-center items-center" : "text-left items-start";
-  const textColor = light ? "text-white" : "text-[#2C1810]";
-  const accentColor = light ? "text-[#FFD700]" : "text-[#8B0000]";
-  const eyebrowColor = light ? "text-[#FFD700]" : "text-[#9A6B00]";
-  const mutedColor = light ? "text-[#FFF8E7]/85" : "text-[#6B4423]";
+  const textColor = light ? "text-white" : "text-[#1F1916]";
+  const accentColor = light ? "text-[#FCD34D]" : "text-[#D10B0C]";
+  const eyebrowBg = light
+    ? "bg-white/10 text-[#FCD34D] border-white/20"
+    : "bg-[#FFF0F0] text-[#D10B0C] border-[#FFD3D3]";
+  const mutedColor = light ? "text-[#D8D0C7]" : "text-[#6B5E55]";
 
   return (
-    <div className={`flex flex-col gap-2.5 ${alignClass}`}>
+    <div className={`flex flex-col gap-3 ${alignClass}`}>
       {eyebrow && (
-        <div className={`flex items-center gap-3 ${align === "center" ? "justify-center" : ""}`}>
-          <span className={`w-6 h-px ${light ? "bg-[#D4AF37]" : "bg-[#9A6B00]/60"}`} aria-hidden="true" />
-          <span className={`section-eyebrow-unified ${eyebrowColor}`}>
-            {eyebrow}
-          </span>
-          {align === "center" && (
-            <span className={`w-6 h-px ${light ? "bg-[#D4AF37]" : "bg-[#9A6B00]/60"}`} aria-hidden="true" />
-          )}
-        </div>
+        <span
+          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${eyebrowBg}`}
+        >
+          {eyebrow}
+        </span>
       )}
 
-      <h2 className={`section-heading-unified ${textColor}`}>
+      <h2 className={`text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-[-0.035em] leading-[1.15] ${textColor}`}>
         {heading}
         {headingAccent && (
           <>
@@ -49,14 +44,8 @@ export default function SectionHeading({
         )}
       </h2>
 
-      {showKnot && (
-        <div className={align === "center" ? "w-full flex justify-center" : "w-52"}>
-          <ChineseKnotDivider variant={light ? "light" : "dark"} className="my-1" />
-        </div>
-      )}
-
       {subheading && (
-        <p className={`section-subheading-unified max-w-xl ${mutedColor}`}>
+        <p className={`text-sm sm:text-base leading-relaxed max-w-xl ${mutedColor}`}>
           {subheading}
         </p>
       )}

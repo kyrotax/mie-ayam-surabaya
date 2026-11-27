@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { supabase } from "@/src/supabaseClient";
+import { getSignedFileUrl } from "@/lib/storage";
 import MenuBoard from "@/components/public/MenuBoard";
-import { ChineseKnotDivider } from "@/components/public/ChineseOrnaments";
 import { MessageCircle, CheckCircle2 } from "lucide-react";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Daftar Menu & Harga",
@@ -18,6 +19,13 @@ export default async function MenuPage() {
     .select("*")
     .order("order_index", { ascending: true });
 
+  const resolvedItems = await Promise.all(
+    (items ?? []).map(async (row) => ({
+      ...row,
+      resolvedImageUrl: row.image_url ? await getSignedFileUrl(row.image_url) : null,
+    }))
+  );
+
   // Group into the CategoryProps shape expected by MenuBoard
   const categoryMap: Record<
     string,
@@ -26,20 +34,20 @@ export default async function MenuPage() {
 
   let catIdCounter = 1;
 
-  function mapItem(row: NonNullable<typeof items>[number]) {
+  function mapItem(row: (typeof resolvedItems)[number]) {
     return {
       id: Number(row.id),
       name: row.name as string,
       description: (row.description as string | null) ?? null,
       price: Number(row.price ?? 0),
-      imageUrl: (row.image_url as string | null) ?? null,
+      imageUrl: row.resolvedImageUrl,
       isAvailable: Boolean(row.is_available),
       isFeatured: false,
       badge: null,
     };
   }
 
-  for (const item of items ?? []) {
+  for (const item of resolvedItems) {
     const cat = (item.category as string) ?? "Lainnya";
     if (!categoryMap[cat]) {
       categoryMap[cat] = {
@@ -56,32 +64,49 @@ export default async function MenuPage() {
   const categories = Object.values(categoryMap).sort((a, b) => a.order - b.order);
 
   return (
-    <div className="bg-[#FAF7F2] min-h-screen pt-28 pb-24 text-[#2C1810]">
-      {/* Editorial Page Header */}
-      <div className="max-w-5xl mx-auto px-5 sm:px-8 mb-10 text-center">
-        <p className="section-eyebrow-unified text-[#9A6B00] mb-2">
-          Pilihan Sajian Lezat
-        </p>
-        <h1 className="font-heading text-4xl sm:text-6xl font-bold tracking-tight text-[#2C1810] uppercase mb-4">
-          DAFTAR MENU <span className="text-[#8B0000]">& HARGA</span>
+    <div className="bg-[#FAF9F7] min-h-screen pt-28 pb-20 text-[#251C17]">
+      {/* Header */}
+      <div className="max-w-4xl mx-auto px-5 sm:px-8 mb-10 text-center">
+        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-[#F3E4DE] text-[#8D0D00] border border-[#E3C1BA] mb-3">
+          DAFTAR HARGA
+        </span>
+        <h1 className="text-3xl sm:text-5xl font-semibold tracking-[-0.04em] text-[#251C17] mb-3">
+          Menu & Pilihan Sajian
         </h1>
-        <ChineseKnotDivider variant="dark" className="my-3" />
-        <p className="section-subheading-unified text-[#6B4423] max-w-2xl mx-auto leading-relaxed mb-6">
-          Semua menu dibuat fresh dari mie kenyal buatan sendiri tiap pagi, disajikan hangat dengan kuah kaldu sapi gurih sedap dan bumbu ayam oriental yang meresap sempurna.
+        <p className="text-sm sm:text-base text-[#6E6259] max-w-xl mx-auto leading-relaxed mb-6">
+          Seluruh menu dibuat dari mie kenyal buatan sendiri tiap pagi, disajikan hangat dengan kuah kaldu sapi dan bumbu ayam meresap.
         </p>
 
-        <div className="inline-flex flex-wrap items-center justify-center gap-3 px-5 py-2.5 rounded-full bg-white border border-stone-200/90 shadow-sm text-xs text-[#2C1810]">
-          <CheckCircle2 className="w-4 h-4 text-[#8B0000] shrink-0" aria-hidden="true" />
-          <span>Bisa makan di tempat, bungkus bawa pulang, atau pesan via WhatsApp</span>
-          <span className="text-stone-300">·</span>
+        <div className="inline-flex flex-wrap items-center justify-center gap-3 px-4 py-2 rounded-full bg-white border border-[#D5CEC5] shadow-xs text-xs text-[#251C17]">
+          <CheckCircle2 className="w-4 h-4 text-[#8D0D00] shrink-0" aria-hidden="true" />
+          <span>Makan di tempat, bungkus bawa pulang, atau order via GoFood</span>
+          <span className="text-[#DDD7D0]">•</span>
           <a
-            href="https://wa.me/6282319195854?text=Halo%20Mie%20Ayam%20Surabaya%2C%20saya%20ingin%20memesan%20makanan."
+            href="https://wa.me/6282319195854?text=Halo%20Mie%20Ayam%20Surabaya%2C%20saya%20ingin%20memesan."
             target="_blank"
             rel="noopener noreferrer"
-            className="font-bold text-[#8B0000] hover:text-[#C41E3A] inline-flex items-center gap-1 transition-colors"
+            className="font-semibold text-[#8D0D00] hover:underline inline-flex items-center gap-1.5"
           >
             <MessageCircle className="w-3.5 h-3.5" />
-            <span>Chat Langsung</span>
+            <span>Pesan via WhatsApp</span>
+          </a>
+          <span className="text-[#DDD7D0]">•</span>
+          <a
+            href="https://gofood.co.id/surabaya/restaurant/mie-ayam-surabaya-taman-pinang-sidoarjo-26ae8787-58a9-4a86-bb97-cc99132ddb0e"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-[#EE2737] hover:underline inline-flex items-center gap-1.5"
+          >
+            <div className="relative h-4 w-4 shrink-0">
+              <Image
+                src="/images/gofood-icon.png"
+                alt="GoFood"
+                fill
+                className="object-contain"
+                sizes="16px"
+              />
+            </div>
+            <span>Order di GoFood</span>
           </a>
         </div>
       </div>
@@ -93,4 +118,3 @@ export default async function MenuPage() {
     </div>
   );
 }
-

@@ -14,8 +14,8 @@ export default function StampBadge({
   size = 96,
   className = "",
   textColor = "#FFFFFF",
-  bgColor = "#8B1E1E",
-  borderColor = "#FAF0E6",
+  bgColor = "#D10B0C",
+  borderColor = "#FFF0F0",
 }: StampBadgeProps) {
   const r = size * 0.38;
   const cx = size / 2;
@@ -55,8 +55,8 @@ export default function StampBadge({
       {/* Circular text */}
       <text
         fontSize={size * 0.115}
-        fontFamily="var(--font-sans), Plus Jakarta Sans, sans-serif"
-        fontWeight="700"
+        fontFamily="var(--font-sans), 'DM Sans', sans-serif"
+        fontWeight="600"
         fill={textColor}
         letterSpacing={size * 0.018}
       >

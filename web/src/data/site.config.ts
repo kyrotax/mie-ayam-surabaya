@@ -5,7 +5,7 @@ export const siteConfig: SiteConfig = {
   tagline: "Mie Ayam Oriental Khas Sidoarjo. Mienya Kenyal, Bumbunya Gurih Meresap, Porsinya Bikin Puas!",
   tahunBerdiri: "2024",
   statusBuka: true,
-  statusBukaNote: "Yuk mampir atau pesan antar!",
+  statusBukaNote: "Yuk mampir atau pesan via WhatsApp & GoFood!",
 
   // Kontak & alamat warung
   kontak: {
@@ -15,15 +15,17 @@ export const siteConfig: SiteConfig = {
     alamat: "Jl. Raya Taman Pinang Indah, Jetis, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213",
     mapsLink: "https://www.google.com/maps/place/MIE+AYAM+SURABAYA,+Jl.+Raya+Taman+Pinang+Indah,+Jetis,+Lemahputro,+Kec.+Sidoarjo,+Kabupaten+Sidoarjo,+Jawa+Timur+61213/data=!4m2!3m1!1s0x2dd7e1704b5593cd:0x81c8774cf4076883!18m1!1e1",
     mapsEmbedUrl: "https://www.google.com/maps?q=MIE+AYAM+SURABAYA+Taman+Pinang+Indah+Sidoarjo&output=embed",
+    gofoodUrl: "https://gofood.co.id/surabaya/restaurant/mie-ayam-surabaya-taman-pinang-sidoarjo-26ae8787-58a9-4a86-bb97-cc99132ddb0e",
   },
 
   // Media sosial
   sosmed: {
     ig: "@mieayamsurabaya_",
     igUrl: "https://www.instagram.com/mieayamsurabaya_/",
-    tiktok: "@mieayamsurabaya",
-    tiktokUrl: "https://www.tiktok.com/@mieayamsurabaya",
+    tiktok: "@mieayamsurabaya__",
+    tiktokUrl: "https://www.tiktok.com/@mieayamsurabaya__?_r=1&_t=ZS-97cSwN9t22B",
     maps: "https://www.google.com/maps/place/MIE+AYAM+SURABAYA",
+    gofoodUrl: "https://gofood.co.id/surabaya/restaurant/mie-ayam-surabaya-taman-pinang-sidoarjo-26ae8787-58a9-4a86-bb97-cc99132ddb0e",
   },
 
   // Menu Makanan (termasuk Mie Ayam original)
@@ -177,7 +179,7 @@ export const siteConfig: SiteConfig = {
       headingAccent: "Mie Ayam Kami?",
       p1: "Bagi kami, semangkuk mie yang enak kuncinya ada di kesegaran bahan. Setiap pagi kami membuat mie sendiri dari adonan segar tanpa bahan pengawet, sehingga tekstur kenyalnya pas, lembut di lidah, dan selalu fresh saat disajikan ke meja kamu.",
       p2: "Dipadukan dengan potongan ayam berbumbu gurih manis yang meresap sempurna, kuah kaldu sapi hangat rebusan berjam-jam, serta pangsit renyah buatan dapur kami. Warung kami di Taman Pinang Indah siap menyambut santap siang dan malammu bareng keluarga serta sahabat.",
-      badgeText: "MIE AYAM SURABAYA · SEJAK 2024 ·",
+      badgeText: "Resep Autentik",
       foto: "/images/1.png",
     },
     kenapaPilihKami: {
@@ -230,7 +232,7 @@ export const siteConfig: SiteConfig = {
     cta: {
       heading: "Lapar atau Pengen yang Gurih?",
       headingAccent: "Yuk, Langsung Pesan Sekarang!",
-      subteks: "Mau makan langsung di tempat, bungkus bawa pulang, atau pesan antar ke rumah? Langsung klik tombol di bawah dan chat kami via WhatsApp ya!",
+      subteks: "Mau makan langsung di tempat, bungkus bawa pulang, atau order via GoFood? Langsung klik tombol di bawah ya!",
       tombolText: "Pesan via WhatsApp Sekarang",
     },
   },
