@@ -93,28 +93,6 @@ VALUES
 ),
 (
     5,
-    'Bakso Sapi Tambahan',
-    'Topping/Tambahan',
-    'Porsi ekstra bakso sapi kuah gurih (isi 3 butir).',
-    10000,
-    true,
-    ARRAY['bks tmbh', 'tambah bakso', 'ekstra bakso', 'bakso porsi'],
-    '/images/menu/kuah-kaldu.png',
-    5
-),
-(
-    6,
-    'Pangsit Goreng',
-    'Topping/Tambahan',
-    'Pangsit renyah gurih isi olahan daging ayam (isi 4).',
-    10000,
-    true,
-    ARRAY['pangsit goreng', 'pangsit renyah', 'pgr porsi'],
-    '/images/menu/pangsit-kuah.png',
-    6
-),
-(
-    7,
     'Es Teh Manis',
     'Minuman',
     'Teh melati seduh segar dengan es batu dingin menyegarkan.',
@@ -122,10 +100,10 @@ VALUES
     true,
     ARRAY['es teh', 'esteh', 'teh es', 'teh manis dingin'],
     '/images/menu/es-teh.png',
-    7
+    5
 ),
 (
-    8,
+    6,
     'Teh Hangat',
     'Minuman',
     'Teh melati hangat harum wangi dengan gula alami.',
@@ -133,18 +111,18 @@ VALUES
     true,
     ARRAY['teh hangat', 'teh panas', 'teh tubruk'],
     '/images/menu/teh-hangat.jpg',
-    8
+    6
 ),
 (
-    9,
+    7,
     'Es Teler Istimewa',
     'Minuman',
     'Es teler segar dengan alpukat mentega, kelapa muda, nangka, dan susu kental manis.',
-    15000,
+    20000,
     true,
     ARRAY['es teler', 'teler', 'esteler'],
-    '/images/menu/es-teler.jpg',
-    9
+    '/images/menu/es-teler.png',
+    7
 )
 ON CONFLICT (id) DO UPDATE SET
     name = EXCLUDED.name,
@@ -199,7 +177,7 @@ VALUES
 ),
 (
     '#ORD-0002',
-    '[{"menuItemId": 1, "name": "Mie Ayam Original", "qty": 3, "price": 20000}, {"menuItemId": 6, "name": "Pangsit Goreng", "qty": 1, "price": 10000}, {"menuItemId": 9, "name": "Es Teler Istimewa", "qty": 2, "price": 15000}]'::jsonb,
+    '[{"menuItemId": 1, "name": "Mie Ayam Original", "qty": 3, "price": 20000}, {"menuItemId": 7, "name": "Es Teler Istimewa", "qty": 2, "price": 20000}]'::jsonb,
     100000,
     'foto',
     'terkonfirmasi',
@@ -210,7 +188,7 @@ VALUES
 ),
 (
     '#ORD-0003',
-    '[{"menuItemId": 2, "name": "Mie Ayam Pangsit", "qty": 1, "price": 25000}, {"menuItemId": 3, "name": "Mie Ayam Bakso", "qty": 1, "price": 25000}, {"menuItemId": 8, "name": "Teh Hangat", "qty": 2, "price": 5000}]'::jsonb,
+    '[{"menuItemId": 2, "name": "Mie Ayam Pangsit", "qty": 1, "price": 25000}, {"menuItemId": 3, "name": "Mie Ayam Bakso", "qty": 1, "price": 25000}, {"menuItemId": 6, "name": "Teh Hangat", "qty": 2, "price": 5000}]'::jsonb,
     60000,
     'manual',
     'terkonfirmasi',
@@ -221,8 +199,8 @@ VALUES
 ),
 (
     '#ORD-0004',
-    '[{"menuItemId": 4, "name": "Mie Ayam Komplit", "qty": 4, "price": 30000}, {"menuItemId": 5, "name": "Bakso Sapi Tambahan", "qty": 2, "price": 10000}, {"menuItemId": 7, "name": "Es Teh Manis", "qty": 4, "price": 5000}]'::jsonb,
-    160000,
+    '[{"menuItemId": 4, "name": "Mie Ayam Komplit", "qty": 4, "price": 30000}, {"menuItemId": 5, "name": "Es Teh Manis", "qty": 4, "price": 5000}]'::jsonb,
+    140000,
     'foto',
     'terkonfirmasi',
     'Kasir Warung',
@@ -241,3 +219,52 @@ VALUES
     NULL,
     timezone('utc'::text, now() - interval '3 days')
 );
+
+-- ==============================================================================
+-- 4. STORAGE SETUP & RLS POLICIES FOR BUCKET 'mie-ayam-surabaya' (SECURE: AUTHENTICATED ONLY)
+-- ==============================================================================
+
+-- Buat atau perbarui bucket 'mie-ayam-surabaya' (public untuk read/lihat gambar)
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('mie-ayam-surabaya', 'mie-ayam-surabaya', true)
+ON CONFLICT (id) DO UPDATE SET public = true;
+
+-- Aktifkan RLS pada tabel storage.objects
+ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+
+-- 1. HANYA User yang sudah login (Authenticated) yang boleh UPLOAD (INSERT)
+DROP POLICY IF EXISTS "Allow upload to mie-ayam-surabaya" ON storage.objects;
+DROP POLICY IF EXISTS "Authenticated users can upload objects" ON storage.objects;
+CREATE POLICY "Authenticated users can upload objects"
+ON storage.objects
+FOR INSERT
+TO authenticated
+WITH CHECK (bucket_id = 'mie-ayam-surabaya');
+
+-- 2. Publik boleh MELIHAT (SELECT) foto makanan/menu yang sudah diunggah
+DROP POLICY IF EXISTS "Allow view mie-ayam-surabaya" ON storage.objects;
+DROP POLICY IF EXISTS "Public can view objects" ON storage.objects;
+CREATE POLICY "Public can view objects"
+ON storage.objects
+FOR SELECT
+TO public
+USING (bucket_id = 'mie-ayam-surabaya');
+
+-- 3. HANYA User yang sudah login (Authenticated) yang boleh UPDATE foto
+DROP POLICY IF EXISTS "Allow update mie-ayam-surabaya" ON storage.objects;
+DROP POLICY IF EXISTS "Authenticated users can update objects" ON storage.objects;
+CREATE POLICY "Authenticated users can update objects"
+ON storage.objects
+FOR UPDATE
+TO authenticated
+USING (bucket_id = 'mie-ayam-surabaya');
+
+-- 4. HANYA User yang sudah login (Authenticated) yang boleh HAPUS (DELETE) foto
+DROP POLICY IF EXISTS "Allow delete mie-ayam-surabaya" ON storage.objects;
+DROP POLICY IF EXISTS "Authenticated users can delete objects" ON storage.objects;
+CREATE POLICY "Authenticated users can delete objects"
+ON storage.objects
+FOR DELETE
+TO authenticated
+USING (bucket_id = 'mie-ayam-surabaya');
+

@@ -9,31 +9,23 @@ export default function StatusBadge({
   note,
   className = "",
 }: StatusBadgeProps) {
+  const statusText = isOpen ? "Buka" : "Tutup";
+  const labelText = note || (isOpen ? "Selasa–Minggu 13.00–Habis" : "Tutup sementara");
+
   return (
     <div
-      className={`inline-flex items-center gap-2.5 text-xs font-medium tracking-wide text-white/90 select-none ${className}`}
+      className={`inline-flex items-center gap-2 rounded-full border border-[#DCD5CD] bg-white px-3 py-1 text-xs font-medium text-[#251C17] select-none ${className}`}
       role="status"
-      aria-label={isOpen ? "Status warung: Buka (Open)" : "Status warung: Tutup (Closed)"}
+      aria-label={`Status warung: ${statusText} · ${labelText}`}
     >
       <span
-        className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider text-xs transition-colors ${
-          isOpen
-            ? "bg-emerald-500/25 text-emerald-300 border border-emerald-400/50"
-            : "bg-red-500/25 text-red-300 border border-red-400/50"
-        }`}
-      >
-        <span
-          className={`w-1.5 h-1.5 rounded-full ${
-            isOpen ? "bg-emerald-400 shadow-[0_0_8px_#34d399]" : "bg-red-400"
-          }`}
-          aria-hidden="true"
-        />
-        {isOpen ? "Open" : "Closed"}
-      </span>
-      <span className="text-xs text-white/80 font-normal hidden sm:inline">
-        {note || (isOpen ? "Selasa - Minggu: 13.00 - Habis" : "Tutup sementara")}
-      </span>
+        className="h-2 w-2 rounded-full shrink-0"
+        style={{ backgroundColor: isOpen ? "#2F7D4F" : "#8D0D00" }}
+        aria-hidden="true"
+      />
+      <span className="font-semibold">{statusText}</span>
+      <span className="text-[#DCD5CD]" aria-hidden="true">·</span>
+      <span className="text-[#6E6259] truncate max-w-[180px] sm:max-w-none">{labelText}</span>
     </div>
   );
 }
-

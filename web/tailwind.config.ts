@@ -59,8 +59,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        heading: ["var(--font-heading)", "Fraunces", "Georgia", "serif"],
-        display: ["var(--font-heading)", "Fraunces", "Georgia", "serif"],
+        heading: ["var(--font-heading)", "var(--font-sans)", "DM Sans", "system-ui", "sans-serif"],
+        display: ["var(--font-heading)", "var(--font-sans)", "DM Sans", "system-ui", "sans-serif"],
         sans: ["var(--font-sans)", "DM Sans", "system-ui", "sans-serif"],
         body: ["var(--font-sans)", "DM Sans", "system-ui", "sans-serif"],
         "serif-sc": ["var(--font-serif-sc)", "Noto Serif SC", "serif"],

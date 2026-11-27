@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Camera } from "lucide-react";
+import { ChevronLeft, ChevronRight, Camera, ExternalLink } from "lucide-react";
 
 export interface GalleryPhoto {
   src: string;
@@ -12,9 +12,16 @@ export interface GalleryPhoto {
 
 interface GalleryCarouselProps {
   items: GalleryPhoto[];
+  mapsGalleryUrl?: string;
 }
 
-export default function GalleryCarousel({ items }: GalleryCarouselProps) {
+const DEFAULT_MAPS_URL =
+  "https://www.google.com/maps/place/MIE+AYAM+SURABAYA/@-7.4492413,112.7050814,15z/data=!4m15!1m8!3m7!1s0x2dd7e1704b5593cd:0x81c8774cf4076883!2sMIE+AYAM+SURABAYA!8m2!3d-7.4493338!4d112.7049644!10e9!16s%2Fg%2F11z9hk1f4y!3m5!1s0x2dd7e1704b5593cd:0x81c8774cf4076883!8m2!3d-7.4493338!4d112.7049644!16s%2Fg%2F11z9hk1f4y";
+
+export default function GalleryCarousel({
+  items,
+  mapsGalleryUrl = DEFAULT_MAPS_URL,
+}: GalleryCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -58,10 +65,9 @@ export default function GalleryCarousel({ items }: GalleryCarouselProps) {
   const scrollByAmount = (direction: "left" | "right") => {
     const el = scrollRef.current;
     if (!el) return;
-    const maxScroll = el.scrollWidth - el.clientWidth;
-    const step = totalPages > 1 ? maxScroll / (totalPages - 1) : el.clientWidth * 0.85;
+    const scrollAmount = el.clientWidth * 0.8;
     el.scrollBy({
-      left: direction === "left" ? -step : step,
+      left: direction === "left" ? -scrollAmount : scrollAmount,
       behavior: "smooth",
     });
   };
@@ -78,9 +84,9 @@ export default function GalleryCarousel({ items }: GalleryCarouselProps) {
     <div className="w-full">
       {/* Top Controls Header */}
       <div className="flex items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#9A6B00]">
-          <Camera className="w-4 h-4 text-[#8B0000]" aria-hidden="true" />
-          <span>Suasana & Sajian Warung</span>
+        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#8D0D00]">
+          <Camera className="w-4 h-4 text-[#8D0D00]" aria-hidden="true" />
+          <span>Dokumentasi Warung & Sajian</span>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -88,7 +94,7 @@ export default function GalleryCarousel({ items }: GalleryCarouselProps) {
             onClick={() => scrollByAmount("left")}
             disabled={!canScrollLeft}
             aria-label="Geser galeri ke kiri"
-            className="w-10 h-10 rounded-full border border-stone-300 bg-white hover:border-[#D4AF37] hover:bg-[#FAF7F2] text-[#2C1810] disabled:opacity-35 disabled:cursor-not-allowed flex items-center justify-center transition-all duration-300 shadow-sm hover:scale-105 active:scale-95"
+            className="w-10 h-10 rounded-[12px] border border-[#DCD5CD] bg-white hover:border-[#8D0D00] hover:text-[#8D0D00] text-[#251C17] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-colors shadow-xs"
           >
             <ChevronLeft className="w-5 h-5" aria-hidden="true" />
           </button>
@@ -97,7 +103,7 @@ export default function GalleryCarousel({ items }: GalleryCarouselProps) {
             onClick={() => scrollByAmount("right")}
             disabled={!canScrollRight}
             aria-label="Geser galeri ke kanan"
-            className="w-10 h-10 rounded-full border border-stone-300 bg-white hover:border-[#D4AF37] hover:bg-[#FAF7F2] text-[#2C1810] disabled:opacity-35 disabled:cursor-not-allowed flex items-center justify-center transition-all duration-300 shadow-sm hover:scale-105 active:scale-95"
+            className="w-10 h-10 rounded-[12px] border border-[#DCD5CD] bg-white hover:border-[#8D0D00] hover:text-[#8D0D00] text-[#251C17] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-colors shadow-xs"
           >
             <ChevronRight className="w-5 h-5" aria-hidden="true" />
           </button>
@@ -107,26 +113,27 @@ export default function GalleryCarousel({ items }: GalleryCarouselProps) {
       {/* Swipeable Track with CSS Scroll-Snap */}
       <div
         ref={scrollRef}
-        className="flex gap-5 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 pt-1 px-1 focus:outline-none [-webkit-overflow-scrolling:touch]"
+        className="flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 pt-1 px-1 focus:outline-none [-webkit-overflow-scrolling:touch]"
         style={{ scrollbarWidth: "none" }}
         tabIndex={0}
-        aria-label="Galeri foto warung"
+        aria-label="Galeri foto warung dan sajian mie ayam"
       >
         {items.map((item, idx) => (
           <div
             key={idx}
-            className="snap-start shrink-0 w-[78vw] sm:w-[45vw] lg:w-[320px] group"
+            className="snap-start shrink-0 w-[82vw] sm:w-[48vw] lg:w-[340px] group"
           >
-            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-stone-100 border border-stone-200/90 shadow-sm group-hover:border-[#D4AF37] group-hover:-translate-y-[6px] group-hover:shadow-2xl transition-all duration-300 ease-out">
+            <div className="relative aspect-[4/3] rounded-[22px] overflow-hidden bg-[#F4F0EB] border border-[#DCD5CD] shadow-[0_4px_14px_rgba(46,31,21,0.03)] group-hover:border-[#8D0D00]/40 transition-all duration-300">
               <Image
                 src={item.src}
                 alt={item.alt}
                 fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                sizes="(max-width: 640px) 78vw, (max-width: 1024px) 45vw, 320px"
+                loading="lazy"
+                className="object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
+                sizes="(max-width: 640px) 82vw, (max-width: 1024px) 48vw, 340px"
               />
               {item.caption && (
-                <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white text-xs font-semibold">
+                <div className="absolute inset-x-0 bottom-0 p-3.5 bg-gradient-to-t from-[#1E1612]/85 via-[#1E1612]/40 to-transparent text-white text-xs font-semibold backdrop-blur-[1px]">
                   {item.caption}
                 </div>
               )}
@@ -135,25 +142,39 @@ export default function GalleryCarousel({ items }: GalleryCarouselProps) {
         ))}
       </div>
 
-      {/* Dot Indicators: Synchronized with actual navigable pages */}
-      {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 mt-6" aria-hidden="true">
-          {Array.from({ length: totalPages }).map((_, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => scrollToPage(idx)}
-              aria-label={`Lihat slide ${idx + 1} dari ${totalPages}`}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                currentPage === idx
-                  ? "w-8 bg-[#8B0000]"
-                  : "w-2 bg-stone-300 hover:bg-[#D4AF37]"
-              }`}
-            />
-          ))}
-        </div>
-      )}
+      {/* Footer controls & Google Maps Link */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-2">
+        {/* Dot Indicators */}
+        {totalPages > 1 ? (
+          <div className="flex items-center gap-1.5" aria-hidden="true">
+            {Array.from({ length: totalPages }).map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => scrollToPage(idx)}
+                aria-label={`Lihat slide ${idx + 1} dari ${totalPages}`}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  currentPage === idx
+                    ? "w-7 bg-[#8D0D00]"
+                    : "w-2 bg-[#DCD5CD] hover:bg-[#8D0D00]/50"
+                }`}
+              />
+            ))}
+          </div>
+        ) : (
+          <div />
+        )}
+
+        <a
+          href={mapsGalleryUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-[12px] bg-white border border-[#DCD5CD] px-4 py-2.5 text-xs sm:text-sm font-semibold text-[#251C17] hover:bg-[#F4F0EB] hover:text-[#8D0D00] transition-colors shadow-xs"
+        >
+          <span>Lihat Foto Lainnya di Google Maps</span>
+          <ExternalLink className="w-3.5 h-3.5 text-[#8D0D00]" aria-hidden="true" />
+        </a>
+      </div>
     </div>
   );
 }
-

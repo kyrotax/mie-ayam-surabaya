@@ -57,9 +57,9 @@ export async function uploadFileToStorage(
 }
 
 /**
- * Generates a signed URL for a file in the private bucket
+ * Generates a signed or public URL for a file in Supabase Storage
  */
-export async function getSignedFileUrl(filePath: string, expiresIn = 3600 * 24): Promise<string> {
+export async function getSignedFileUrl(filePath: string, expiresIn = 3600 * 24 * 7): Promise<string> {
   if (!filePath) return "";
 
   // If already a data URL, local public asset (e.g. /images/...), or HTTP URL, return as is
@@ -67,15 +67,30 @@ export async function getSignedFileUrl(filePath: string, expiresIn = 3600 * 24):
     return filePath;
   }
 
-  const { data, error } = await supabase.storage
-    .from(BUCKET_NAME)
-    .createSignedUrl(filePath, expiresIn);
+  // Try creating signed URL (works for private buckets)
+  try {
+    const { data, error } = await supabase.storage
+      .from(BUCKET_NAME)
+      .createSignedUrl(filePath, expiresIn);
 
-  if (error || !data?.signedUrl) {
-    return filePath;
+    if (!error && data?.signedUrl) {
+      return data.signedUrl;
+    }
+  } catch (e) {
+    // ignore and fallback
   }
 
-  return data.signedUrl;
+  // Fallback to getPublicUrl (works for public buckets)
+  try {
+    const { data: pubData } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
+    if (pubData?.publicUrl) {
+      return pubData.publicUrl;
+    }
+  } catch (e) {
+    // ignore
+  }
+
+  return filePath;
 }
 
 /**

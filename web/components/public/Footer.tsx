@@ -3,68 +3,52 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useLiveData } from "@/lib/public/LiveDataContext";
-import { MapPin, Phone, Instagram, ExternalLink } from "lucide-react";
-import { ChineseBorderStrip } from "./ChineseOrnaments";
+import { MapPin, Phone, Instagram, Clock } from "lucide-react";
 
 export default function Footer() {
   const { siteData } = useLiveData();
-  return (
-    <footer className="bg-[#6B0000] text-[#FFF8E7]" aria-label="Footer Mie Ayam Surabaya">
-      <ChineseBorderStrip />
 
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 pt-12 pb-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
-          {/* Kolom 1: Brand & Tagline */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-[#D4AF37] shrink-0 bg-[#8B0000]">
+  return (
+    <footer className="bg-[#1E1612] text-[#E3DDD6]" aria-label="Footer Mie Ayam Surabaya">
+      <div className="mx-auto max-w-6xl px-5 pt-14 pb-10">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-[#34261F]">
+          {/* Kolom 1: Logo + deskripsi 1 kalimat */}
+          <div className="md:col-span-4 space-y-3">
+            <div className="flex items-center gap-2.5">
+              <div className="relative h-10 w-10 rounded-[12px] overflow-hidden border border-[#483329] bg-[#251C17] shrink-0">
                 <Image
                   src="/images/logo-umkm.jpg"
                   alt={`Logo ${siteData.brandName}`}
                   fill
                   className="object-cover"
-                  sizes="48px"
+                  sizes="40px"
                 />
               </div>
-              <div>
-                <p className="font-heading text-xl font-bold text-[#FFD700] leading-tight">
-                  {siteData.brandName}
-                </p>
-                <p className="text-[10px] tracking-[0.2em] uppercase text-[#FFF8E7]/80 font-medium font-sans">
-                  Oriental Noodle House
-                </p>
-              </div>
+              <span className="text-base font-semibold text-white tracking-[-0.02em]">
+                {siteData.brandName}
+              </span>
             </div>
-
-            <p className="text-sm text-[#FFF8E7]/90 leading-relaxed font-sans">
-              {siteData.tagline}
-            </p>
-
-            <p className="text-xs text-[#FFF8E7]/75 font-sans leading-relaxed">
-              Semangkuk mie kenyal buatan sendiri tiap pagi, disajikan hangat dengan bumbu ayam gurih meresap, kuah kaldu sapi, dan aneka minuman segar.
+            <p className="text-sm text-[#B9AEA5] leading-relaxed">
+              Mie kenyal buatan sendiri setiap pagi dengan kuah kaldu sapi gurih dan topping ayam melimpah.
             </p>
           </div>
 
-          {/* Kolom 2: Navigasi Cepat */}
-          <div className="space-y-4">
-            <h3 className="font-display text-sm tracking-[0.18em] uppercase text-[#FFD700] font-bold">
-              Navigasi Halaman
-            </h3>
-
-            <ul className="space-y-2.5 font-sans text-sm">
+          {/* Kolom 2: Link anchor & halaman */}
+          <div className="md:col-span-2 space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-white">
+              Navigasi
+            </p>
+            <ul className="space-y-2 text-sm text-[#B9AEA5]">
               {[
-                { label: "Beranda Utama", href: "/#beranda" },
-                { label: "Daftar Menu Lengkap", href: "/menu" },
-                { label: "Tentang Kami", href: "/tentang" },
-                { label: "Jam Buka & Lokasi", href: "/#lokasi" },
-                { label: "Terima Pesanan", href: "/#kontak" },
-                { label: "Portal Admin & Kasir", href: "/admin/login" },
+                { label: "Tentang", href: "/#tentang" },
+                { label: "Menu Unggulan", href: "/#menu" },
+                { label: "Daftar Menu", href: "/menu" },
+                { label: "Galeri", href: "/#galeri" },
+                { label: "Cara Pesan", href: "/#cara-pesan" },
+                { label: "Lokasi", href: "/#lokasi" },
               ].map((item) => (
                 <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="link-gold-underline text-[#FFF8E7]/90 hover:text-[#FFD700] transition-colors inline-block py-0.5"
-                  >
+                  <Link href={item.href} className="hover:text-white transition-colors">
                     {item.label}
                   </Link>
                 </li>
@@ -72,68 +56,69 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Kolom 3: Kontak, Alamat & Sosmed */}
-          <div className="space-y-4">
-            <h3 className="font-display text-sm tracking-[0.18em] uppercase text-[#FFD700] font-bold">
-              Kontak & Lokasi
-            </h3>
+          {/* Kolom 3: Kontak */}
+          <div className="md:col-span-3 space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-white">
+              Kontak
+            </p>
+            <ul className="space-y-2.5 text-sm text-[#B9AEA5]">
+              <li>
+                <a
+                  href={`https://wa.me/${siteData.kontak.wa}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 hover:text-white transition-colors"
+                >
+                  <Phone className="w-4 h-4 shrink-0" aria-hidden="true" />
+                  <span>{siteData.kontak.waDisplay}</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href={siteData.sosmed.igUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 hover:text-white transition-colors"
+                >
+                  <Instagram className="w-4 h-4 shrink-0" aria-hidden="true" />
+                  <span>{siteData.sosmed.ig}</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href={siteData.kontak.mapsLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-start gap-2 hover:text-white transition-colors"
+                >
+                  <MapPin className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
+                  <span>Taman Pinang Indah, Sidoarjo</span>
+                </a>
+              </li>
+            </ul>
+          </div>
 
-            <div className="space-y-3.5 font-sans text-xs sm:text-sm">
-              <a
-                href={siteData.kontak.mapsLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Buka peta lokasi: ${siteData.kontak.alamat}`}
-                className="flex items-start gap-2.5 text-[#FFF8E7]/90 hover:text-[#FFD700] transition-colors group"
-              >
-                <MapPin className="w-4 h-4 text-[#D4AF37] group-hover:scale-110 transition-transform shrink-0 mt-0.5" aria-hidden="true" />
-                <span className="text-xs leading-relaxed">{siteData.kontak.alamat}</span>
-              </a>
-
-              <a
-                href={`https://wa.me/${siteData.kontak.wa}?text=Halo%20${encodeURIComponent(
-                  siteData.brandName
-                )}%2C%20saya%20ingin%20memesan.`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`WhatsApp ${siteData.kontak.waDisplay} (buka di tab baru)`}
-                className="flex items-center gap-2.5 text-[#FFF8E7]/90 hover:text-[#FFD700] transition-colors group"
-              >
-                <Phone className="w-4 h-4 text-[#D4AF37] group-hover:scale-110 group-hover:rotate-6 transition-transform shrink-0" aria-hidden="true" />
-                <span className="font-semibold text-xs">{siteData.kontak.waDisplay}</span>
-                <ExternalLink className="w-3 h-3 text-[#D4AF37]/80 group-hover:text-[#FFD700]" aria-hidden="true" />
-              </a>
-
-              <a
-                href={siteData.sosmed.igUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Instagram ${siteData.sosmed.ig} (buka di tab baru)`}
-                className="flex items-center gap-2.5 text-[#FFF8E7]/90 hover:text-[#FFD700] transition-colors group"
-              >
-                <Instagram className="w-4 h-4 text-[#D4AF37] group-hover:scale-125 group-hover:-rotate-6 transition-transform shrink-0" aria-hidden="true" />
-                <span className="font-semibold text-xs">{siteData.sosmed.ig}</span>
-                <ExternalLink className="w-3 h-3 text-[#D4AF37]/80 group-hover:text-[#FFD700]" aria-hidden="true" />
-              </a>
+          {/* Kolom 4: Jam Buka */}
+          <div className="md:col-span-3 space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-white">
+              Jam Buka
+            </p>
+            <div className="space-y-1.5 text-sm text-[#B9AEA5]">
+              <div className="flex items-center gap-2 text-white font-medium">
+                <Clock className="w-4 h-4 shrink-0" aria-hidden="true" />
+                <span>Selasa – Minggu</span>
+              </div>
+              <p>13.00 – Habis</p>
+              <p className="text-xs text-[#8A7C72]">Senin Libur</p>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-10 pt-6 border-t border-[#D4AF37]/30 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#FFF8E7]/75 font-sans">
-          <p>&copy; {new Date().getFullYear()} {siteData.brandName}. Hak cipta dilindungi.</p>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/admin/login"
-              className="text-[#FFF8E7]/60 hover:text-[#FFD700] transition-colors"
-            >
-              Portal Admin
-            </Link>
-            <span className="text-[#D4AF37]/40">•</span>
-            <span className="text-[11px] tracking-widest uppercase text-[#FFD700]/80 font-semibold">
-              Warung Kuliner Oriental Sidoarjo
-            </span>
-          </div>
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#B9AEA5]">
+          <p>© {new Date().getFullYear()} {siteData.brandName}. Hak cipta dilindungi.</p>
+          <Link href="/admin/login" className="hover:text-white transition-colors">
+            Portal Admin
+          </Link>
         </div>
       </div>
     </footer>

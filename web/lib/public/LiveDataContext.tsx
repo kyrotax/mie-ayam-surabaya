@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { siteConfig as defaultSiteConfig } from "@/data/site.config";
 import { supabase } from "@/src/supabaseClient";
+import { getSignedFileUrl } from "@/lib/storage";
 import { SiteConfig, MenuItem } from "@/types/site";
 
 interface LiveDataContextType {
@@ -28,32 +29,34 @@ export function PublicLiveDataProvider({ children }: { children: React.ReactNode
         const statusRow = statusRes.data;
 
         if (menuRows.length > 0) {
-          const menuMakanan: MenuItem[] = menuRows
-            .filter((m) => m.category === "Mie Ayam" || m.category === "Topping/Tambahan")
+          const resolvedRows = await Promise.all(
+            menuRows.map(async (m) => ({
+              ...m,
+              resolvedPhoto: m.image_url ? await getSignedFileUrl(m.image_url) : null,
+            }))
+          );
+
+          const menuMakanan: MenuItem[] = resolvedRows
+            .filter((m) => m.category !== "Minuman")
             .map((m) => ({
               id: String(m.id),
               nama: m.name,
               deskripsi: m.description || "",
               harga: Number(m.price),
-              foto: m.image_url || "/images/mie-ayam-komplit.png",
-              badge:
-                m.category === "Topping/Tambahan"
-                  ? "Topping"
-                  : m.name.toLowerCase().includes("komplit")
-                  ? "Paling Laris"
-                  : null,
+              foto: m.resolvedPhoto || "/images/mie-ayam-komplit.png",
+              badge: m.name.toLowerCase().includes("komplit") ? "Paling Laris" : null,
               isAvailable: Boolean(m.is_available),
               kategori: "makanan",
             }));
 
-          const menuMinuman: MenuItem[] = menuRows
+          const menuMinuman: MenuItem[] = resolvedRows
             .filter((m) => m.category === "Minuman")
             .map((m) => ({
               id: String(m.id),
               nama: m.name,
               deskripsi: m.description || "",
               harga: Number(m.price),
-              foto: m.image_url || "/images/es-teh.png",
+              foto: m.resolvedPhoto || "/images/es-teh.png",
               badge: m.name.toLowerCase().includes("teler") ? "Spesial" : null,
               isAvailable: Boolean(m.is_available),
               kategori: "minuman",

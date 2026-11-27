@@ -13,7 +13,7 @@ export const siteConfig: SiteConfig = {
     waDisplay: "0823-1919-5854",
     email: "kontak@mieayamsurabaya.id",
     alamat: "Jl. Raya Taman Pinang Indah, Jetis, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213",
-    mapsLink: "https://www.google.com/maps/place/MIE+AYAM+SURABAYA,+Jl.+Raya+Taman+Pinang+Indah,+Jetis,+Lemahputro,+Kec.+Sidoarjo,+Kabupaten+Sidoarjo,+Jawa+Timur+61213/data=!4m2!3m1!1s0x2dd7e1704b5593cd:0x81c8774cf4076883!18m1!1e1",
+    mapsLink: "https://www.google.com/maps/place/MIE+AYAM+SURABAYA/@-7.4492413,112.7050814,15z/data=!4m15!1m8!3m7!1s0x2dd7e1704b5593cd:0x81c8774cf4076883!2sMIE+AYAM+SURABAYA!8m2!3d-7.4493338!4d112.7049644!10e9!16s%2Fg%2F11z9hk1f4y!3m5!1s0x2dd7e1704b5593cd:0x81c8774cf4076883!8m2!3d-7.4493338!4d112.7049644!16s%2Fg%2F11z9hk1f4y",
     mapsEmbedUrl: "https://www.google.com/maps?q=MIE+AYAM+SURABAYA+Taman+Pinang+Indah+Sidoarjo&output=embed",
   },
 
@@ -118,7 +118,7 @@ export const siteConfig: SiteConfig = {
     {
       nama: "Cleo Cleo",
       teks: "Jarang kasih bintang 5, tapi yg ini memang layak. Mienya kenyal, topping ayamnya gurih & meresap, porsiny bikin kenyang. Dengan harga segini, rasanya benar-benar di atas ekspektasi. Salah satu mie ayam terenak di Surabaya & Sidoarjo 👍 Highly recommended!",
-      rating: 5
+      rating: 5,
     },
     {
       nama: "Daniel Abraham",
@@ -133,6 +133,16 @@ export const siteConfig: SiteConfig = {
     {
       nama: "Satyananda Gunawan",
       teks: "Dari tampilan aja uda bikin ngiler apalagi pas di coba,haujek secimping westalah pokoke",
+      rating: 5,
+    },
+    {
+      nama: "Rizky Pratama",
+      teks: "Porsi mienya banyak, tekstur mienya kenyal dan bumbunya gurih nagih. Tempatnya strategis di Taman Pinang Indah. Pelayanannya ramah dan cepat.",
+      rating: 5,
+    },
+    {
+      nama: "Vania Amanda",
+      teks: "Kuah kaldunya harum banget, bumbu ayamnya melimpah. Mie ayam oriental terbaik di Sidoarjo, wajib coba mie ayam komplitnya!",
       rating: 5,
     },
   ],

@@ -19,10 +19,10 @@
   --color-dark:        #2C1810;
   --color-warm:        #6B4423;
 
-  /* Global Centralized Typography Variables */
-  --font-heading: 'Fraunces', Georgia, serif;
+  /* Global Centralized Typography Variables - Same as Dashboard */
+  --font-heading: var(--font-sans);
   --font-display: var(--font-heading);
-  --font-sans: 'DM Sans', system-ui, sans-serif;
+  --font-sans: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-body: var(--font-sans);
 }
 
@@ -32,8 +32,8 @@ html {
 }
 
 body {
-  background-color: #FAF7F2;
-  color: #2C1810;
+  background-color: #FAF9F7;
+  color: #251C17;
   font-family: var(--font-sans), 'DM Sans', system-ui, sans-serif;
   font-weight: 400; /* DM Sans regular */
   -webkit-font-smoothing: antialiased;
@@ -70,23 +70,23 @@ select:focus-visible {
 
 /* ═══════════ SCROLLBAR ═══════════ */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #FFF8E7;
+  background: #FAF9F7;
 }
 ::-webkit-scrollbar-thumb {
-  background: #C41E3A;
+  background: #8D0D00;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #8B0000;
+  background: #6F0A00;
 }
 
 /* ═══════════ CENTRALIZED TYPOGRAPHY CLASSES ═══════════ */
 .font-heading,
 .font-display {
-  font-family: var(--font-heading), 'Fraunces', Georgia, serif;
+  font-family: var(--font-heading), var(--font-sans), 'DM Sans', system-ui, sans-serif;
 }
 
 .font-serif-sc {
@@ -99,18 +99,18 @@ select:focus-visible {
 }
 
 /*
-  STANDARDIZASI FONT GLOBAL SELURUH WEBSITE:
-  - Heading (semua judul section): Fraunces (bold), ukuran seragam
-  - Subheading: DM Sans (medium), ukuran seragam
-  - Body text: DM Sans (regular), ukuran seragam
-  - Eyebrow / Label kategori: DM Sans (semibold), uppercase tracking seragam
+  STANDARDIZASI FONT GLOBAL (SELARAS DENGAN DASHBOARD):
+  - Heading (semua judul section/halaman): Font Sans / DM Sans, Semibold (600), tracking ketat
+  - Subheading: Font Sans / DM Sans, Medium (500), ukuran seragam
+  - Body text: Font Sans / DM Sans, Regular (400), ukuran seragam
+  - Eyebrow / Label kategori: Font Sans / DM Sans, Semibold (600), uppercase tracking seragam
 */
 .section-heading-unified {
-  font-family: var(--font-heading), 'Fraunces', Georgia, serif;
-  font-weight: 700;
+  font-family: var(--font-heading), var(--font-sans), 'DM Sans', system-ui, sans-serif;
+  font-weight: 600;
   font-size: 2.125rem; /* 34px */
   line-height: 1.15;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 @media (min-width: 640px) {
   .section-heading-unified {
@@ -163,7 +163,7 @@ select:focus-visible {
   gap: 0.5rem;
   background-color: #D4AF37;
   color: #2C1810;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 0.875rem;
   padding: 0.75rem 1.75rem;
   border-radius: 9999px;
@@ -189,7 +189,7 @@ select:focus-visible {
   gap: 0.5rem;
   background-color: #8B0000;
   color: #FFD700;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 0.875rem;
   padding: 0.75rem 1.75rem;
   border-radius: 9999px;

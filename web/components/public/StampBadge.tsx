@@ -55,8 +55,8 @@ export default function StampBadge({
       {/* Circular text */}
       <text
         fontSize={size * 0.115}
-        fontFamily="var(--font-sans), Plus Jakarta Sans, sans-serif"
-        fontWeight="700"
+        fontFamily="var(--font-sans), 'DM Sans', sans-serif"
+        fontWeight="600"
         fill={textColor}
         letterSpacing={size * 0.018}
       >

@@ -113,7 +113,7 @@ export default function MenuCarousel({ makanan, minuman, waNumber }: MenuCarouse
 
       {/* Dot Indicators (display only, not clickable) */}
       <div
-        className="flex items-center justify-center gap-2 mt-3"
+        className="flex items-center justify-center gap-1.5 mt-4"
         aria-hidden="true"
         role="presentation"
       >
@@ -122,8 +122,8 @@ export default function MenuCarousel({ makanan, minuman, waNumber }: MenuCarouse
             key={idx}
             className={`block rounded-full transition-all duration-300 ease-out ${
               activeIndex === idx
-                ? "w-6 h-2 bg-[#8B0000]"
-                : "w-2 h-2 bg-stone-300"
+                ? "w-6 h-1.5 bg-[#8D0D00]"
+                : "w-1.5 h-1.5 bg-[#DDD7D0]"
             }`}
           />
         ))}

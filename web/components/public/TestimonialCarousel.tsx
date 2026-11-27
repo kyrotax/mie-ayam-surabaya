@@ -82,25 +82,25 @@ export default function TestimonialCarousel({
           onClick={() => scrollByAmount("left")}
           disabled={!canScrollLeft}
           aria-label="Geser testimoni ke kiri"
-          className="w-10 h-10 rounded-full border border-stone-300 bg-white hover:border-[#D4AF37] hover:bg-[#FAF7F2] text-[#2C1810] disabled:opacity-35 disabled:cursor-not-allowed flex items-center justify-center transition-all duration-300 shadow-sm hover:scale-105 active:scale-95"
+          className="w-9 h-9 rounded-[11px] border border-[#D5CEC5] bg-white text-[#251C17] hover:border-[#8D0D00] hover:text-[#8D0D00] disabled:opacity-35 disabled:cursor-not-allowed flex items-center justify-center transition-colors shadow-xs"
         >
-          <ChevronLeft className="w-5 h-5" aria-hidden="true" />
+          <ChevronLeft className="w-4 h-4" aria-hidden="true" />
         </button>
         <button
           type="button"
           onClick={() => scrollByAmount("right")}
           disabled={!canScrollRight}
           aria-label="Geser testimoni ke kanan"
-          className="w-10 h-10 rounded-full border border-stone-300 bg-white hover:border-[#D4AF37] hover:bg-[#FAF7F2] text-[#2C1810] disabled:opacity-35 disabled:cursor-not-allowed flex items-center justify-center transition-all duration-300 shadow-sm hover:scale-105 active:scale-95"
+          className="w-9 h-9 rounded-[11px] border border-[#D5CEC5] bg-white text-[#251C17] hover:border-[#8D0D00] hover:text-[#8D0D00] disabled:opacity-35 disabled:cursor-not-allowed flex items-center justify-center transition-colors shadow-xs"
         >
-          <ChevronRight className="w-5 h-5" aria-hidden="true" />
+          <ChevronRight className="w-4 h-4" aria-hidden="true" />
         </button>
       </div>
 
       {/* Swipeable Track with CSS Scroll-Snap */}
       <div
         ref={scrollRef}
-        className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 pt-1 px-1 focus:outline-none [-webkit-overflow-scrolling:touch]"
+        className="flex gap-5 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 pt-1 px-1 focus:outline-none [-webkit-overflow-scrolling:touch]"
         style={{ scrollbarWidth: "none" }}
         tabIndex={0}
         aria-label="Daftar testimoni pelanggan"
@@ -121,19 +121,19 @@ export default function TestimonialCarousel({
         ))}
       </div>
 
-      {/* Dot Indicators: Synchronized with actual navigable pages */}
+      {/* Dot Indicators */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 mt-6" aria-hidden="true">
+        <div className="flex items-center justify-center gap-1.5 mt-5" aria-hidden="true">
           {Array.from({ length: totalPages }).map((_, idx) => (
             <button
               key={idx}
               type="button"
               onClick={() => scrollToPage(idx)}
               aria-label={`Lihat testimoni halaman ${idx + 1} dari ${totalPages}`}
-              className={`h-2 rounded-full transition-all duration-300 ${
+              className={`h-1.5 rounded-full transition-all duration-300 ${
                 currentPage === idx
-                  ? "w-8 bg-[#8B0000]"
-                  : "w-2 bg-stone-300 hover:bg-[#D4AF37]"
+                  ? "w-6 bg-[#8D0D00]"
+                  : "w-2 bg-[#DDD7D0] hover:bg-[#8D0D00]/50"
               }`}
             />
           ))}
