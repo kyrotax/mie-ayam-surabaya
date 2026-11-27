@@ -15,7 +15,7 @@ export default function Footer() {
           {/* Kolom 1: Logo + deskripsi 1 kalimat */}
           <div className="md:col-span-4 space-y-3">
             <div className="flex items-center gap-2.5">
-              <div className="relative h-10 w-10 rounded-[12px] overflow-hidden border border-[#483329] bg-[#251C17] shrink-0">
+              <div className="relative h-10 w-10 rounded-full overflow-hidden border border-[#483329] bg-[#251C17] shrink-0 ring-1 ring-white/10">
                 <Image
                   src="/images/logo-umkm.jpg"
                   alt={`Logo ${siteData.brandName}`}
@@ -84,6 +84,40 @@ export default function Footer() {
                   <span>{siteData.sosmed.ig}</span>
                 </a>
               </li>
+              <li>
+                <a
+                  href={siteData.sosmed.tiktokUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 hover:text-white transition-colors"
+                >
+                  <svg className="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.47 6.27 6.27 0 0 0 1.88-4.47V8.76a8.28 8.28 0 0 0 4.89 1.57V6.89a4.84 4.84 0 0 1-1-.2z" />
+                  </svg>
+                  <span>{siteData.sosmed.tiktok}</span>
+                </a>
+              </li>
+              {siteData.sosmed.gofoodUrl && (
+                <li>
+                  <a
+                    href={siteData.sosmed.gofoodUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-[#FF6B6B] hover:text-white transition-colors font-medium"
+                  >
+                    <div className="relative h-4 w-4 shrink-0">
+                      <Image
+                        src="/images/gofood-icon.png"
+                        alt="GoFood"
+                        fill
+                        className="object-contain"
+                        sizes="16px"
+                      />
+                    </div>
+                    <span>Order di GoFood</span>
+                  </a>
+                </li>
+              )}
               <li>
                 <a
                   href={siteData.kontak.mapsLink}

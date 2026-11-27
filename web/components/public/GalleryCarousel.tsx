@@ -123,7 +123,7 @@ export default function GalleryCarousel({
             key={idx}
             className="snap-start shrink-0 w-[82vw] sm:w-[48vw] lg:w-[340px] group"
           >
-            <div className="relative aspect-[4/3] rounded-[22px] overflow-hidden bg-[#F4F0EB] border border-[#DCD5CD] shadow-[0_4px_14px_rgba(46,31,21,0.03)] group-hover:border-[#8D0D00]/40 transition-all duration-300">
+            <div className="relative aspect-[4/3] rounded-[24px] overflow-hidden bg-[#F8F5F2] border border-[#E8E2DC] shadow-[0_4px_16px_rgba(31,25,22,0.04)] group-hover:border-[#D10B0C]/40 group-hover:shadow-[0_12px_28px_rgba(209,11,12,0.08)] transition-all duration-300">
               <Image
                 src={item.src}
                 alt={item.alt}
@@ -155,8 +155,8 @@ export default function GalleryCarousel({
                 aria-label={`Lihat slide ${idx + 1} dari ${totalPages}`}
                 className={`h-2 rounded-full transition-all duration-300 ${
                   currentPage === idx
-                    ? "w-7 bg-[#8D0D00]"
-                    : "w-2 bg-[#DCD5CD] hover:bg-[#8D0D00]/50"
+                    ? "w-7 bg-gradient-to-r from-[#D10B0C] to-[#E52D2E]"
+                    : "w-2 bg-[#E8E2DC] hover:bg-[#D10B0C]/40"
                 }`}
               />
             ))}

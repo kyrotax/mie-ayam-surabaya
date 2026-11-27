@@ -72,6 +72,7 @@ export function PublicLiveDataProvider({ children }: { children: React.ReactNode
                 : "Sedang Tutup"),
             menuMakanan: menuMakanan.length > 0 ? menuMakanan : prev.menuMakanan,
             menuMinuman: menuMinuman.length > 0 ? menuMinuman : prev.menuMinuman,
+            menuUnggulan: menuMakanan.slice(0, 3).length > 0 ? menuMakanan.slice(0, 3) : prev.menuUnggulan,
           }));
         } else if (statusRow) {
           setSiteData((prev) => ({

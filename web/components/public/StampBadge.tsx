@@ -14,8 +14,8 @@ export default function StampBadge({
   size = 96,
   className = "",
   textColor = "#FFFFFF",
-  bgColor = "#8B1E1E",
-  borderColor = "#FAF0E6",
+  bgColor = "#D10B0C",
+  borderColor = "#FFF0F0",
 }: StampBadgeProps) {
   const r = size * 0.38;
   const cx = size / 2;

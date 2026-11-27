@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { supabase } from "@/src/supabaseClient";
 import { getSignedFileUrl } from "@/lib/storage";
 import MenuBoard from "@/components/public/MenuBoard";
 import { MessageCircle, CheckCircle2 } from "lucide-react";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Daftar Menu & Harga",
@@ -78,16 +79,34 @@ export default async function MenuPage() {
 
         <div className="inline-flex flex-wrap items-center justify-center gap-3 px-4 py-2 rounded-full bg-white border border-[#D5CEC5] shadow-xs text-xs text-[#251C17]">
           <CheckCircle2 className="w-4 h-4 text-[#8D0D00] shrink-0" aria-hidden="true" />
-          <span>Makan di tempat, bungkus, atau pesan antar</span>
+          <span>Makan di tempat, bungkus bawa pulang, atau order via GoFood</span>
           <span className="text-[#DDD7D0]">•</span>
           <a
             href="https://wa.me/6282319195854?text=Halo%20Mie%20Ayam%20Surabaya%2C%20saya%20ingin%20memesan."
             target="_blank"
             rel="noopener noreferrer"
-            className="font-semibold text-[#8D0D00] hover:underline inline-flex items-center gap-1"
+            className="font-semibold text-[#8D0D00] hover:underline inline-flex items-center gap-1.5"
           >
             <MessageCircle className="w-3.5 h-3.5" />
             <span>Pesan via WhatsApp</span>
+          </a>
+          <span className="text-[#DDD7D0]">•</span>
+          <a
+            href="https://gofood.co.id/surabaya/restaurant/mie-ayam-surabaya-taman-pinang-sidoarjo-26ae8787-58a9-4a86-bb97-cc99132ddb0e"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-[#EE2737] hover:underline inline-flex items-center gap-1.5"
+          >
+            <div className="relative h-4 w-4 shrink-0">
+              <Image
+                src="/images/gofood-icon.png"
+                alt="GoFood"
+                fill
+                className="object-contain"
+                sizes="16px"
+              />
+            </div>
+            <span>Order di GoFood</span>
           </a>
         </div>
       </div>

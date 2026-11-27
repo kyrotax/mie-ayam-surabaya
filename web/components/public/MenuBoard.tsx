@@ -47,8 +47,7 @@ function resolveMenuImage(imageUrl?: string | null): string {
   ) {
     return imageUrl;
   }
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://fidpdnscwysqrcadagmq.supabase.co";
-  return `${supabaseUrl}/storage/v1/object/public/mie-ayam-surabaya/${imageUrl}`;
+  return `/api/storage/${imageUrl.replace(/^\/+/, "")}`;
 }
 
 export default function MenuBoard({ categories }: { categories: CategoryProps[] }) {

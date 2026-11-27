@@ -17,12 +17,12 @@ export default function SectionHeading({
   light = false,
 }: SectionHeadingProps) {
   const alignClass = align === "center" ? "text-center items-center" : "text-left items-start";
-  const textColor = light ? "text-white" : "text-[#251C17]";
-  const accentColor = light ? "text-[#F0C87D]" : "text-[#8D0D00]";
+  const textColor = light ? "text-white" : "text-[#1F1916]";
+  const accentColor = light ? "text-[#FCD34D]" : "text-[#D10B0C]";
   const eyebrowBg = light
-    ? "bg-white/10 text-[#F0C87D] border-white/20"
-    : "bg-[#F3E4DE] text-[#8D0D00] border-[#E3C1BA]";
-  const mutedColor = light ? "text-[#D8D0C7]" : "text-[#6E6259]";
+    ? "bg-white/10 text-[#FCD34D] border-white/20"
+    : "bg-[#FFF0F0] text-[#D10B0C] border-[#FFD3D3]";
+  const mutedColor = light ? "text-[#D8D0C7]" : "text-[#6B5E55]";
 
   return (
     <div className={`flex flex-col gap-3 ${alignClass}`}>

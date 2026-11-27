@@ -1,6 +1,12 @@
 import { supabase } from "@/src/supabaseClient";
 
 export const BUCKET_NAME = "mie-ayam-surabaya";
+export const BUCKET_FALLBACKS = [
+  "mie-ayam-surabaya",
+  "MIE-AYAN-SURABAYA",
+  "MIE-AYAM-SURABAYA",
+  "mie-ayan-surabaya",
+];
 
 /**
  * Uploads a file to Supabase Storage with the required folder structure:
@@ -38,19 +44,31 @@ export async function uploadFileToStorage(
   // Strict folder rule: ${auth.uid()}/${featureName}/${itemId}/${uuid}.${extension}
   const filePath = `${user.id}/${params.featureName}/${params.itemId}/${uuid}.${extension}`;
 
-  const { error: uploadError } = await supabase.storage
-    .from(BUCKET_NAME)
-    .upload(filePath, file, {
-      cacheControl: "3600",
-      upsert: true,
-      contentType: file.type || "image/jpeg",
-    });
+  let lastError: any = null;
+  let uploadSuccess = false;
 
-  if (uploadError) {
-    throw new Error(`Gagal mengunggah berkas ke Storage: ${uploadError.message}`);
+  // Try uploading to primary bucket and candidate buckets if needed
+  for (const bucket of BUCKET_FALLBACKS) {
+    const { error: uploadError } = await supabase.storage
+      .from(bucket)
+      .upload(filePath, file, {
+        cacheControl: "3600",
+        upsert: true,
+        contentType: file.type || "image/jpeg",
+      });
+
+    if (!uploadError) {
+      uploadSuccess = true;
+      break;
+    }
+    lastError = uploadError;
   }
 
-  // Generate signed URL since bucket is private
+  if (!uploadSuccess && lastError) {
+    throw new Error(`Gagal mengunggah berkas ke Storage: ${lastError.message}`);
+  }
+
+  // Generate signed URL
   const signedUrl = await getSignedFileUrl(filePath, 60 * 60 * 24);
 
   return { filePath, signedUrl };
@@ -67,30 +85,23 @@ export async function getSignedFileUrl(filePath: string, expiresIn = 3600 * 24 *
     return filePath;
   }
 
-  // Try creating signed URL (works for private buckets)
-  try {
-    const { data, error } = await supabase.storage
-      .from(BUCKET_NAME)
-      .createSignedUrl(filePath, expiresIn);
+  // Try creating signed URL across candidate buckets
+  for (const bucket of BUCKET_FALLBACKS) {
+    try {
+      const { data, error } = await supabase.storage
+        .from(bucket)
+        .createSignedUrl(filePath, expiresIn);
 
-    if (!error && data?.signedUrl) {
-      return data.signedUrl;
+      if (!error && data?.signedUrl) {
+        return data.signedUrl;
+      }
+    } catch {
+      // ignore and continue
     }
-  } catch (e) {
-    // ignore and fallback
   }
 
-  // Fallback to getPublicUrl (works for public buckets)
-  try {
-    const { data: pubData } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
-    if (pubData?.publicUrl) {
-      return pubData.publicUrl;
-    }
-  } catch (e) {
-    // ignore
-  }
-
-  return filePath;
+  // Fallback to internal storage proxy endpoint
+  return `/api/storage/${filePath.replace(/^\/+/, "")}`;
 }
 
 /**
@@ -104,13 +115,12 @@ export async function deleteFileFromStorage(filePath: string): Promise<boolean> 
     return true;
   }
 
-  const { error } = await supabase.storage
-    .from(BUCKET_NAME)
-    .remove([filePath]);
-
-  if (error) {
-    console.warn(`Gagal menghapus berkas dari storage "${filePath}":`, error.message);
-    return false;
+  for (const bucket of BUCKET_FALLBACKS) {
+    try {
+      await supabase.storage.from(bucket).remove([filePath]);
+    } catch {
+      // ignore
+    }
   }
 
   return true;

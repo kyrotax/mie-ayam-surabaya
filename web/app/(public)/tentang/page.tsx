@@ -46,7 +46,7 @@ export default function TentangPage() {
               Potongan ayam dimasak perlahan dengan rempah pilihan hingga bumbunya meresap sempurna, berpadu dengan kuah kaldu sapi bening yang harum dan menenangkan.
             </p>
             <p className="text-[#6E6259]">
-              Warung kami di kawasan Taman Pinang Indah siap menyambut Anda untuk makan di tempat, bungkus bawa pulang, maupun pesan antar via WhatsApp.
+              Warung kami di kawasan Taman Pinang Indah siap menyambut Anda untuk makan di tempat, bungkus bawa pulang (takeaway), maupun order online via GoFood dan WhatsApp.
             </p>
           </div>
         </section>
